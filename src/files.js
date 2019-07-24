@@ -18,7 +18,7 @@ const bannedExeFileNames = [
     'unins',
     'conf',
     'setup',
-    'settings',
+    'setting',
     'install',
     'check',
     'alpharomdie',

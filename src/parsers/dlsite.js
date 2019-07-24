@@ -70,23 +70,13 @@ let dlsiteStrategy = new DlsiteStrategy();
 module.exports = dlsiteStrategy;
 
 async function searchJp(name) {
-    return {
-        work: [
-            {
-                id: 'RJ12345679',
-                name: 'Lol'
-            }
-        ]
-    };
-
-    // TODO: change to real code, add multiple sites (en, jp, pro)
-    // return JSON.parse(
-    //     await request.get({
-    //         uri: `https://www.dlsite.com/suggest/?site=adult-jp&time=${new Date().getTime()}&term=${encodeURIComponent(
-    //             name
-    //         )}`
-    //     })
-    // );
+    return JSON.parse(
+        await request.get({
+            uri: `https://www.dlsite.com/suggest/?site=adult-jp&time=${new Date().getTime()}&term=${encodeURIComponent(
+                name
+            )}`
+        })
+    );
 }
 
 function getOptions(id, type) {

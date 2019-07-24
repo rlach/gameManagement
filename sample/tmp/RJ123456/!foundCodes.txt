@@ -4,9 +4,21 @@
         "extractedCode": "RJ123456",
         "foundCodes": [
             {
-                "id": "RJ12345679",
-                "name": "Lol"
+                "work_name": "俺の炎に抱かれて消えろ",
+                "workno": "RJ123456",
+                "maker_name": "がしゃどくろ",
+                "maker_id": "RG18122",
+                "work_type": "MNG",
+                "intro_s": "勇太の家で食後に2人きりで話していたら、六花の不意打ちに興奮した勇太は、更なる契約を求め…",
+                "age_category": 3,
+                "is_ana": false
             }
         ]
+    },
+    "getchu": {
+        "extractedCode": "123456",
+        "foundCodes": {
+            "works": []
+        }
     }
 }

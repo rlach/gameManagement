@@ -3,6 +3,7 @@ const log = require('./../logger');
 
 var gameSchema = new mongoose.Schema({
     id: String,
+    source: String,
     nameEn: String,
     nameJp: String,
     descriptionEn: String,

@@ -1,11 +1,12 @@
 {
     "file": "RJ1234567",
     "dlsite": {
-        "foundCodes": [
-            {
-                "id": "RJ12345679",
-                "name": "Lol"
-            }
-        ]
+        "foundCodes": []
+    },
+    "getchu": {
+        "extractedCode": "1234567",
+        "foundCodes": {
+            "works": []
+        }
     }
 }

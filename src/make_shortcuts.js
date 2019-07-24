@@ -22,6 +22,7 @@ async function main() {
             if ((!game.nameEn && !game.nameJp) || settings.forceUpdate) {
                 const gameData = await strategy.fetchGameData(file);
                 Object.assign(game, gameData);
+                game.source = strategy.name;
                 await game.save();
             }
 
@@ -51,7 +52,7 @@ function determineLinkName(file, game) {
             log.info('Unknown maker');
         }
         const genres = game.genresEn
-            ? game.genresEn.map(g => g.replace(/ /gi, '_').replace(/\//gi, '+')).join(' ')
+            ? game.genresEn.map(g => g.replace(/ /gi, '_').replace(/\//gi, '+')).slice(0, 7).join(' ')
             : '';
         return `${name} [${maker} ${genres}]`;
     } else {

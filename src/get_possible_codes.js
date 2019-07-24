@@ -1,12 +1,11 @@
 const files = require('./files');
 const log = require('./logger');
 const parserStrategies = require('./parsers');
-
-const mainPath = './sample';
+const settings = require('./settings');
 
 async function main() {
-    log.info(`Reading ${mainPath}`);
-    const foundFiles = await files.readDir(mainPath);
+    log.info(`Reading ${settings.paths.main}`);
+    const foundFiles = await files.readDir(settings.paths.main);
 
     const results = [];
 
@@ -23,7 +22,11 @@ async function main() {
             };
         }
         results.push(fileResults);
-        await files.writeFile(`${mainPath}/${file}/!foundCodes.txt`, JSON.stringify(fileResults, null, 4));
+        try {
+            await files.writeFile(`${settings.paths.main}/${file}/!foundCodes.txt`, JSON.stringify(fileResults, null, 4));
+        } catch(e) {
+            log.error('Error writing codes', e);
+        }
     }
 
     log.info(results);
@@ -32,9 +35,9 @@ async function main() {
 main().catch(e => log.error('Main process crashed', e));
 
 function removeTagsAndMetadata(name) {
-    let improvedName = name.replace(/\[([^\]]+)\]/g, '');
-    improvedName = improvedName.replace(/\(([^)]+)\)/g, '');
-    improvedName = improvedName.replace(/Ver.*/gi, '');
+    let improvedName = name.replace(/\[([^\]]+)\]/g, ''); //remove []
+    improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
+    improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
     improvedName = improvedName.trim();
 
     return improvedName;

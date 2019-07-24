@@ -1,0 +1,22 @@
+{
+    "file": "母性カノジョ",
+    "dlsite": {
+        "extractedCode": "",
+        "foundCodes": []
+    },
+    "getchu": {
+        "extractedCode": "",
+        "foundCodes": {
+            "works": [
+                {
+                    "work_name": "母性カノジョ2 -知性 崩壊編-",
+                    "workno": "1039713"
+                },
+                {
+                    "work_name": "母性カノジョ -子宮 帰還編-",
+                    "workno": "988206"
+                }
+            ]
+        }
+    }
+}

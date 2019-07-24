@@ -6,19 +6,29 @@ const settings = require('./../settings');
 const files = require('./../files');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
+const JAPANESE_ENCODING = 'EUC-JP';
 
 class GetchuStrategy {
     constructor() {
         this.name = 'getchu';
-        this.pathName = settings.paths.dlsite;
+        this.pathName = settings.paths.getchu;
     }
 
     async fetchGameData(gameId) {
         log.debug(`Fetching game ${gameId}`);
 
-        const sites = await Promise.all([getJapaneseSite(gameId), getEnglishSite(gameId)]);
-        const jpn = sites[0] ? sites[0] : {};
-        const eng = sites[1] ? sites[1] : {};
+        const jpnResult = await getJapaneseSite(gameId)
+        const jpn = jpnResult ? jpnResult : {};
+        let eng = {};
+        log.info('Got jpn', jpn);
+        if(jpn.name) {
+            log.info(`Getting english site for ${jpn.name}`);
+            const engResult = await getEnglishSite(jpn.name);
+            log.info('Got eng', engResult);
+            if(engResult) {
+                eng = engResult;
+            }
+        }
 
         return {
             nameEn: eng.name,
@@ -42,8 +52,35 @@ class GetchuStrategy {
         return matches ? matches[0] : '';
     }
 
+    async callFindGame(name) {
+        return new Promise((resolve, reject) => {
+            request.get({
+                uri: `http://www.getchu.com/php/search.phtml?search_keyword=${encodeURIComponent(
+                    name
+                )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`
+            }).pipe(iconv.decodeStream(JAPANESE_ENCODING)).collect(function(err, decodedBody) {
+                if(err) {
+                    return reject(err);
+                } else {
+                    return resolve(decodedBody);
+                }
+            });
+        });
+    }
+
     async findGame(name) {
-        return [];
+        const reply = await this.callFindGame(name);
+        // await files.writeFile(`${name}.html`, reply);
+        const root = htmlParser.parse(reply);
+        const works = root.querySelectorAll('.blueb').map(b => {
+            return {
+                work_name: b.text.trim(),
+                workno: b.attributes.HREF ? b.attributes.HREF.match(GETCHU_ID_REGEX) : ''
+            }
+        });
+
+
+        return { works };
     }
 
     shouldUse(gameId) {
@@ -57,7 +94,7 @@ module.exports = getchuStrategy;
 function getGameMetadataJp(root) {
     try {
         return {
-            name: root.querySelector('#soft-title').firstChild.text.trim()
+            name: root.querySelector('#soft-title').firstChild.text.trim(),
             // description: root
             //     .querySelectorAll('.tablebody')
             //     .map(t => t.text)
@@ -70,65 +107,93 @@ function getGameMetadataJp(root) {
             //     .querySelector('.work_genre')
             //     .childNodes.map(node => node.text.trim())
             //     .filter(n => n !== ''),
-            // maker: root.querySelector('.maker_name').text.trim(),
-            // image: root.querySelector('.slider_item').firstChild.attributes.src
+            maker: root.querySelector('.glance').text.trim(),
+            image: root.querySelector('.highslide').attributes.HREF
         };
     } catch (e) {
         log.error('Metadata parsing failure', { e, root });
     }
 }
 
-function getGameMetadataEn(root) {
+//There is no English getchu, let's try getting data from VNDB
+const VNDB = require('vndb');
+const VNDBtags = require('./vndb-tags');
+async function getEnglishSite(name) {
+    let improvedName = name.replace(/\(([^)]+)\)/g, ''); //remove ()
+    improvedName = improvedName.replace(/（([^)]+)）/g, ''); //remove japanese ()
+    improvedName = improvedName.replace(/・/g, ''); // replace bad characters
+    log.info('Improved name', improvedName);
+    let vndb;
     try {
+         vndb = await VNDB.start();
+        await vndb.write('login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}');
+        let foundVNs = JSON.parse((await vndb.write(`get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`)).replace('results ', ''));
+
+        let VN;
+        if(foundVNs.num > 0) {
+            VN = foundVNs.items[0]
+        }
+
+        if(!VN) {
+            improvedName = improvedName.substring(0, improvedName.length / 2);
+            foundVNs = JSON.parse((await vndb.write(`get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`)).replace('results ', ''));
+            if(foundVNs.num > 0) {
+                VN = foundVNs.items[0]
+            } else {
+                return undefined;
+            }
+        }
+
+        const tags = VN.tags.filter(tag => tag[1] > 1).map(tag => {
+            const foundTag = VNDBtags.find(t => t.id === tag[0]);
+            return foundTag ? foundTag : ''
+        }).filter(tag => tag !== '');
+
+        log.info('About to return VN');
         return {
-            name: root
-                .querySelector('#soft-title .notranslate')
-                .childNodes[root.querySelector('#soft-title .notranslate').childNodes.length - 2].text.trim()
-            // description: root.querySelector('.work_article').text.trim(),
-            // genres: root
-            //     .querySelector('.main_genre')
-            //     .childNodes.map(node => node.text.trim())
-            //     .filter(n => n !== ''),
-            // tags: root
-            //     .querySelector('.work_genre')
-            //     .childNodes.map(node => node.text.trim())
-            //     .filter(n => n !== ''),
+            name: VN.title,
+            description: VN.description,
+            genres: tags.filter(t => t.cat === 'ero').map(t => t.name),
+            tags: tags.filter(t => t.cat === 'tech').map(t => t.name),
             // maker: root.querySelector('.maker_name').text.trim(),
-            // image: root.querySelector('.slider_item').firstChild.attributes.src
+            image: VN.image
         };
     } catch (e) {
-        log.error('Metadata parsing failure', { e, root });
+        log.info('Bluh');
+        log.error('Something happened when connecting to VNDB API', e);
+    } finally {
+        if(vndb) {
+            await vndb.end();
+        }
     }
-}
 
-async function getEnglishSite(id) {
-    try {
-        let reply = await request.get({
-            method: 'GET',
-            uri: `https://translate.googleusercontent.com/translate_c?depth=1&hl=pl&nv=1&rurl=translate.google.pl&sl=auto&sp=nmt4&tl=en&u=http://www.getchu.com/sp/soft.phtml%3Fid%3D${id}%26gc%3Dgc&xid=17259,15700022,15700186,15700191,15700256,15700259,15700262,15700265&usg=ALkJrhhz0aTF7nKShQH7BbJn5uR_ca4A6A`
-        });
-        // await files.writeFile(`${id}-en.html`, reply);
-        const root = htmlParser.parse(reply);
-        return getGameMetadataEn(root);
-    } catch (e) {
-        log.error(`Error getting ${id} from ${this.name}`, e);
-        return undefined;
-    }
+    log.info('returning undefined');
+    return undefined;
 }
 
 async function getJapaneseSite(id) {
     try {
-        let reply = await request.get({
-            method: 'GET',
-            uri: `http://www.getchu.com/sp/soft.phtml?id=${id}&gc=gc`,
-            encoding: null
-        });
-        const bodyWithCorrectEncoding = iconv.decode(reply, 'EUC-JP');
-        // await files.writeFile(`${id}.html`, bodyWithCorrectEncoding);
-        const root = htmlParser.parse(bodyWithCorrectEncoding);
+        let reply = await callGetPage(id);
+        const root = htmlParser.parse(reply);
         return getGameMetadataJp(root);
     } catch (e) {
         log.error(`Error getting ${id} from ${this.name}`, e);
         return undefined;
     }
+}
+
+async function callGetPage(id) {
+    return new Promise((resolve, reject) => {
+        request.get({
+            method: 'GET',
+            uri: `http://www.getchu.com/sp/soft.phtml?id=${id}&gc=gc`,
+            encoding: null
+        }).pipe(iconv.decodeStream(JAPANESE_ENCODING)).collect(function(err, decodedBody) {
+            if(err) {
+                return reject(err);
+            } else {
+                return resolve(decodedBody);
+            }
+        });
+    });
 }
