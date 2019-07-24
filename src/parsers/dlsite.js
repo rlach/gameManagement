@@ -5,14 +5,29 @@ const settings = require('./../settings');
 
 class DlsiteStrategy {
     constructor() {
+        this.name = 'dlsite';
         this.pathName = settings.paths.dlsite;
     }
 
     async fetchGameData(gameId) {
         log.debug(`Fetching game ${gameId}`);
-        const sites = await Promise.all([getSite(gameId), getEnglishSite(gameId)]);
-        const jpn = sites[0] ? sites[0] : {};
-        const eng = sites[1] ? sites[1] : {};
+        let jpn = {};
+        let eng = {};
+        if (gameId.startsWith('RJ')) {
+            const sites = await Promise.all([getJapaneseSite(gameId), getEnglishSite(gameId)]);
+            jpn = sites[0] ? sites[0] : {};
+            eng = sites[1] ? sites[1] : {};
+        } else if (gameId.startsWith('RE')) {
+            const engSite = await getEnglishSite(id);
+            eng = engSite ? engSite : {};
+        } else if (gameId.startsWith('VJ')) {
+            const jpnSite = await getProSite(id);
+            jpn = jpnSite ? jpnSite : {};
+        } else {
+            log.error('Wrong file for strategy', { name: this.name });
+            return;
+        }
+
         return {
             nameEn: eng.name,
             nameJp: jpn.name,
@@ -29,6 +44,23 @@ class DlsiteStrategy {
         };
     }
 
+    extractCode(name) {
+        log.info('name', { name });
+        const matches = name.match(/((RE)|(RJ)|(VJ))\d+/gi);
+        return matches ? matches.find(matched => matched.length === 8) : '';
+    }
+
+    async findGame(name) {
+        const reply = await searchJp(name);
+        const works = reply.work;
+        if (works.length === 0) {
+            const reply2 = await searchJp(name.substring(0, name.length / 2));
+            return reply2.work;
+        } else {
+            return works;
+        }
+    }
+
     shouldUse(gameId) {
         return gameId.startsWith('RJ') || gameId.startsWith('RE') || gameId.startsWith('VJ');
     }
@@ -37,17 +69,46 @@ class DlsiteStrategy {
 let dlsiteStrategy = new DlsiteStrategy();
 module.exports = dlsiteStrategy;
 
-function getOptions(id) {
+async function searchJp(name) {
     return {
-        method: 'GET',
-        uri: `https://www.dlsite.com/maniax/work/=/product_id/${id}.html`
+        work: [
+            {
+                id: 'RJ12345679',
+                name: 'Lol'
+            }
+        ]
     };
+
+    // TODO: change to real code, add multiple sites (en, jp, pro)
+    // return JSON.parse(
+    //     await request.get({
+    //         uri: `https://www.dlsite.com/suggest/?site=adult-jp&time=${new Date().getTime()}&term=${encodeURIComponent(
+    //             name
+    //         )}`
+    //     })
+    // );
 }
 
-function getOptionsEn(id) {
+function getOptions(id, type) {
+    let dlsiteDomain;
+    switch (type) {
+        case 'en':
+            dlsiteDomain = '/ecchi-eng/work/';
+            break;
+        case 'proAnnounce':
+            dlsiteDomain = '/pro/announce/';
+            break;
+        case 'pro':
+            dlsiteDomain = '/pro/work/';
+            break;
+        case 'jp':
+        default:
+            dlsiteDomain = '/maniax/work/';
+    }
+
     return {
         method: 'GET',
-        uri: `https://www.dlsite.com/ecchi-eng/work/=/product_id/${id}.html`
+        uri: `https://www.dlsite.com${dlsiteDomain}=/product_id/${id}.html`
     };
 }
 
@@ -80,30 +141,51 @@ async function getEnglishSite(id) {
     const idEn = id.replace('RJ', 'RE');
 
     try {
-        const reply = await request.get(getOptionsEn(idEn));
+        const reply = await request.get(getOptions(idEn, 'en'));
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${idEn}`, e);
+        log.error(`Error getting ${idEn} from ${this.name}`, {
+            name: e.name,
+            statusCode: e.statusCode,
+            message: e.message
+        });
         return undefined;
     }
 }
 
-async function getSite(id) {
+async function getJapaneseSite(id) {
+    try {
+        let reply = await request.get(getOptions(id, 'jp'));
+        const root = htmlParser.parse(reply);
+        return getGameMetadata(root);
+    } catch (e) {
+        log.error(`Error getting ${id} from ${this.name}`, {
+            name: e.name,
+            statusCode: e.statusCode,
+            message: e.message
+        });
+        return undefined;
+    }
+}
+
+async function getProSite(id) {
     try {
         let reply;
         try {
-            reply = await request.get(getOptions(id));
+            reply = await request.get(getOptions(id, 'pro'));
         } catch (e) {
-            reply = await request.get({
-                method: 'GET',
-                uri: `https://www.dlsite.com/pro/announce/=/product_id/${id}.html`
-            });
+            log.debug('Pro does not exist, trying announce', { id });
+            reply = await request.get(getOptions(id, 'proAnnounce'));
         }
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${id}`, e);
+        log.error(`Error getting ${id} from ${this.name}`, {
+            name: e.name,
+            statusCode: e.statusCode,
+            message: e.message
+        });
         return undefined;
     }
 }

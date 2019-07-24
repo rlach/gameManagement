@@ -3,24 +3,23 @@ const files = require('./files');
 const log = require('./logger');
 const {retrieveGame} = require('./database/game');
 const {db, connect} = require('./database/mongoose');
-
-const mainPath = `J:/!NEWORDER/DLSITE`;
+const settings = require('./settings');
 
 async function main() {
     await connect();
 
-    log.info(`Reading ${mainPath}`);
-    const foundFiles = await files.readDir(mainPath);
+    log.info(`Reading ${settings.paths.main}`);
+    const foundFiles = await files.readDir(settings.paths.main);
 
     for (const file of foundFiles) {
         const strategy = selectStrategy(file);
 
         let game = await retrieveGame(file);
-        if (game.shortcutExists) {
+        if (game.shortcutExists && !settings.forceUpdate) {
             log.debug(`Skipping ${file}`);
         } else {
             log.debug(`Processing ${file}`);
-            if (!game.nameEn && !game.nameJp) {
+            if ((!game.nameEn && !game.nameJp) || settings.forceUpdate) {
                 const gameData = await strategy.fetchGameData(file);
                 Object.assign(game, gameData);
                 await game.save();
@@ -63,10 +62,10 @@ function determineLinkName(file, game) {
 async function determineTargetPath(file, strategy) {
     let targetPath;
 
-    const foundFiles = await files.findExecutables(`${mainPath}/${file}`);
+    const foundFiles = await files.findExecutables(`${settings.paths.main}/${file}`);
     if (foundFiles.length == 0) {
         log.debug(`There is no exe`, {file});
-        const subFiles = await files.readDir(`${mainPath}/${file}`);
+        const subFiles = await files.readDir(`${settings.paths.main}/${file}`);
         if (subFiles.find(f => f === 'DELETED')) {
             log.info('Game was deleted', {file});
             return;
@@ -108,8 +107,8 @@ async function makeLink(name, target, game) {
 }
 
 function selectStrategy(gameId) {
-    let strategies = Object.keys(parserStrategies);
-    for (const strategy in strategies) {
+    let strategies = Object.values(parserStrategies);
+    for (const strategy of strategies) {
         if (strategy.shouldUse(gameId)) {
             return strategy;
         }

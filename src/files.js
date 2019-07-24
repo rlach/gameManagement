@@ -6,7 +6,8 @@ const fs = require('fs');
 const find = require('fs-find');
 const ws = require('windows-shortcuts/lib/windows-shortcuts');
 const fsAsync = {
-    readdir: promisify(fs.readdir)
+    readdir: promisify(fs.readdir),
+    writeFile: promisify(fs.writeFile)
 };
 const wsAsyncCreate = promisify(ws.create);
 const asyncFind = promisify(find);
@@ -52,6 +53,10 @@ class Files {
             args: targetFileRelativePath
         });
     }
+
+    async writeFile(path, content) {
+        await fsAsync.writeFile(path, content);
+    }
 }
 
 let files = new Files();
@@ -62,5 +67,5 @@ function hasProperExtension(fileName) {
 }
 
 function isBaned(fileName) {
-    return bannedExeFileNames.findIndex(bannedName => fileName.toLowerCase().contains(bannedName)) > -1;
+    return bannedExeFileNames.findIndex(bannedName => fileName.toLowerCase().includes(bannedName)) > -1;
 }

@@ -1,0 +1,12 @@
+{
+    "file": "Some really complicated name",
+    "dlsite": {
+        "extractedCode": "",
+        "foundCodes": [
+            {
+                "id": "RJ12345679",
+                "name": "Lol"
+            }
+        ]
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "file": "RJ1234567",
+    "dlsite": {
+        "foundCodes": [
+            {
+                "id": "RJ12345679",
+                "name": "Lol"
+            }
+        ]
+    }
+}

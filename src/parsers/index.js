@@ -1,3 +1,4 @@
 module.exports = {
-    dlsiteStrategy: require('./dlsite')
+    dlsiteStrategy: require('./dlsite'),
+    getchuStrategy: require('./getchu')
 };

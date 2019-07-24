@@ -1,0 +1,12 @@
+{
+    "file": "samplePages",
+    "dlsite": {
+        "extractedCode": "",
+        "foundCodes": [
+            {
+                "id": "RJ12345679",
+                "name": "Lol"
+            }
+        ]
+    }
+}

@@ -1,6 +1,9 @@
 module.exports = {
+    forceUpdate: true,
     paths: {
-        shortcuts: `J:/!NEWORDER/Shortcuts`,
-        dlsite: 'DLSITE'
+        main: './sample/games',
+        shortcuts: './sample/shortcuts',
+        dlsite: 'DLSITE',
+        getchu: 'GETCHU'
     }
 };

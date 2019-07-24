@@ -1,4 +1,5 @@
 const {mongoose} = require('./mongoose');
+const log = require('./../logger');
 
 var gameSchema = new mongoose.Schema({
     id: String,
