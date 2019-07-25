@@ -1,5 +1,6 @@
 const {mongoose} = require('./mongoose');
 const log = require('./../logger');
+const moment = require('moment');
 
 var gameSchema = new mongoose.Schema({
     id: String,
@@ -18,8 +19,9 @@ var gameSchema = new mongoose.Schema({
     imageUrlEn: String,
     shortcutExists: Boolean,
     completed: Boolean,
-    dateAdded: Date,
-    dateModified: Date,
+    dateAdded: String,
+    dateModified: String,
+    releaseDate: String,
     favorite: Boolean,
     rating: Number,
     stars: Number,
@@ -38,6 +40,8 @@ var Game = mongoose.model('Game', gameSchema);
 async function createGame(gameData) {
     log.debug('Creating new game entry');
     var game = new Game(gameData);
+    game.dateAdded = moment().format();
+    game.dateModified = moment().format();
     return game.save();
 }
 

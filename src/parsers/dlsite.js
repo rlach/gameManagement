@@ -17,10 +17,10 @@ class DlsiteStrategy {
             jpn = sites[0] ? sites[0] : {};
             eng = sites[1] ? sites[1] : {};
         } else if (gameId.startsWith('RE')) {
-            const engSite = await getEnglishSite(id);
+            const engSite = await getEnglishSite(gameId);
             eng = engSite ? engSite : {};
         } else if (gameId.startsWith('VJ')) {
-            const jpnSite = await getProSite(id);
+            const jpnSite = await getProSite(gameId);
             jpn = jpnSite ? jpnSite : {};
         } else {
             log.error('Wrong file for strategy', { name: this.name });
@@ -44,20 +44,41 @@ class DlsiteStrategy {
     }
 
     extractCode(name) {
-        log.info('name', { name });
+        log.debug('Extracting code from name', { name });
         const matches = name.match(/((RE)|(RJ)|(VJ))\d+/gi);
         return matches ? matches.find(matched => matched.length === 8) : '';
     }
 
     async findGame(name) {
-        const reply = await searchJp(name);
-        const works = reply.work;
-        if (works.length === 0) {
-            const reply2 = await searchJp(name.substring(0, name.length / 2));
-            return reply2.work;
+        const replies = await Promise.all([search(name, 'adult-jp'), search(name, 'adult-en'), search(name, 'pro')])
+        let replyEn = replies[1];
+        let replyJp = replies[0];
+        let replyPro = replies[2];
+
+        const works = [];
+
+        if(replyEn.work.length === 0) {
+            const replyEn2 = await search(name.substring(0, name.length / 2), 'adult-en');
+            works.push(...replyEn2.work);
         } else {
-            return works;
+            works.push(...replyEn.work)
         }
+
+        if(replyJp.work.length === 0) {
+            const replyJp2 = await search(name.substring(0, name.length / 2), 'adult-jp');
+            works.push(...replyJp2.work);
+        } else {
+            works.push(...replyJp.work)
+        }
+
+        if(replyPro.work.length === 0) {
+            const replyPro2 = await search(name.substring(0, name.length / 2), 'pro');
+            works.push(...replyPro2.work);
+        } else {
+            works.push(...replyPro.work)
+        }
+
+        return works;
     }
 
     shouldUse(gameId) {
@@ -68,10 +89,10 @@ class DlsiteStrategy {
 let dlsiteStrategy = new DlsiteStrategy();
 module.exports = dlsiteStrategy;
 
-async function searchJp(name) {
+async function search(name, site) {
     return JSON.parse(
         await request.get({
-            uri: `https://www.dlsite.com/suggest/?site=adult-jp&time=${new Date().getTime()}&term=${encodeURIComponent(
+            uri: `https://www.dlsite.com/suggest/?site=${site}&time=${new Date().getTime()}&term=${encodeURIComponent(
                 name
             )}`
         })
@@ -139,7 +160,7 @@ async function getEnglishSite(id) {
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${idEn} from ${this.name}`, {
+        log.error(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message

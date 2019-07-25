@@ -1,5 +1,5 @@
 const { Game } = require('./database/game');
-
+const moment = require('moment');
 const fs = require('fs');
 const { promisify } = require('util');
 const log = require('./logger');
@@ -9,7 +9,6 @@ const convert = require('xml-js');
 const UUID = require('uuid');
 
 async function main() {
-    log.info(`Reading ${settings.paths.main}`);
     await connect();
 
     const games = await Game.find({});
@@ -31,11 +30,13 @@ async function main() {
                 _text: game.completed ? game.completed : 'false'
             },
             DateAdded: {
-                //todo: Make sure the format of the dates is '2019-07-25T01:47:19.966921+02:00' (ISOString?)
-                _text: game.dateAdded ? game.dateAdded : new Date().toISOString()
+                _text: moment().format()
             },
             DateModified: {
-                _text: game.dateModified ? game.dateModified : new Date().toISOString()
+                _text: moment().format()
+            },
+            ReleaseDate: {
+                _text: moment().format()
             },
             Developer: {
                 _text: getDeveloper(game)
@@ -119,7 +120,7 @@ async function main() {
     const objectToExport = {
         _declaration: {
             _attributes: {
-                version: 1.0,
+                version: '1.0',
                 standalone: 'yes'
             }
         },
@@ -129,13 +130,8 @@ async function main() {
     };
 
     const xml = convert.js2xml(objectToExport, { compact: true });
-    require('fs').writeFileSync(`./sample/launchbox/${settings.launchboxPlatform}.xml`, xml);
+    // require('fs').writeFileSync(`C:\\Users\\Alein\\LaunchBox\\Data\\Platforms/${settings.launchboxPlatform}.xml`, xml);
 
-    // log.info('xml', xml);
-    //
-    // var launchboxXml = require('fs').readFileSync('./sample/launchbox/WINDOWS.xml', 'utf8');
-    // const convetedObject = convert.xml2js(launchboxXml, { compact: true });
-    // log.info('object', JSON.stringify(convetedObject, null, 4));
     db.close();
 }
 
@@ -162,7 +158,9 @@ const externalGameProps = {
     ConfigurationPath: {},
     DosBoxConfigurationPath: {},
     Emulator: {},
-    LastPlayedDate: {},
+    LastPlayedDate: {
+        _text: '2019-07-25T01:33:35.9365244+02:00'
+    },
     ManualPath: {},
     MusicPath: {},
     Publisher: {},
@@ -252,8 +250,9 @@ async function downloadImages(game) {
     if (!imageUrl) {
         return;
     }
-    const filename = game.nameEn ? game.nameEn : game.nameJp;
-    const targetPath = `./sample/launchbox/Images/Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
+    let filename = game.nameEn ? game.nameEn : game.nameJp;
+    filename = filename.replace(/[\?*':\/"]/gi, '_'); //Replace banned characters with underscore like launchbox does
+    const targetPath = `C:\\Users\\Alein\\LaunchBox\\Images\\WINDOWS\\Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
 
     if(fs.existsSync(targetPath)) {
         log.info('Image already exists, skipping', targetPath);

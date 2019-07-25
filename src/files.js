@@ -26,7 +26,10 @@ const bannedExeFileNames = [
     'アンインストール',
     '設定',
     'delfile',
-    '結合ナビ'
+    '結合ナビ',
+    'acmp.exe',
+    'courier.exe',
+    'courier_i.exe'
 ];
 
 const executableExtensions = ['.exe', '.swf'];

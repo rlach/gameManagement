@@ -47,7 +47,7 @@ class GetchuStrategy {
     }
 
     extractCode(name) {
-        log.info('name', { name });
+        log.debug('Extracting code from name', { name });
         const matches = name.match(GETCHU_ID_REGEX);
         return matches ? matches[0] : '';
     }
@@ -75,11 +75,12 @@ class GetchuStrategy {
         const reply = await this.callFindGame(name);
         // await files.writeFile(`${name}.html`, reply);
         const root = parseSite(reply);
-        const works = root.querySelectorAll('.blueb').map(b => {
+        // log.info('selected blueb', JSON.stringify(select(root, '.blueb'), null, 4));
+        const works = select(root, '.blueb').filter(b => b.name === 'A').map(b => {
             return {
-                work_name: b.text.trim(),
-                workno: b.attributes.HREF ? b.attributes.HREF.match(GETCHU_ID_REGEX) : ''
-            };
+                work_name: b.children && b.children[0] ? b.children[0].data: '',
+                workno: b.attribs && b.attribs.HREF ? b.attribs.HREF.match(GETCHU_ID_REGEX) : ''
+            }
         });
 
         return { works };
@@ -201,7 +202,7 @@ function parseSite(rawHtml) {
         if (error) {
             log.error('Error parsing html', error);
         } else {
-            log.info('Parsing done!');
+            log.debug('Parsing done!');
         }
     });
     const parser = new htmlparser.Parser(handler);

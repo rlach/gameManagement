@@ -4,6 +4,7 @@ const log = require('./logger');
 const { retrieveGameFromDb } = require('./database/game');
 const { db, connect } = require('./database/mongoose');
 const settings = require('./settings');
+const moment = require('moment');
 
 async function main() {
     await connect();
@@ -23,6 +24,7 @@ async function main() {
                 const gameData = await strategy.fetchGameData(file);
                 Object.assign(game, gameData);
                 game.source = strategy.name;
+                game.dateModified = moment().format();
                 await game.save();
             }
 
@@ -79,11 +81,11 @@ async function determineTargetPath(file) {
     } else {
         if (subFiles > 0) {
             targetPath = {
-                directory: path.resolve(`${file}\\${subFiles[0]}`)
+                directory: path.resolve(`${settings.paths.main}/${file}/${subFiles[0]}`)
             };
         } else {
             targetPath = {
-                directory: path.resolve(`${file}`)
+                directory: path.resolve(`${settings.paths.main}/${file}`)
             };
         }
     }
@@ -91,7 +93,7 @@ async function determineTargetPath(file) {
     if (foundFiles.length == 0) {
         log.debug(`There is no exe`, { file });
     } else if (foundFiles.length === 1) {
-        log.info('found only exe', foundFiles[0]);
+        log.debug('found only exe', foundFiles[0]);
         targetPath.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
     } else {
         let gameExe = foundFiles.find(t => t.name.toLowerCase().startsWith('game'));
@@ -102,7 +104,7 @@ async function determineTargetPath(file) {
             gameExe = foundFiles[0];
         }
 
-        log.info('game exe selected', gameExe);
+        log.debug('game exe selected', gameExe);
         targetPath.file = path.resolve(`${gameExe.base}/${gameExe.relative}`);
     }
 
@@ -116,6 +118,7 @@ async function makeLink(name, target, game) {
         game.directory = target.directory;
         game.executableFile = target.file;
         game.shortcutExists = false;
+        game.dateModified = moment().format();
         await game.save();
     } catch (e) {
         log.error(`File ${name} sucks`, e);
