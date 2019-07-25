@@ -218,7 +218,7 @@ async function getJapaneseSite(id) {
         const root = parseSite(reply);
         return getGameMetadataJp(root);
     } catch (e) {
-        log.error(`Error getting ${id} from ${getchuStrategy.name}`, e);
+        log.warn(`Error getting ${id} from ${getchuStrategy.name}`, e);
         return undefined;
     }
 }

@@ -8,8 +8,17 @@ const settings = require('./settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
 
+const LAUNCHBOX_PLATFORM_XML = `C:\\Users\\Alein\\LaunchBox\\Data\\Platforms/${settings.launchboxPlatform}.xml`;
+
+//TODO: remake it so it SYNCS to launchbox and doesn't overwrite IDs otherwise manually added images break
+
 async function main() {
     await connect();
+
+    if(fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
+        log.info('Platform file already exists, backing up');
+        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `./sample/launchbox/${settings.launchboxPlatform}-backup.xml`)
+    }
 
     const games = await Game.find({});
 
@@ -130,7 +139,7 @@ async function main() {
     };
 
     const xml = convert.js2xml(objectToExport, { compact: true });
-    // require('fs').writeFileSync(`C:\\Users\\Alein\\LaunchBox\\Data\\Platforms/${settings.launchboxPlatform}.xml`, xml);
+    fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
 }
@@ -159,7 +168,7 @@ const externalGameProps = {
     DosBoxConfigurationPath: {},
     Emulator: {},
     LastPlayedDate: {
-        _text: '2019-07-25T01:33:35.9365244+02:00'
+        _text: '2019-07-25T01:33:35.9365244+02:00'  //TODO: currently all dates are hardcoded
     },
     ManualPath: {},
     MusicPath: {},

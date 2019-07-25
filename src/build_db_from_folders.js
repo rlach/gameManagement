@@ -9,19 +9,28 @@ const moment = require('moment');
 async function main() {
     await connect();
 
-    log.info(`Reading ${settings.paths.main}`);
-    const foundFiles = await files.readDir(settings.paths.main);
+    log.info(`Reading all main paths`, settings.paths.main);
+    const foundFiles = [];
+    for(const path of settings.paths.main) {
+        const singlePathFiles = (await files.readDir(path)).map(name => {
+            return {
+                name,
+                path
+            }
+        });
+        foundFiles.push(...singlePathFiles);
+    }
 
     for (const file of foundFiles) {
-        const strategy = selectStrategy(file);
+        const strategy = selectStrategy(file.name);
 
-        let game = await retrieveGameFromDb(file);
+        let game = await retrieveGameFromDb(file.name);
         if (game.shortcutExists && !settings.forceUpdate) {
-            log.debug(`Skipping ${file}`);
+            log.debug(`Skipping ${file.name}`);
         } else {
-            log.debug(`Processing ${file}`);
+            log.debug(`Processing ${file.name}`);
             if ((!game.nameEn && !game.nameJp) || settings.forceUpdate) {
-                const gameData = await strategy.fetchGameData(file);
+                const gameData = await strategy.fetchGameData(file.name);
                 Object.assign(game, gameData);
                 game.source = strategy.name;
                 game.dateModified = moment().format();
@@ -30,7 +39,7 @@ async function main() {
 
             const targetPath = await determineTargetPath(file, strategy);
             if (targetPath) {
-                const linkName = determineLinkName(file, game);
+                const linkName = determineLinkName(file.name, game);
                 await makeLink(linkName, targetPath, game);
             }
         }
@@ -73,19 +82,19 @@ var path = require('path');
 async function determineTargetPath(file) {
     let targetPath;
 
-    const foundFiles = await files.findExecutables(`${settings.paths.main}/${file}`);
-    const subFiles = await files.readDir(`${settings.paths.main}/${file}`);
+    const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
+    const subFiles = await files.readDir(`${file.path}/${file.name}`);
     if (subFiles.find(f => f === 'DELETED')) {
         log.info('Game was deleted', { file });
         return;
     } else {
         if (subFiles > 0) {
             targetPath = {
-                directory: path.resolve(`${settings.paths.main}/${file}/${subFiles[0]}`)
+                directory: path.resolve(`${file.path}/${file}/${subFiles[0]}`)
             };
         } else {
             targetPath = {
-                directory: path.resolve(`${settings.paths.main}/${file}`)
+                directory: path.resolve(`${file.path}/${file}`)
             };
         }
     }

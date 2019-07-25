@@ -7,7 +7,6 @@ module.exports = {
     onlyUpdateNewer: true,
     paths: {
         unsortedGames: 'J:\\!NEWORDER\\!',
-        main: 'J:\\!NEWORDER\\DLSITE' //TODO: make this list of folders
-        // shortcuts: './sample/shortcuts'
+        main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
     }
 };

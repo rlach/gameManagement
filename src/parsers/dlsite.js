@@ -160,7 +160,7 @@ async function getEnglishSite(id) {
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
+        log.warn(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
@@ -176,7 +176,7 @@ async function getJapaneseSite(id) {
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${id} from ${this.name}`, {
+        log.warn(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
@@ -197,7 +197,7 @@ async function getProSite(id) {
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
-        log.error(`Error getting ${id} from ${this.name}`, {
+        log.warn(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message

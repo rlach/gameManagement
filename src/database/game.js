@@ -17,14 +17,14 @@ var gameSchema = new mongoose.Schema({
     makerJp: String,
     imageUrlJp: String,
     imageUrlEn: String,
-    shortcutExists: Boolean,
+    shortcutExists: Boolean, //TODO: this name is outdated, rename it to something else
     completed: Boolean,
     dateAdded: String,
     dateModified: String,
-    releaseDate: String,
+    releaseDate: String, //TODO: Import release date
     favorite: Boolean,
     rating: Number,
-    stars: Number,
+    stars: Number, //TODO: import stars
     version: String,
     series: String, //TODO: Import series from dlsite and possibly getchu/vndb
     portable: Boolean,
