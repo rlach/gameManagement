@@ -1,9 +1,8 @@
 module.exports = {
-    forceUpdate: true,
+    forceUpdate: false,
+    launchboxPlatform: 'WINDOWS',
     paths: {
-        main: 'J:\\!NEWORDER\\!',
-        shortcuts: 'J:\\!NEWORDER\\Shortcuts',
-        dlsite: 'DLSITE',
-        getchu: 'GETCHU'
+        main: './sample/games'
+        // shortcuts: './sample/shortcuts'
     }
 };

@@ -8,7 +8,9 @@
     "node-html-parser": "^1.1.16",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "uuid": "^3.3.2",
     "vndb": "^0.1.0",
-    "windows-shortcuts": "^0.1.6"
+    "windows-shortcuts": "^0.1.6",
+    "xml-js": "^1.6.11"
   }
 }

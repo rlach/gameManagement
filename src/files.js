@@ -47,12 +47,12 @@ class Files {
         });
     }
 
-    async createRelativeLink(linkFileName, targetFileRelativePath) {
-        return wsAsyncCreate(`${settings.paths.shortcuts}/${linkFileName}.lnk`, {
-            target: explorerExePath,
-            args: targetFileRelativePath
-        });
-    }
+    // async createRelativeLink(linkFileName, targetFileRelativePath) {
+    //     return wsAsyncCreate(`${settings.paths.shortcuts}/${linkFileName}.lnk`, {
+    //         target: explorerExePath,
+    //         args: targetFileRelativePath
+    //     });
+    // }
 
     async writeFile(path, content) {
         await fsAsync.writeFile(path, content);

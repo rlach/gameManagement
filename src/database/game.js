@@ -16,7 +16,20 @@ var gameSchema = new mongoose.Schema({
     makerJp: String,
     imageUrlJp: String,
     imageUrlEn: String,
-    shortcutExists: Boolean
+    shortcutExists: Boolean,
+    completed: Boolean,
+    dateAdded: Date,
+    dateModified: Date,
+    favorite: Boolean,
+    rating: Number,
+    stars: Number,
+    version: String,
+    series: String, //TODO: Import series from dlsite and possibly getchu/vndb
+    portable: Boolean,
+    hide: Boolean,
+    broken: Boolean,
+    executableFile: String,
+    directory: String
 });
 gameSchema.index({id: 1});
 
@@ -34,7 +47,7 @@ async function findGame(id) {
     }).exec();
 }
 
-async function retrieveGame(id) {
+async function retrieveGameFromDb(id) {
     let game = await findGame(id);
     if (!game) {
         game = await createGame({
@@ -44,4 +57,4 @@ async function retrieveGame(id) {
     return game;
 }
 
-module.exports = {Game, retrieveGame};
+module.exports = {Game, retrieveGameFromDb};

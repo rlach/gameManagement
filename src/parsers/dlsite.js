@@ -6,11 +6,10 @@ const settings = require('./../settings');
 class DlsiteStrategy {
     constructor() {
         this.name = 'dlsite';
-        this.pathName = settings.paths.dlsite;
     }
 
     async fetchGameData(gameId) {
-        log.debug(`Fetching game ${gameId}`);
+        log.debug(`Fetching game ${gameId} with strategy ${this.name}`);
         let jpn = {};
         let eng = {};
         if (gameId.startsWith('RJ')) {
@@ -24,7 +23,7 @@ class DlsiteStrategy {
             const jpnSite = await getProSite(id);
             jpn = jpnSite ? jpnSite : {};
         } else {
-            log.error('Wrong file for strategy', { name: this.name });
+            log.error('Wrong file for strategy', {name: this.name});
             return;
         }
 
@@ -45,7 +44,7 @@ class DlsiteStrategy {
     }
 
     extractCode(name) {
-        log.info('name', { name });
+        log.info('name', {name});
         const matches = name.match(/((RE)|(RJ)|(VJ))\d+/gi);
         return matches ? matches.find(matched => matched.length === 8) : '';
     }
@@ -98,7 +97,7 @@ function getOptions(id, type) {
 
     return {
         method: 'GET',
-        uri: `https://www.dlsite.com${dlsiteDomain}=/product_id/${id}.html`
+        uri: `https://www.dlsite.com${dlsiteDomain}=/product_id/${encodeURIComponent(id)}.html`
     };
 }
 
@@ -165,7 +164,7 @@ async function getProSite(id) {
         try {
             reply = await request.get(getOptions(id, 'pro'));
         } catch (e) {
-            log.debug('Pro does not exist, trying announce', { id });
+            log.debug('Pro does not exist, trying announce', {id});
             reply = await request.get(getOptions(id, 'proAnnounce'));
         }
         const root = htmlParser.parse(reply);

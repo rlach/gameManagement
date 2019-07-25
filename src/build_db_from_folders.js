@@ -1,8 +1,8 @@
 const parserStrategies = require('./parsers');
 const files = require('./files');
 const log = require('./logger');
-const {retrieveGame} = require('./database/game');
-const {db, connect} = require('./database/mongoose');
+const { retrieveGameFromDb } = require('./database/game');
+const { db, connect } = require('./database/mongoose');
 const settings = require('./settings');
 
 async function main() {
@@ -14,7 +14,7 @@ async function main() {
     for (const file of foundFiles) {
         const strategy = selectStrategy(file);
 
-        let game = await retrieveGame(file);
+        let game = await retrieveGameFromDb(file);
         if (game.shortcutExists && !settings.forceUpdate) {
             log.debug(`Skipping ${file}`);
         } else {
@@ -33,11 +33,14 @@ async function main() {
             }
         }
     }
+
+    db.close();
 }
 
-main()
-    .catch(e => log.error('Main process crashed', e))
-    .finally(() => db.close());
+main().catch(e => {
+    log.error('Main process crashed', e);
+    db.close();
+});
 
 function determineLinkName(file, game) {
     const wrongChars = /[\\\/:*?\"<>|]/gi;
@@ -52,7 +55,10 @@ function determineLinkName(file, game) {
             log.info('Unknown maker');
         }
         const genres = game.genresEn
-            ? game.genresEn.map(g => g.replace(/ /gi, '_').replace(/\//gi, '+')).slice(0, 7).join(' ')
+            ? game.genresEn
+                  .map(g => g.replace(/ /gi, '_').replace(/\//gi, '+'))
+                  .slice(0, 7)
+                  .join(' ')
             : '';
         return `${name} [${maker} ${genres}]`;
     } else {
@@ -60,25 +66,33 @@ function determineLinkName(file, game) {
     }
 }
 
-async function determineTargetPath(file, strategy) {
+var path = require('path');
+
+async function determineTargetPath(file) {
     let targetPath;
 
     const foundFiles = await files.findExecutables(`${settings.paths.main}/${file}`);
-    if (foundFiles.length == 0) {
-        log.debug(`There is no exe`, {file});
-        const subFiles = await files.readDir(`${settings.paths.main}/${file}`);
-        if (subFiles.find(f => f === 'DELETED')) {
-            log.info('Game was deleted', {file});
-            return;
+    const subFiles = await files.readDir(`${settings.paths.main}/${file}`);
+    if (subFiles.find(f => f === 'DELETED')) {
+        log.info('Game was deleted', { file });
+        return;
+    } else {
+        if (subFiles > 0) {
+            targetPath = {
+                directory: path.resolve(`${file}\\${subFiles[0]}`)
+            };
         } else {
-            if (subFiles > 0) {
-                targetPath = `${file}\\${subFiles[0]}`;
-            } else {
-                targetPath = `${file}`;
-            }
+            targetPath = {
+                directory: path.resolve(`${file}`)
+            };
         }
+    }
+
+    if (foundFiles.length == 0) {
+        log.debug(`There is no exe`, { file });
     } else if (foundFiles.length === 1) {
-        targetPath = `${file}\\${foundFiles[0].relative}`;
+        log.info('found only exe', foundFiles[0]);
+        targetPath.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
     } else {
         let gameExe = foundFiles.find(t => t.name.toLowerCase().startsWith('game'));
         if (!gameExe) {
@@ -88,18 +102,19 @@ async function determineTargetPath(file, strategy) {
             gameExe = foundFiles[0];
         }
 
-        targetPath = `${file}\\${gameExe.relative}`;
+        log.info('game exe selected', gameExe);
+        targetPath.file = path.resolve(`${gameExe.base}/${gameExe.relative}`);
     }
-
-    targetPath = targetPath ? `..\\${strategy.pathName}\\${targetPath}` : undefined;
 
     return targetPath;
 }
 
 async function makeLink(name, target, game) {
-    log.debug(`making link to ${target}`);
+    log.debug(`making link to target`, target);
     try {
-        await files.createRelativeLink(name, target);
+        // await files.createRelativeLink(name, target.file);
+        game.directory = target.directory;
+        game.executableFile = target.file;
         game.shortcutExists = true;
         await game.save();
     } catch (e) {

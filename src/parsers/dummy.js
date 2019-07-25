@@ -1,7 +1,6 @@
 class DummyStrategy {
     constructor() {
         this.name = 'dummy';
-        this.pathName = 'DUMMY';
     }
 
     async fetchGameData(gameId) {

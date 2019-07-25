@@ -15,7 +15,7 @@ async function main() {
             file
         };
         for (const strategy of strategies) {
-            log.info('Strategy', { strategy, file });
+            log.info('Strategy', {strategy, file});
             fileResults[strategy.name] = {
                 extractedCode: strategy.extractCode(file),
                 foundCodes: await strategy.findGame(removeTagsAndMetadata(file))
@@ -24,7 +24,7 @@ async function main() {
         results.push(fileResults);
         try {
             await files.writeFile(`${settings.paths.main}/${file}/!foundCodes.txt`, JSON.stringify(fileResults, null, 4));
-        } catch(e) {
+        } catch (e) {
             log.error('Error writing codes', e);
         }
     }
