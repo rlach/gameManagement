@@ -4,12 +4,11 @@ const {promisify} = require('util');
 
 const fs = require('fs');
 const find = require('fs-find');
-const ws = require('windows-shortcuts/lib/windows-shortcuts');
 const fsAsync = {
     readdir: promisify(fs.readdir),
     writeFile: promisify(fs.writeFile)
 };
-const wsAsyncCreate = promisify(ws.create);
+// const wsAsyncCreate = promisify(ws.create);
 const asyncFind = promisify(find);
 
 const bannedExeFileNames = [

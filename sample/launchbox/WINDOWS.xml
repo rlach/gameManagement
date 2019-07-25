@@ -1,601 +1,114 @@
-<?xml version="1" standalone="yes"?>
-<LaunchBox>
-    <Game>
-        <ApplicationPath>
-            /home/lchr/dev/projects/stellarity/gameManagement/sample/games/1039713/sampleGetchuGame/fake.exe
-        </ApplicationPath>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.111Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.111Z</DateModified>
-        <Developer>あかべぇそふとつぅ</Developer>
-        <Favorite>false</Favorite>
-        <ID>592f1dcc-d1bb-495b-b44b-b637ae71422b</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/1039713</RootFolder>
-        <SortTitle>1039713</SortTitle>
-        <Source>getchu</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title>母性カノジョ2 -知性 崩壊編-</Title>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath/>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer></Developer>
-        <Favorite>false</Favorite>
-        <ID>79d54291-7360-4e6a-92a0-0eacf70356ea</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder/>
-        <SortTitle>1039714</SortTitle>
-        <Source/>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title>Maternity Kanojo 2-Hens Hen-</Title>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/母性カノジョ/nottrue.exe
-        </ApplicationPath>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer></Developer>
-        <Favorite>false</Favorite>
-        <ID>a75621cf-0f20-44a2-99eb-48b965880d3a</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/母性カノジョ</RootFolder>
-        <SortTitle>母性カノジョ</SortTitle>
-        <Source>getchu</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title/>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath>
-            /home/lchr/dev/projects/stellarity/gameManagement/sample/games/錬精術士コレットのHな搾精物語～精液を集める錬精術士～/錬精術士コレットのHな搾精物語～精液を集める錬精術士～.exe
-        </ApplicationPath>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer></Developer>
-        <Favorite>false</Favorite>
-        <ID>fde6e2d9-5f76-4725-86c3-609beb70d2e2</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/錬精術士コレットのHな搾精物語～精液を集める錬精術士～</RootFolder>
-        <SortTitle>錬精術士コレットのHな搾精物語～精液を集める錬精術士～</SortTitle>
-        <Source>getchu</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title/>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath/>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer>がしゃどくろ</Developer>
-        <Favorite>false</Favorite>
-        <ID>466232ce-05c5-48dd-a693-6140076cf0f6</ID>
-        <Notes>六花と付き合い始めてからそれなりに経ち、
-            デートもキスもしたもののエッチはまだだった勇太たち。
+<?xml version="1" standalone="yes"?><LaunchBox><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:09.771Z</DateAdded><DateModified>2019-07-25T14:09:09.771Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>9932a631-6a37-46cf-bf6f-ddab9a802dcf</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder/><SortTitle>1039714</SortTitle><Source/><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Maternity Kanojo 2-Hens Hen-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/母性カノジョ/nottrue.exe</ApplicationPath><Completed>false</Completed><DateAdded>2019-07-25T14:09:09.772Z</DateAdded><DateModified>2019-07-25T14:09:09.772Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>5f176e35-d46d-491f-ab6f-85414bcdd563</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/母性カノジョ</RootFolder><SortTitle>母性カノジョ</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:09.772Z</DateAdded><DateModified>2019-07-25T14:09:09.772Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>24e589f3-183b-4a2c-83e1-bdc9557109ee</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/Some really complicated name</RootFolder><SortTitle>Some really complicated name</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:09.772Z</DateAdded><DateModified>2019-07-25T14:09:09.772Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>e839cf00-2a78-49a0-99ca-590ed066c892</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/123456</RootFolder><SortTitle>123456</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:10.337Z</DateAdded><DateModified>2019-07-25T14:09:10.337Z</DateModified><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>d45bcea6-7430-4fe6-ae5f-8b603c01c4f9</ID><Notes>You are a stressed out, miserable salaryman. One day a lawyer comes to tell you that your only aunt has died. She had a daughter, who had been abused by her from the time she was born. You take it upon yourself to care for this girl, healing both yourself and her in the process.</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/952377</RootFolder><SortTitle>952377</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Fureai ~Kizu Darake no Shoujo o Amayakasu~</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Lolicon</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/1039713/sampleGetchuGame/fake.exe</ApplicationPath><Completed>false</Completed><DateAdded>2019-07-25T14:09:12.589Z</DateAdded><DateModified>2019-07-25T14:09:12.589Z</DateModified><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>2746c45d-9e16-4d44-93ce-bd4e2771c1be</ID><Notes>
+医学部合格を目指し、ひたすら受験勉強に没頭する主人公。,,
+しかし父親からの期待に応えて頑張り続ける彼の心は、,,
+自分自身でも気付かないうちに疲れきっていた。,,
+,,
+ある日、従姉妹の女の子・伊夜がやってきて、,,
+夏休みの間だけ勉強を教えてほしいと頼まれる。,,
+そんな2人の夏休みは、勉強だけで終わるはずもなく……,,
+,,
+「頑張るの、やめちゃおう？」,,
+,,
+そもそも、自分はどうして頑張っていたのか。,,
+彼女に甘やかされ、エッチを繰り返す日々の中で、,,
+主人公は忘れていた大切な想いを取り戻していく――,
 
-            勇太の家で食後に2人きりで話していたら、
-            六花の不意打ちに興奮した勇太は、更なる契約を求め…
+,,
+『母性カノジョ2 -知性 崩壊編-』をご予約いただくと予約キャンペーンとして、,,
+,,をプレゼント！,
 
-            JPEG26枚（PDF28ページ）の作品です。
-        </Notes>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ123456</RootFolder>
-        <SortTitle>RJ123456</SortTitle>
-        <Source>dlsite</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title>俺の炎に抱かれて消えろ</Title>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/RJ1234567/What this game named
-            is [yolo] v1.00 (fooBar)/yolo.exe
-        </ApplicationPath>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer></Developer>
-        <Favorite>false</Favorite>
-        <ID>5b3332b1-39c8-4b09-aeb9-dd035a28074f</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ1234567</RootFolder>
-        <SortTitle>RJ1234567</SortTitle>
-        <Source>dlsite</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title/>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath/>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer>acerola</Developer>
-        <Favorite>false</Favorite>
-        <ID>f59e2638-d45c-4026-bbc1-9d6528722e11</ID>
-        <Notes>* ver1.11
+,,
+マスターアップイラストいただきました！,</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/1039713</RootFolder><SortTitle>1039713</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>母性カノジョ2 -知性 崩壊編-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:12.985Z</DateAdded><DateModified>2019-07-25T14:09:12.985Z</DateModified><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>07ee54be-4779-4287-a370-b8a15003c265</ID><Notes>The plain lands of “Eos” located in west “Serenus.”
 
-            * Story
+Seven fortresses located in the northern boundaries of Eos served as the setting for the war between the Alliance and Legion. This conflict, however, was in its final stages with the decline of the Dark Elf queen’s power. Under the High Elf’s calling, the “Seven Shields Alliance” was formed to stand against the Legion. The Alliance issued a request to the group of mercenaries headed by the protagonist, known as the “Black Dogs.” They were to be the vanguard for an all-out-war in order to put an end to this conflict, but…
 
-            Deep in the mountains lived two peaceful girls.
-            One was the mysterious girl, known as Priscilla the Alchemist,
-            and her student who she had found and raised called Colette.
+Upon invading the Dark Elf queen’s country, the Black Dogs turned that land into their stronghold and began to invade their former allies’ countries. Panic, shock, indignation, sorrow… After the betrayal, the Black Dogs’ leader issued an unbelievable declaration - the founding of the “Cuntry,” where women are obligated to partake in sexual service for all men.
 
-            Priscilla had invented her own form of alchemy that used cum,
-            and had been living a lazy life while sharing her teachings with Colette.
+The women of the Alliance would soon learn first-hand that this declaration was neither a lie, nor an exaggeration…
 
-            However, an unexpected visitor came by one day,
-            and Priscilla had decided to leave the mountain.
+[Edited from [url=http://blog.mangagamer.org/2017/02/24/kuroinu-chapter-1-now-available-for-pre-order/]MangaGamer Blog[/url]]</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/675572</RootFolder><SortTitle>675572</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Kuroinu ~Kedakaki Seijo wa Hakudaku ni Somaru~</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>All the Way Through;Cunnilingus;Pregnant Sex;Excessive Semen;Doggy Style;Gang Rape;Tentacle Rape;Sitting Sex;Sex in Front of an Audience;Sexual Slavery;High Sexual Content;Fingering;Nukige;Inflation;Anilingus;Slime Monster Rape;Multiple Penetration;Urination Fetish;Futanari on Female;Defloration;Sexual Slavery (Non-consensual);Sex with Sleepers;Rape;High Amounts of Rape;Handjob;Single Hole Multiple Penetration;Twin Boobjob;Single Hole Multiple Objects Insertion;Sex With Monsters;Seventh Posture;Object Insertion;Single Hole Multiple Tentacle Penetration;Group Sex of One Female and Several Males;Lactation During Sex;Sex in Public Places;Masturbation;Hairjob;Twin Blowjob;Anal Sex;Bondage;Standing Sex;Ahegao;Quickie Fix Position;Cowgirl;Huge Insertion;Piledriver;Double Dildos;Boobjob;Stuck-in-Wall Sex;Glory Hole Sex;Blowjob;Bukkake;Sexual Slavery (Choukyou Variation);Penis Growth;Deepthroat;Enema;Public Cum Dumpster;Background Moans;Outdoor Sex;Gokkun</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:13.480Z</DateAdded><DateModified>2019-07-25T14:09:13.480Z</DateModified><Developer>がしゃどくろ</Developer><Favorite>false</Favorite><ID>99bc80fd-1a3e-45eb-ba4c-6dcdb3fff440</ID><Notes>六花と付き合い始めてからそれなりに経ち、
+デートもキスもしたもののエッチはまだだった勇太たち。
 
-            Now, Colette must finally live on her own.
+勇太の家で食後に2人きりで話していたら、
+六花の不意打ちに興奮した勇太は、更なる契約を求め…
 
-            Though Colette had the skills to be a professional alchemist,
-            she still had some reservations about cum collecting.
+JPEG26枚（PDF28ページ）の作品です。</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ123456</RootFolder><SortTitle>RJ123456</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>俺の炎に抱かれて消えろ</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/RJ1234567/What this game named is [yolo] v1.00 (fooBar)/yolo.exe</ApplicationPath><Completed>false</Completed><DateAdded>2019-07-25T14:09:13.480Z</DateAdded><DateModified>2019-07-25T14:09:13.480Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>b79e2e6c-21d0-46fb-af63-f099bc955f7b</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ1234567</RootFolder><SortTitle>RJ1234567</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><DateAdded>2019-07-25T14:09:13.758Z</DateAdded><DateModified>2019-07-25T14:09:13.758Z</DateModified><Developer>acerola</Developer><Favorite>false</Favorite><ID>8069ad37-e234-4908-9760-7eb309913ec1</ID><Notes>* ver1.11
 
-            Priscilla decided to give one final lesson to help Colette,
-            and Colette was able to experience her "first time".
+* Story
 
-            Having made her first cum collection and success in alchemy,
-            Priscilla was able to let Colette leave the nest and go off into
-            the world on her own.
+Deep in the mountains lived two peaceful girls.
+One was the mysterious girl, known as Priscilla the Alchemist,
+and her student who she had found and raised called Colette.
 
-            Colette the Cum Collecting Alchemist-
-            She will go on a journey where she will make new connections,
-            help those in need, and end up in various incidents.
+Priscilla had invented her own form of alchemy that used cum,
+and had been living a lazy life while sharing her teachings with Colette.
 
-            Her grand adventure begins!
+However, an unexpected visitor came by one day, 
+and Priscilla had decided to leave the mountain.
+
+Now, Colette must finally live on her own.
+
+Though Colette had the skills to be a professional alchemist,
+she still had some reservations about cum collecting.
+
+Priscilla decided to give one final lesson to help Colette, 
+and Colette was able to experience her "first time".
+
+Having made her first cum collection and success in alchemy, 
+Priscilla was able to let Colette leave the nest and go off into 
+the world on her own.
+
+Colette the Cum Collecting Alchemist-
+She will go on a journey where she will make new connections,
+help those in need, and end up in various incidents.
+
+Her grand adventure begins!
 
 
-            * System:
-            - Alchemy
-            By combining materials and [cum], you can create new items!
-            You can use the cum that your comrades collect as well, so collect
-            lots of cum and gather various materials!
+* System:
+- Alchemy
+By combining materials and [cum], you can create new items!
+You can use the cum that your comrades collect as well, so collect 
+lots of cum and gather various materials!
 
-            - Control up to 3 Characters!
-            Choose characters from the guild and take them on your journey!
+- Control up to 3 Characters!
+Choose characters from the guild and take them on your journey!
 
-            - Hornyness level
-            When the Hornyness amount is high, you can perform more intense
-            sexual interactions. It increases as you use skills and get sexually harassed.
+- Hornyness level
+When the Hornyness amount is high, you can perform more intense 
+sexual interactions. It increases as you use skills and get sexually harassed.
 
-            - Lewdness level
-            This time the Lewdness has S &amp; M amounts, that increases through sex.
-            The higher the amount, the more sexually promiscuous she becomes.
-            When the Lewdness and Hornyness reach a certain point she...!?
-            Then the S or M amount reaches a certain point she...!?
+- Lewdness level
+This time the Lewdness has S &amp; M amounts, that increases through sex.
+The higher the amount, the more sexually promiscuous she becomes.
+When the Lewdness and Hornyness reach a certain point she...!?
+Then the S or M amount reaches a certain point she...!?
 
-            - Karma level
-            Karma goes up/down when she does good or bad things.
-            If she does good things, the meter doesn't increase, and sometimes goes down.
-            However, if she does lots of bad things the meter increases and...!?
+- Karma level
+Karma goes up/down when she does good or bad things.
+If she does good things, the meter doesn't increase, and sometimes goes down.
+However, if she does lots of bad things the meter increases and...!?
 
-            - Pleading system
-            This system allows her to plead for cum!
-            It applies to the sub-characters as well, and use this command to collect
-            lots and lots of cum!
+- Pleading system
+This system allows her to plead for cum! 
+It applies to the sub-characters as well, and use this command to collect
+lots and lots of cum!
 
-            - Fetish system
-            The girls each have their preferred sexual activities.
-            By repeating a certain sex act, it can awaken a fetish within her and...!?
+- Fetish system
+The girls each have their preferred sexual activities. 
+By repeating a certain sex act, it can awaken a fetish within her and...!?
 
-            - Mid-battle sex
-            If captured during battle, she will be violated.
-            Though her health will decrease after being violated, she can also obtain cum.
-            Going out of your way to get violated and obtain cum is also a viable technique!
+- Mid-battle sex
+If captured during battle, she will be violated. 
+Though her health will decrease after being violated, she can also obtain cum.
+Going out of your way to get violated and obtain cum is also a viable technique!
 
-            - Approval system
-            The sub-character girls have an approval rating meter.
-            Though hiring them costs money, when their approval rating reaches MAX,
-            you no longer have to pay to hire them.
-            * In addition, when the approval rating increases...!?
+- Approval system
+The sub-character girls have an approval rating meter.
+Though hiring them costs money, when their approval rating reaches MAX,
+you no longer have to pay to hire them.
+* In addition, when the approval rating increases...!?
 
 
-            * We have created new pixel and music material for this work!
-            Enjoy even more lewd pixel H!
-        </Notes>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ249908</RootFolder>
-        <SortTitle>RJ249908</SortTitle>
-        <Source>dlsite</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title>Colette the Cum Collecting Alchemist</Title>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre>Foreign Object;Naughty;Ashamed;Humiliation;Gangbang;Interspecies Sex</Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-    <Game>
-        <ApplicationPath/>
-        <Completed>false</Completed>
-        <DateAdded>2019-07-25T12:35:55.112Z</DateAdded>
-        <DateModified>2019-07-25T12:35:55.112Z</DateModified>
-        <Developer></Developer>
-        <Favorite>false</Favorite>
-        <ID>16551e5b-c736-4313-b023-5470c8678024</ID>
-        <Notes/>
-        <Platform>WINDOWS</Platform>
-        <Rating/>
-        <RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/Some really complicated name</RootFolder>
-        <SortTitle>Some really complicated name</SortTitle>
-        <Source>getchu</Source>
-        <StarRatingFloat>0</StarRatingFloat>
-        <StarRating>0</StarRating>
-        <Title/>
-        <Version/>
-        <Series/>
-        <Portable>false</Portable>
-        <Hide>false</Hide>
-        <Broken>false</Broken>
-        <Genre></Genre>
-        <CommandLine/>
-        <ConfigurationCommandLine/>
-        <ConfigurationPath/>
-        <DosBoxConfigurationPath/>
-        <Emulator/>
-        <LastPlayedDate/>
-        <ManualPath/>
-        <MusicPath/>
-        <Publisher/>
-        <ScummVMAspectCorrection>false</ScummVMAspectCorrection>
-        <ScummVMFullscreen>false</ScummVMFullscreen>
-        <ScummVMGameDataFolderPath/>
-        <ScummVMGameType/>
-        <CommunityStarRating>0</CommunityStarRating>
-        <CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes>
-        <Status/>
-        <UseDosBox>false</UseDosBox>
-        <UseScummVM>false</UseScummVM>
-        <PlayMode/>
-        <Region/>
-        <PlayCount>0</PlayCount>
-        <VideoPath/>
-        <MissingVideo>true</MissingVideo>
-        <MissingBoxFrontImage>false</MissingBoxFrontImage>
-        <MissingScreenshotImage>false</MissingScreenshotImage>
-        <MissingClearLogoImage>false</MissingClearLogoImage>
-        <MissingBackgroundImage>false</MissingBackgroundImage>
-        <UseStartupScreen>false</UseStartupScreen>
-        <HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows>
-        <StartupLoadDelay>0</StartupLoadDelay>
-        <HideMouseCursorInGame>false</HideMouseCursorInGame>
-        <DisableShutdownScreen>false</DisableShutdownScreen>
-        <AggressiveWindowHiding>false</AggressiveWindowHiding>
-        <OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings>
-        <UsePauseScreen>false</UsePauseScreen>
-        <OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings>
-        <SuspendProcessOnPause>false</SuspendProcessOnPause>
-        <ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation>
-        <CustomDosBoxVersionPath/>
-    </Game>
-</LaunchBox>
+* We have created new pixel and music material for this work!
+Enjoy even more lewd pixel H!</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/RJ249908</RootFolder><SortTitle>RJ249908</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Colette the Cum Collecting Alchemist</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Foreign Object;Naughty;Ashamed;Humiliation;Gangbang;Interspecies Sex</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/錬精術士コレットのHな搾精物語～精液を集める錬精術士～/錬精術士コレットのHな搾精物語～精液を集める錬精術士～.exe</ApplicationPath><Completed>false</Completed><DateAdded>2019-07-25T14:09:13.758Z</DateAdded><DateModified>2019-07-25T14:09:13.758Z</DateModified><Developer></Developer><Favorite>false</Favorite><ID>e377b788-ab43-49d9-afc4-3f4f345ac27e</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/錬精術士コレットのHな搾精物語～精液を集める錬精術士～</RootFolder><SortTitle>錬精術士コレットのHな搾精物語～精液を集める錬精術士～</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><LastPlayedDate/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game></LaunchBox>

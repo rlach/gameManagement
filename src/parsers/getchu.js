@@ -1,5 +1,6 @@
 const iconv = require('iconv-lite');
-const htmlParser = require('node-html-parser/dist/index');
+const htmlparser = require('htmlparser');
+const select = require('soupselect').select;
 const request = require('request-promise');
 const log = require('./../logger');
 const settings = require('./../settings');
@@ -73,7 +74,7 @@ class GetchuStrategy {
     async findGame(name) {
         const reply = await this.callFindGame(name);
         // await files.writeFile(`${name}.html`, reply);
-        const root = htmlParser.parse(reply);
+        const root = parseSite(reply);
         const works = root.querySelectorAll('.blueb').map(b => {
             return {
                 work_name: b.text.trim(),
@@ -94,16 +95,20 @@ module.exports = getchuStrategy;
 
 function getGameMetadataJp(root) {
     try {
-        const titleElement = root.querySelector('#soft-title');
-        const makerElement = root.querySelector('.glance');
-        const imageElement = root.querySelector('.highslide');
+        const titleElement = select(root, '#soft-title').shift();
+        const makerElement = select(root, '.glance').shift();
+        const imageElement = select(root, '.highslide').shift();
+        const description = select(root, '.tablebody');
+
+        // log.info('title', JSON.stringify(titleElement, null, 4));
+        // log.info('maker', JSON.stringify(makerElement, null, 4));
+        // log.info('description', JSON.stringify(description, null, 4));
 
         return {
-            name: titleElement && titleElement.firstChild ? titleElement.firstChild.text.trim() : '',
-            // description: root
-            //     .querySelectorAll('.tablebody')
-            //     .map(t => t.text)
-            //     .join(' ')
+            name: titleElement && titleElement.children[0] ? titleElement.children[0].data.trim() : '',
+            description: description
+                .map(desc => desc.children.map(descChild => (descChild.type === 'text' ? descChild.data : '')))
+                .join('\n'),
             // genres: root
             //     .querySelector('.main_genre')
             //     .childNodes.map(node => node.text.trim())
@@ -112,8 +117,11 @@ function getGameMetadataJp(root) {
             //     .querySelector('.work_genre')
             //     .childNodes.map(node => node.text.trim())
             //     .filter(n => n !== ''),
-            maker: makerElement ? makerElement.text.trim() : '',
-            image: imageElement && imageElement.attributes ? imageElement.attributes.HREF : ''
+            maker: makerElement && makerElement.attribs ? makerElement.attribs.title.trim() : '',
+            image:
+                imageElement && imageElement.attribs
+                    ? imageElement.attribs.href.replace('.', 'http://www.getchu.com')
+                    : ''
         };
     } catch (e) {
         log.error('Metadata parsing failure', { e, root });
@@ -188,10 +196,25 @@ async function getEnglishSite(name) {
     return undefined;
 }
 
+function parseSite(rawHtml) {
+    const handler = new htmlparser.DefaultHandler(function(error, dom) {
+        if (error) {
+            log.error('Error parsing html', error);
+        } else {
+            log.info('Parsing done!');
+        }
+    });
+    const parser = new htmlparser.Parser(handler);
+    parser.parseComplete(rawHtml);
+    log.debug('Dom parsed!');
+    return handler.dom;
+}
+
 async function getJapaneseSite(id) {
     try {
         let reply = await callGetPage(id);
-        const root = htmlParser.parse(reply);
+        // require('fs').writeFileSync(`./sample/pages/getchu-${id}.html`, reply);
+        const root = parseSite(reply);
         return getGameMetadataJp(root);
     } catch (e) {
         log.error(`Error getting ${id} from ${getchuStrategy.name}`, e);
@@ -202,13 +225,13 @@ async function getJapaneseSite(id) {
 async function callGetPage(id) {
     return new Promise((resolve, reject) => {
         setTimeout(function() {
-            reject('Promise timed out after ' + 3000 + ' ms');
-        }, 3000);
+            reject('Promise timed out after ' + 30000 + ' ms');
+        }, 30000);
 
         request
             .get({
                 method: 'GET',
-                uri: `http://www.getchu.com/sp/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`,
+                uri: `http://www.getchu.com/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`,
                 encoding: null
             })
             .pipe(iconv.decodeStream(JAPANESE_ENCODING))

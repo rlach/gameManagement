@@ -115,7 +115,7 @@ async function makeLink(name, target, game) {
         // await files.createRelativeLink(name, target.file);
         game.directory = target.directory;
         game.executableFile = target.file;
-        game.shortcutExists = true;
+        game.shortcutExists = false;
         await game.save();
     } catch (e) {
         log.error(`File ${name} sucks`, e);

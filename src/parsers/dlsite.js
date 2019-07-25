@@ -23,7 +23,7 @@ class DlsiteStrategy {
             const jpnSite = await getProSite(id);
             jpn = jpnSite ? jpnSite : {};
         } else {
-            log.error('Wrong file for strategy', {name: this.name});
+            log.error('Wrong file for strategy', { name: this.name });
             return;
         }
 
@@ -44,7 +44,7 @@ class DlsiteStrategy {
     }
 
     extractCode(name) {
-        log.info('name', {name});
+        log.info('name', { name });
         const matches = name.match(/((RE)|(RJ)|(VJ))\d+/gi);
         return matches ? matches.find(matched => matched.length === 8) : '';
     }
@@ -103,6 +103,11 @@ function getOptions(id, type) {
 
 function getGameMetadata(root) {
     try {
+        let imageSrc = root.querySelector('.slider_item').firstChild.attributes.src;
+        if (imageSrc.startsWith('//')) {
+            imageSrc = imageSrc.replace('//', 'http://');
+        }
+
         return {
             name: root.querySelector('#work_name').text.trim(),
             description: root.querySelector('.work_article').text.trim(),
@@ -115,7 +120,7 @@ function getGameMetadata(root) {
                 .childNodes.map(node => node.text.trim())
                 .filter(n => n !== ''),
             maker: root.querySelector('.maker_name').text.trim(),
-            image: root.querySelector('.slider_item').firstChild.attributes.src
+            image: imageSrc
         };
     } catch (e) {
         log.error('Metadata parsing failure', e);
@@ -146,6 +151,7 @@ async function getEnglishSite(id) {
 async function getJapaneseSite(id) {
     try {
         let reply = await request.get(getOptions(id, 'jp'));
+        // require('fs').writeFileSync(`./sample/pages/dlsite-${id}.html`, reply);
         const root = htmlParser.parse(reply);
         return getGameMetadata(root);
     } catch (e) {
@@ -164,7 +170,7 @@ async function getProSite(id) {
         try {
             reply = await request.get(getOptions(id, 'pro'));
         } catch (e) {
-            log.debug('Pro does not exist, trying announce', {id});
+            log.debug('Pro does not exist, trying announce', { id });
             reply = await request.get(getOptions(id, 'proAnnounce'));
         }
         const root = htmlParser.parse(reply);

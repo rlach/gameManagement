@@ -1,5 +1,7 @@
 const { Game } = require('./database/game');
 
+const fs = require('fs');
+const { promisify } = require('util');
 const log = require('./logger');
 const { db, connect } = require('./database/mongoose');
 const settings = require('./settings');
@@ -15,6 +17,10 @@ async function main() {
     const convertedGames = [];
 
     for (const game of games) {
+        if (settings.downloadImages) {
+            await downloadImages(game);
+        }
+
         const gameProperties = {
             ApplicationPath: game.executableFile
                 ? {
@@ -237,3 +243,37 @@ const externalGameProps = {
     },
     CustomDosBoxVersionPath: {}
 };
+
+const download = require('image-downloader');
+
+async function downloadImages(game) {
+    const regexExtension = /\.\w{3,4}($|\?)/;
+    const imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;
+    if (!imageUrl) {
+        return;
+    }
+    const filename = game.nameEn ? game.nameEn : game.nameJp;
+    const targetPath = `./sample/launchbox/Images/Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
+
+    if(fs.existsSync(targetPath)) {
+        log.info('Image already exists, skipping', targetPath);
+        return;
+    }
+
+    log.info('Downloading', {
+        imageUrl,
+        filename,
+        targetPath
+    });
+
+    try {
+        await download.image({
+            url: imageUrl,
+            dest: targetPath
+        });
+    } catch(e) {
+        log.error('Error downloading image', e);
+    }
+
+    log.info('past download');
+}
