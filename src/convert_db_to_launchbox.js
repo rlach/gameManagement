@@ -1,23 +1,29 @@
-const { Game } = require('./database/game');
+const {Game} = require('./database/game');
 const moment = require('moment');
 const fs = require('fs');
-const { promisify } = require('util');
 const log = require('./logger');
-const { db, connect } = require('./database/mongoose');
+const {db, connect} = require('./database/mongoose');
 const settings = require('./settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
 
-const LAUNCHBOX_PLATFORM_XML = `C:\\Users\\Alein\\LaunchBox\\Data\\Platforms/${settings.launchboxPlatform}.xml`;
-
-//TODO: remake it so it SYNCS to launchbox and doesn't overwrite IDs otherwise manually added images break
+const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}\\Data\\Platforms/${settings.launchboxPlatform}.xml`;
 
 async function main() {
     await connect();
 
-    if(fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
+    let launchboxGames = [];
+
+    if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.info('Platform file already exists, backing up');
-        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `./sample/launchbox/${settings.launchboxPlatform}-backup.xml`)
+        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`)
+
+        log.info('Also, read old file so we can keep ids unchanged')
+        const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
+        const convertedObject = convert.xml2js(launchboxXml, {compact: true});
+        if (convertedObject.LaunchBox.Game.length > 0) {
+            launchboxGames = convertedObject.LaunchBox.Game;
+        }
     }
 
     const games = await Game.find({});
@@ -25,6 +31,12 @@ async function main() {
     const convertedGames = [];
 
     for (const game of games) {
+        if (game.deleted) {
+            continue;
+        }
+
+        const matchingGame = launchboxGames.find(g => g.SortTitle._text === game.id);
+
         if (settings.downloadImages) {
             await downloadImages(game);
         }
@@ -32,20 +44,26 @@ async function main() {
         const gameProperties = {
             ApplicationPath: game.executableFile
                 ? {
-                      _text: game.executableFile
-                  }
+                    _text: game.executableFile
+                }
                 : {},
             Completed: {
                 _text: game.completed ? game.completed : 'false'
             },
+            CommunityStarRating: {
+                _text: game.communityStars ? game.communityStars : 0
+            },
+            CommunityStarRatingTotalVotes: {
+                _text: game.communityStarVotes ? game.communityStarVotes : 0
+            },
             DateAdded: {
-                _text: moment().format()
+                _text: game.dateAdded ? game.dateAdded : moment().format()
             },
             DateModified: {
-                _text: moment().format()
+                _text: game.dateModified ? game.dateModified : moment().format()
             },
             ReleaseDate: {
-                _text: moment().format()
+                _text: game.releaseDate ? game.releaseDate : moment().format()
             },
             Developer: {
                 _text: getDeveloper(game)
@@ -54,35 +72,34 @@ async function main() {
                 _text: game.favorite ? game.favorite : false
             },
             ID: {
-                //On creation we need to create some UUID
-                _text: UUID.v4()
+                _text: getUUID(game.id, matchingGame)
             },
             Notes:
                 game.descriptionEn || game.descriptionJp
                     ? {
-                          _text: game.descriptionEn ? game.descriptionEn : game.descriptionJp
-                      }
+                        _text: game.descriptionEn ? game.descriptionEn : game.descriptionJp
+                    }
                     : {},
             Platform: {
                 _text: settings.launchboxPlatform
             },
             Rating: game.rating
                 ? {
-                      _text: game.rating
-                  }
+                    _text: game.rating
+                }
                 : {},
             RootFolder: game.directory
                 ? {
-                      _text: game.directory
-                  }
+                    _text: game.directory
+                }
                 : {},
             SortTitle: {
                 _text: game.id
             },
             Source: game.source
                 ? {
-                      _text: game.source
-                  }
+                    _text: game.source
+                }
                 : {},
             StarRatingFloat: {
                 _text: game.stars ? game.stars : 0
@@ -93,18 +110,18 @@ async function main() {
             Title:
                 game.nameEn || game.nameJp
                     ? {
-                          _text: game.nameEn ? game.nameEn : game.nameJp
-                      }
+                        _text: game.nameEn ? game.nameEn : game.nameJp
+                    }
                     : {},
             Version: game.version
                 ? {
-                      _text: game.version
-                  }
+                    _text: game.version
+                }
                 : {},
             Series: game.series
                 ? {
-                      _text: game.series
-                  }
+                    _text: game.series
+                }
                 : {},
             Portable: {
                 _text: game.portable ? game.portable : 'false'
@@ -120,10 +137,15 @@ async function main() {
             }
         };
 
-        convertedGames.push({
-            ...gameProperties,
-            ...externalGameProps
-        });
+        if (matchingGame) {
+            Object.assign(matchingGame, gameProperties);
+            convertedGames.push(matchingGame);
+        } else {
+            convertedGames.push({
+                ...gameProperties,
+                ...externalGameProps
+            });
+        }
     }
 
     const objectToExport = {
@@ -138,7 +160,7 @@ async function main() {
         }
     };
 
-    const xml = convert.js2xml(objectToExport, { compact: true });
+    const xml = convert.js2xml(objectToExport, {compact: true});
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
@@ -167,9 +189,7 @@ const externalGameProps = {
     ConfigurationPath: {},
     DosBoxConfigurationPath: {},
     Emulator: {},
-    LastPlayedDate: {
-        _text: '2019-07-25T01:33:35.9365244+02:00'  //TODO: currently all dates are hardcoded
-    },
+    LastPlayedDate: {},
     ManualPath: {},
     MusicPath: {},
     Publisher: {},
@@ -181,12 +201,6 @@ const externalGameProps = {
     },
     ScummVMGameDataFolderPath: {},
     ScummVMGameType: {},
-    CommunityStarRating: {
-        _text: '0'
-    },
-    CommunityStarRatingTotalVotes: {
-        _text: '0'
-    },
     Status: {},
     UseDosBox: {
         _text: 'false'
@@ -261,9 +275,9 @@ async function downloadImages(game) {
     }
     let filename = game.nameEn ? game.nameEn : game.nameJp;
     filename = filename.replace(/[\?*':\/"]/gi, '_'); //Replace banned characters with underscore like launchbox does
-    const targetPath = `C:\\Users\\Alein\\LaunchBox\\Images\\WINDOWS\\Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
+    const targetPath = `${settings.paths.launchbox}\\Images\\${settings.launchboxPlatform}\\Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
 
-    if(fs.existsSync(targetPath)) {
+    if (fs.existsSync(targetPath)) {
         log.info('Image already exists, skipping', targetPath);
         return;
     }
@@ -279,9 +293,17 @@ async function downloadImages(game) {
             url: imageUrl,
             dest: targetPath
         });
-    } catch(e) {
+    } catch (e) {
         log.error('Error downloading image', e);
     }
 
     log.info('past download');
+}
+
+function getUUID(gameId, matchingGame) {
+    if (matchingGame && matchingGame.ID && matchingGame.ID._text) {
+        return matchingGame.ID._text;
+    } else {
+        return UUID.v4()
+    }
 }

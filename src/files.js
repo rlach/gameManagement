@@ -34,8 +34,6 @@ const bannedExeFileNames = [
 
 const executableExtensions = ['.exe', '.swf'];
 
-const explorerExePath = `^%windir^%/explorer.exe`;
-
 class Files {
     async readDir(path) {
         return fsAsync.readdir(path);
@@ -65,7 +63,7 @@ let files = new Files();
 module.exports = files;
 
 function hasProperExtension(fileName) {
-    return executableExtensions.findIndex(extension => fileName.toLocaleString().endsWith(extension)) > -1;
+    return executableExtensions.findIndex(extension => fileName.toLowerCase().endsWith(extension)) > -1;
 }
 
 function isBaned(fileName) {

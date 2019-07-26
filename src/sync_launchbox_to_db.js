@@ -1,29 +1,31 @@
 const {Game} = require('./database/game');
 const moment = require('moment');
 const fs = require('fs');
-const {promisify} = require('util');
 const log = require('./logger');
 const {db, connect} = require('./database/mongoose');
 const convert = require('xml-js');
-const UUID = require('uuid');
 const settings = require('./settings');
 
 async function main() {
     await connect();
 
-    const launchboxXml = fs.readFileSync(`C:\\Users\\Alein\\LaunchBox\\Data\\Platforms/${settings.launchboxPlatform}.xml`, 'utf8');
+    //TODO: One in all sync that syncs folders and launchbox with db then updates launcbox xml
+    //First update all db entries from launchbox (only newer)
+    //Then rescan folders, update deleted, maybe update sources, paths
+    //Then convert db to launchbox
+    //TODO: check if it's possible to create fresh platform with no changes using those scripts
+    //TODO: English dmm https://www.dmm.co.jp/en/dc/doujin/-/detail/=/cid=d_082865/
+    const launchboxXml = fs.readFileSync(`${settings.paths.launchbox}\\Data\\Platforms/${settings.launchboxPlatform}.xml`, 'utf8');
     const convertedObject = convert.xml2js(launchboxXml, {compact: true});
-    // log.info('object', JSON.stringify(convertedObject, null, 4));
     log.info('Found games', convertedObject.LaunchBox.Game.length);
 
-    for (launchboxGame of convertedObject.LaunchBox.Game) {
+    for (const launchboxGame of convertedObject.LaunchBox.Game) {
         const dbGame = await Game.findOne({id: launchboxGame.SortTitle._text});
         if (!dbGame) {
             log.info(`Game ${launchboxGame.SortTitle._text} does not exist in db`);
         } else {
             log.info(`Syncing game ${launchboxGame.SortTitle._text}`);
-
-            if (settings.onlyUpdateNewer && dbGame.dateModified && moment(dbGame.dateModified).isSameOrAfter(moment(launchboxGame.DateModified._text))) {
+            if (settings.onlyUpdateNewer && dbGame.dateModified && moment(dbGame.dateModified).isSameOrBefore(moment(launchboxGame.DateModified._text))) {
                 log.info('Skipping game due to outdated data in launchbox');
             } else {
                 let update;

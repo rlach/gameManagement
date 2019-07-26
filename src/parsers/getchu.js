@@ -3,8 +3,7 @@ const htmlparser = require('htmlparser');
 const select = require('soupselect').select;
 const request = require('request-promise');
 const log = require('./../logger');
-const settings = require('./../settings');
-const files = require('./../files');
+const moment = require('moment');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
 const JAPANESE_ENCODING = 'EUC-JP';
@@ -20,17 +19,19 @@ class GetchuStrategy {
         const jpnResult = await getJapaneseSite(gameId);
         const jpn = jpnResult ? jpnResult : {};
         let eng = {};
-        log.info('Got jpn', jpn);
         if (jpn.name) {
             log.info(`Getting english site for ${jpn.name}`);
             const engResult = await getEnglishSite(jpn.name);
-            log.info('Got eng', engResult);
             if (engResult) {
                 eng = engResult;
             }
         }
 
+        const reviews = await getReviews(gameId);
+
         return {
+            releaseDate: jpn.releaseDate ? jpn.releaseDate : eng.releaseDate,
+            communityStars: reviews && reviews.averageRating ? reviews.averageRating : undefined,
             nameEn: eng.name,
             nameJp: jpn.name,
             descriptionEn: eng.description,
@@ -100,24 +101,19 @@ function getGameMetadataJp(root) {
         const makerElement = select(root, '.glance').shift();
         const imageElement = select(root, '.highslide').shift();
         const description = select(root, '.tablebody');
-
-        // log.info('title', JSON.stringify(titleElement, null, 4));
-        // log.info('maker', JSON.stringify(makerElement, null, 4));
-        // log.info('description', JSON.stringify(description, null, 4));
+        let releaseDayText;
+        try {
+            releaseDayText = select(root, '#tooltip-day').shift().children[0].data;
+        } catch(e) {
+            log.debug('Release day element missing or invalid');
+        }
 
         return {
             name: titleElement && titleElement.children[0] ? titleElement.children[0].data.trim() : '',
+            releaseDate: releaseDayText ? moment(releaseDayText, 'YYYY/MM/DD').format() : undefined,
             description: description
                 .map(desc => desc.children.map(descChild => (descChild.type === 'text' ? descChild.data : '')))
                 .join('\n'),
-            // genres: root
-            //     .querySelector('.main_genre')
-            //     .childNodes.map(node => node.text.trim())
-            //     .filter(n => n !== ''),
-            // tags: root
-            //     .querySelector('.work_genre')
-            //     .childNodes.map(node => node.text.trim())
-            //     .filter(n => n !== ''),
             maker: makerElement && makerElement.attribs ? makerElement.attribs.title.trim() : '',
             image:
                 imageElement && imageElement.attribs
@@ -178,10 +174,10 @@ async function getEnglishSite(name) {
         log.info('About to return VN');
         return {
             name: VN.title,
+            releaseDate: moment(VN.released, 'YYYY-MM-DD').format(),
             description: VN.description,
             genres: tags.filter(t => t.cat === 'ero').map(t => t.name),
             tags: tags.filter(t => t.cat === 'tech').map(t => t.name),
-            // maker: root.querySelector('.maker_name').text.trim(),
             image: VN.image
         };
     } catch (e) {
@@ -213,8 +209,7 @@ function parseSite(rawHtml) {
 
 async function getJapaneseSite(id) {
     try {
-        let reply = await callGetPage(id);
-        // require('fs').writeFileSync(`./sample/pages/getchu-${id}.html`, reply);
+        let reply = await callPage(`http://www.getchu.com/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`);
         const root = parseSite(reply);
         return getGameMetadataJp(root);
     } catch (e) {
@@ -223,7 +218,25 @@ async function getJapaneseSite(id) {
     }
 }
 
-async function callGetPage(id) {
+async function getReviews(id) {
+    try {
+        let reply = await callPage(`http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(id)}`);
+        const root = parseSite(reply);
+
+        const averageRatingElement = select(root, '.r_ave').shift();
+
+        const averageRatingText = averageRatingElement && averageRatingElement.children && averageRatingElement.children.length > 0 ? averageRatingElement.children[0].data : '0.00';
+
+        return {
+            averageRating: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])
+        };
+    } catch (e) {
+        log.warn(`Error getting reviews for ${id} from ${getchuStrategy.name}`);
+        return undefined;
+    }
+}
+
+async function callPage(uri) {
     return new Promise((resolve, reject) => {
         setTimeout(function() {
             reject('Promise timed out after ' + 30000 + ' ms');
@@ -232,7 +245,7 @@ async function callGetPage(id) {
         request
             .get({
                 method: 'GET',
-                uri: `http://www.getchu.com/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`,
+                uri: uri,
                 encoding: null
             })
             .pipe(iconv.decodeStream(JAPANESE_ENCODING))

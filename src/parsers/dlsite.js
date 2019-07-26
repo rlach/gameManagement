@@ -1,7 +1,7 @@
 const htmlParser = require('node-html-parser/dist/index');
 const request = require('request-promise');
 const log = require('./../logger');
-const settings = require('./../settings');
+const moment = require('moment');
 
 class DlsiteStrategy {
     constructor() {
@@ -27,7 +27,11 @@ class DlsiteStrategy {
             return;
         }
 
+        const productInfo = await getProductInfo(gameId);
+
         return {
+            communityStars: productInfo ? productInfo.rate_average_2dp : undefined,
+            communityStarVotes: productInfo ? productInfo.rate_count : undefined,
             nameEn: eng.name,
             nameJp: jpn.name,
             descriptionEn: eng.description,
@@ -39,7 +43,9 @@ class DlsiteStrategy {
             makerEn: eng.maker,
             makerJp: jpn.maker,
             imageUrlJp: jpn.image,
-            imageUrlEn: eng.image
+            imageUrlEn: eng.image,
+            releaseDate: jpn.releaseDate ? jpn.releaseDate : eng.releaseDate,
+            series: eng.series ? eng.series : jpn.series
         };
     }
 
@@ -129,7 +135,26 @@ function getGameMetadata(root) {
             imageSrc = imageSrc.replace('//', 'http://');
         }
 
+        let releaseDate;
+        const dateText = root.querySelector('#work_outline a').text.trim();
+        if(/\d/.test(dateText[0])) {
+            releaseDate = moment(dateText, 'YYYY-MM-DD-').format(); //Japanese format
+        } else {
+            releaseDate = moment(dateText, 'MMM-DD-YYYY').format(); //English format
+        }
+        if(releaseDate === 'Invalid Date') {
+            releaseDate = undefined;
+        }
+
+        let seriesText;
+        try {
+            seriesText = root.querySelectorAll('#work_outline a').filter(a => a.attributes.href.includes('work.series'))[0].text.trim();
+        } catch(e) {
+            log.warn('Series text missing or invalid');
+        }
+
         return {
+            series: seriesText,
             name: root.querySelector('#work_name').text.trim(),
             description: root.querySelector('.work_article').text.trim(),
             genres: root
@@ -140,6 +165,7 @@ function getGameMetadata(root) {
                 .querySelector('.work_genre')
                 .childNodes.map(node => node.text.trim())
                 .filter(n => n !== ''),
+            releaseDate: releaseDate,
             maker: root.querySelector('.maker_name').text.trim(),
             image: imageSrc
         };
@@ -161,6 +187,22 @@ async function getEnglishSite(id) {
         return getGameMetadata(root);
     } catch (e) {
         log.warn(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
+            name: e.name,
+            statusCode: e.statusCode,
+            message: e.message
+        });
+        return undefined;
+    }
+}
+
+async function getProductInfo(id) {
+    try {
+        return JSON.parse(await request.get(   {
+            method: 'GET',
+            uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`
+        }))[id];
+    } catch (e) {
+        log.warn(`Error getting productInfo for ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message

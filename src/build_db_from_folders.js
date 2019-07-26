@@ -25,11 +25,12 @@ async function main() {
         const strategy = selectStrategy(file.name);
 
         let game = await retrieveGameFromDb(file.name);
-        if (game.shortcutExists && !settings.forceUpdate) {
+        if (game.executableFile && !settings.forceSourceRefresh && !settings.forceExecutableRefresh) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
-            if ((!game.nameEn && !game.nameJp) || settings.forceUpdate) {
+            if ((!game.nameEn && !game.nameJp) || settings.forceSourceRefresh) {
+                log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(file.name);
                 Object.assign(game, gameData);
                 game.source = strategy.name;
@@ -37,10 +38,15 @@ async function main() {
                 await game.save();
             }
 
-            const targetPath = await determineTargetPath(file, strategy);
-            if (targetPath) {
-                const linkName = determineLinkName(file.name, game);
-                await makeLink(linkName, targetPath, game);
+            if(!game.executableFile || settings.forceExecutableRefresh) {
+                log.debug('Updating executable path');
+                const executableFile = await findExecutableFile(file, strategy);
+                if(executableFile.deleted) {
+                    game.deleted = true;
+                    await game.save();
+                } else {
+                    await saveFileAndDirectory(executableFile, game);
+                }
             }
         }
     }
@@ -53,48 +59,26 @@ main().catch(e => {
     db.close();
 });
 
-function determineLinkName(file, game) {
-    const wrongChars = /[\\\/:*?\"<>|]/gi;
-    if (game.nameEn || game.nameJp) {
-        const name = game.nameEn ? game.nameEn.replace(wrongChars, '') : game.nameJp.replace(wrongChars, '');
-        let maker = '';
-        try {
-            maker = game.makerEn
-                ? game.makerEn.replace(wrongChars, '').replace(/ /gi, '_')
-                : game.makerJp.replace(wrongChars, '').replace(/ /gi, '_');
-        } catch (e) {
-            log.info('Unknown maker');
-        }
-        const genres = game.genresEn
-            ? game.genresEn
-                  .map(g => g.replace(/ /gi, '_').replace(/\//gi, '+'))
-                  .slice(0, 7)
-                  .join(' ')
-            : '';
-        return `${name} [${maker} ${genres}]`;
-    } else {
-        return file;
-    }
-}
-
 var path = require('path');
 
-async function determineTargetPath(file) {
-    let targetPath;
+async function findExecutableFile(file) {
+    let executableFile;
 
     const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
     const subFiles = await files.readDir(`${file.path}/${file.name}`);
-    if (subFiles.find(f => f === 'DELETED')) {
+    if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
         log.info('Game was deleted', { file });
-        return;
+        return {
+            deleted: true
+        };
     } else {
         if (subFiles > 0) {
-            targetPath = {
-                directory: path.resolve(`${file.path}/${file}/${subFiles[0]}`)
+            executableFile = {
+                directory: path.resolve(`${file.path}/${file.name}/${subFiles[0]}`)
             };
         } else {
-            targetPath = {
-                directory: path.resolve(`${file.path}/${file}`)
+            executableFile = {
+                directory: path.resolve(`${file.path}/${file.name}`)
             };
         }
     }
@@ -102,9 +86,10 @@ async function determineTargetPath(file) {
     if (foundFiles.length == 0) {
         log.debug(`There is no exe`, { file });
     } else if (foundFiles.length === 1) {
-        log.debug('found only exe', foundFiles[0]);
-        targetPath.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
+        log.debug('Found single exe file', foundFiles[0].file);
+        executableFile.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
     } else {
+        log.debug('Found multiple exe files', foundFiles.map(f => f.file));
         let gameExe = foundFiles.find(t => t.name.toLowerCase().startsWith('game'));
         if (!gameExe) {
             gameExe = foundFiles.find(t => t.name.toLowerCase().endsWith('exe'));
@@ -114,23 +99,22 @@ async function determineTargetPath(file) {
         }
 
         log.debug('game exe selected', gameExe);
-        targetPath.file = path.resolve(`${gameExe.base}/${gameExe.relative}`);
+        executableFile.file = path.resolve(`${gameExe.base}/${gameExe.relative}`);
     }
 
-    return targetPath;
+    return executableFile;
 }
 
-async function makeLink(name, target, game) {
-    log.debug(`making link to target`, target);
+async function saveFileAndDirectory(target, game) {
     try {
-        // await files.createRelativeLink(name, target.file);
+        log.debug(`saving link to executable`, target);
+        game.deleted = false;
         game.directory = target.directory;
         game.executableFile = target.file;
-        game.shortcutExists = false;
         game.dateModified = moment().format();
         await game.save();
     } catch (e) {
-        log.error(`File ${name} sucks`, e);
+        log.error(`Could not update game`, e);
     }
 }
 
