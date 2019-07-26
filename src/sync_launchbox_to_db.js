@@ -15,6 +15,11 @@ async function main() {
     //Then convert db to launchbox
     //TODO: check if it's possible to create fresh platform with no changes using those scripts
     //TODO: English dmm https://www.dmm.co.jp/en/dc/doujin/-/detail/=/cid=d_082865/
+    //TODO: Download more images? Import more images?
+
+    //TODO: Bug VJ010674 - invalid release date
+
+    //TODO: Bug VJ010354 - problem with encoding of single character
     const launchboxXml = fs.readFileSync(`${settings.paths.launchbox}\\Data\\Platforms/${settings.launchboxPlatform}.xml`, 'utf8');
     const convertedObject = convert.xml2js(launchboxXml, {compact: true});
     log.info('Found games', convertedObject.LaunchBox.Game.length);

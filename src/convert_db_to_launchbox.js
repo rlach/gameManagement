@@ -65,6 +65,9 @@ async function main() {
             ReleaseDate: {
                 _text: game.releaseDate ? game.releaseDate : moment().format()
             },
+            LastPlayedDate: matchingGame ? matchingGame.LastPlayedDate : {
+                _text: '1800-01-01T01:33:35.9365244+02:00'
+            },
             Developer: {
                 _text: getDeveloper(game)
             },
@@ -189,7 +192,6 @@ const externalGameProps = {
     ConfigurationPath: {},
     DosBoxConfigurationPath: {},
     Emulator: {},
-    LastPlayedDate: {},
     ManualPath: {},
     MusicPath: {},
     Publisher: {},
