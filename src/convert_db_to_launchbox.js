@@ -276,7 +276,7 @@ async function downloadImages(game) {
         return;
     }
     let filename = game.nameEn ? game.nameEn : game.nameJp;
-    filename = filename.replace(/[\?*':\/"]/gi, '_'); //Replace banned characters with underscore like launchbox does
+    filename = filename.replace(/[\?*':\/\<\>"]/gi, '_'); //Replace banned characters with underscore like launchbox does
     const targetPath = `${settings.paths.launchbox}\\Images\\${settings.launchboxPlatform}\\Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
 
     if (fs.existsSync(targetPath)) {
