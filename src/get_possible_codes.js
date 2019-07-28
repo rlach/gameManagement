@@ -33,7 +33,7 @@ async function main() {
                 log.debug('Strategy', {strategy, file});
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
-                    foundCodes: await strategy.findGame(removeTagsAndMetadata(file))
+                    foundCodes: await strategy.findGame(files.removeTagsAndMetadata(file))
                 };
             }
             try {
@@ -49,11 +49,3 @@ async function main() {
 
 main().catch(e => log.error('Main process crashed', e));
 
-function removeTagsAndMetadata(name) {
-    let improvedName = name.replace(/\[([^\]]+)\]/g, ''); //remove []
-    improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
-    improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
-    improvedName = improvedName.trim();
-
-    return improvedName;
-}

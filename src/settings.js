@@ -1,5 +1,5 @@
 module.exports = {
-    logLevel: 'debug',
+    logLevel: 'info',
     forceSourceRefresh: false,
     forceExecutableRefresh: false,
     downloadImages: true,

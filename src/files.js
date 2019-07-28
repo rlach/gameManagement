@@ -47,12 +47,14 @@ class Files {
         });
     }
 
-    // async createRelativeLink(linkFileName, targetFileRelativePath) {
-    //     return wsAsyncCreate(`${settings.paths.shortcuts}/${linkFileName}.lnk`, {
-    //         target: explorerExePath,
-    //         args: targetFileRelativePath
-    //     });
-    // }
+    removeTagsAndMetadata(name) {
+        let improvedName = name.replace(/\[([^\]]+)\]/g, ''); //remove []
+        improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
+        improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
+        improvedName = improvedName.trim();
+
+        return improvedName;
+    }
 
     async writeFile(path, content) {
         await fsAsync.writeFile(path, content);
