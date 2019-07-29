@@ -27,7 +27,13 @@ class DlsiteStrategy {
             return;
         }
 
-        const productInfo = await getProductInfo(gameId);
+        let additionalImages;
+        let productInfo;
+        if (eng.name || jpn.name) {
+            productInfo = await getProductInfo(gameId);
+
+            additionalImages = await getAdditionalImages(gameId);
+        }
 
         return {
             communityStars: productInfo ? productInfo.rate_average_2dp : undefined,
@@ -45,7 +51,8 @@ class DlsiteStrategy {
             imageUrlJp: jpn.image,
             imageUrlEn: eng.image,
             releaseDate: jpn.releaseDate ? jpn.releaseDate : eng.releaseDate,
-            series: eng.series ? eng.series : jpn.series
+            series: eng.series ? eng.series : jpn.series,
+            additionalImages
         };
     }
 
@@ -128,7 +135,7 @@ function getOptions(id, type) {
     };
 }
 
-function getGameMetadata(root) {
+function getGameMetadata(root, gameId) {
     try {
         let imageSrc = root.querySelector('.slider_item').firstChild.attributes.src;
         if (imageSrc.startsWith('//')) {
@@ -187,9 +194,9 @@ async function getEnglishSite(id) {
     try {
         const reply = await request.get(getOptions(idEn, 'en'));
         const root = htmlParser.parse(reply);
-        return getGameMetadata(root);
+        return getGameMetadata(root, id);
     } catch (e) {
-        log.warn(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
+        log.debug(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
@@ -207,7 +214,50 @@ async function getProductInfo(id) {
             })
         )[id];
     } catch (e) {
-        log.warn(`Error getting productInfo for ${id} from ${this.name}`, {
+        log.debug(`Error getting productInfo for ${id} from ${this.name}`, {
+            name: e.name,
+            statusCode: e.statusCode,
+            message: e.message
+        });
+        return undefined;
+    }
+}
+
+async function getAdditionalImages(id) {
+    try {
+        let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
+        if (id.startsWith('RE')) {
+            url = `https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/${id}.html`;
+        }
+        let reply = await request.get({
+            method: 'GET',
+            uri: url
+        });
+
+        const root = htmlParser.parse(reply);
+
+        const samplesCount = parseInt(
+            root
+                .querySelector('#page')
+                .text.replace('1/', '')
+                .trim()
+        );
+        const firstImage = root.querySelector('.target_type').attributes.src.replace('//', 'http://');
+        log.debug(`Samples found`, {
+            samplesCount,
+            id,
+            queryResult: root.querySelector('#page').text,
+            firstImage
+        });
+
+        const additionalImages = [];
+        for (let i = 1; i <= samplesCount; i++) {
+            additionalImages.push(firstImage.replace('smp1', `smp${i}`));
+        }
+
+        return additionalImages;
+    } catch (e) {
+        log.debug(`Error getting productInfo for ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
@@ -221,9 +271,9 @@ async function getJapaneseSite(id) {
         let reply = await request.get(getOptions(id, 'jp'));
         // require('fs').writeFileSync(`./sample/pages/dlsite-${id}.html`, reply);
         const root = htmlParser.parse(reply);
-        return getGameMetadata(root);
+        return getGameMetadata(root, id);
     } catch (e) {
-        log.warn(`Error getting ${id} from ${this.name}`, {
+        log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
@@ -242,9 +292,9 @@ async function getProSite(id) {
             reply = await request.get(getOptions(id, 'proAnnounce'));
         }
         const root = htmlParser.parse(reply);
-        return getGameMetadata(root);
+        return getGameMetadata(root, id);
     } catch (e) {
-        log.warn(`Error getting ${id} from ${this.name}`, {
+        log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message

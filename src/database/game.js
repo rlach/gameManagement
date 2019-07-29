@@ -33,7 +33,8 @@ var gameSchema = new mongoose.Schema({
     broken: Boolean,
     deleted: Boolean,
     executableFile: String,
-    directory: String
+    directory: String,
+    additionalImages: [String]
 });
 gameSchema.index({ id: 1 });
 

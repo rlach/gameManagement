@@ -1,6 +1,6 @@
 module.exports = {
     logLevel: 'info',
-    forceSourceRefresh: false,
+    forceSourceRefresh: true,
     forceExecutableRefresh: false,
     downloadImages: true,
     launchboxPlatform: 'WINDOWS',

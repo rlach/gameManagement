@@ -166,10 +166,10 @@ async function convertDbToLaunchbox() {
     };
 
     const xml = convert.js2xml(objectToExport, { compact: true });
-    if(!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Data`);
     }
-    if(!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Data/Platforms`);
     }
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
@@ -281,38 +281,66 @@ async function downloadImages(game) {
     let filename = game.nameEn ? game.nameEn : game.nameJp;
     filename = filename.replace(/[\?*':\/\<\>"]/gi, '_'); //Replace banned characters with underscore like launchbox does
 
-    if(!fs.existsSync(`${settings.paths.launchbox}/Images`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Images`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images`);
     }
-    if(!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`);
     }
-    if(!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`);
     }
 
-    const targetPath = `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front/${filename}-01${
-        imageUrl.match(regexExtension)[0]
-    }`;
+    const targetPathMainImage = `${settings.paths.launchbox}/Images/${
+        settings.launchboxPlatform
+    }/Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
 
-    if (fs.existsSync(targetPath)) {
-        log.info('Image already exists, skipping', targetPath);
-        return;
+    if (fs.existsSync(targetPathMainImage)) {
+        log.info('Image already exists, skipping', targetPathMainImage);
+    } else {
+        log.debug('Downloading main image', {
+            imageUrl,
+            filename,
+            targetPath: targetPathMainImage
+        });
+
+        try {
+            await download.image({
+                url: imageUrl,
+                dest: targetPathMainImage
+            });
+        } catch (e) {
+            log.error('Error downloading image', e);
+        }
     }
 
-    log.debug('Downloading', {
-        imageUrl,
-        filename,
-        targetPath
-    });
+    if (!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`);
+    }
+    for (const [index, additionalImage] of game.additionalImages.entries()) {
+        log.info('Processing additionalImage', additionalImage);
+        const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
+            settings.launchboxPlatform
+            }/Screenshot - Gameplay/${filename}-${String(index + 1).padStart(2, '0')}${additionalImage.match(regexExtension)[0]}`;
 
-    try {
-        await download.image({
-            url: imageUrl,
-            dest: targetPath
-        });
-    } catch (e) {
-        log.error('Error downloading image', e);
+        if (fs.existsSync(targetPathAdditionalImage)) {
+            log.info('Additional image already exists, skipping', targetPathAdditionalImage);
+        } else {
+            log.debug('Downloading additional image', {
+                additionalImage,
+                filename,
+                targetPath: targetPathAdditionalImage
+            });
+
+            try {
+                await download.image({
+                    url: additionalImage,
+                    dest: targetPathAdditionalImage
+                });
+            } catch (e) {
+                log.error('Error downloading image', e);
+            }
+        }
     }
 }
 
