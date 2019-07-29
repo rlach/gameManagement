@@ -1,16 +1,16 @@
-const files = require('./files');
+const files = require('../files');
 const fs = require('fs');
-const log = require('./logger');
-const settings = require('./settings');
+const log = require('../logger');
+const settings = require('../settings');
 const inquirer = require('inquirer');
 
-async function main() {
+async function organizeDirectories() {
     log.info(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = await files.readDir(settings.paths.unsortedGames);
 
-    const dlsiteFolder = `${settings.paths.unsortedGames}/DLSITE`;
-    if (!fs.existsSync(dlsiteFolder)) {
-        fs.mkdirSync(dlsiteFolder);
+    const targetFolder = `${settings.paths.targetSortFolder}`;
+    if (!fs.existsSync(targetFolder)) {
+        fs.mkdirSync(targetFolder);
     }
 
     let current = 0;
@@ -158,7 +158,7 @@ async function main() {
             }
 
             if (score >= settings.organizeDirectories.minimumScoreToAccept) {
-                const gameFolder = `${dlsiteFolder}/${finalBossCode}`;
+                const gameFolder = `${targetFolder}/${finalBossCode}`;
                 if (!fs.existsSync(gameFolder)) {
                     fs.mkdirSync(gameFolder);
                 } else {
@@ -182,4 +182,4 @@ function addCode(bossCodes, CODE_WEIGHT, code) {
     bossCodes[improvedCode] ? (bossCodes[improvedCode] += CODE_WEIGHT) : (bossCodes[improvedCode] = CODE_WEIGHT);
 }
 
-main().catch(e => log.error(`Failure in main process`, e));
+module.exports = organizeDirectories;

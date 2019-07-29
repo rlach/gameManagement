@@ -1,12 +1,12 @@
-const parserStrategies = require('./parsers');
-const files = require('./files');
-const log = require('./logger');
-const { retrieveGameFromDb } = require('./database/game');
-const { db, connect } = require('./database/mongoose');
-const settings = require('./settings');
-const moment = require('moment');
+const parserStrategies = require('../parsers');
+const files = require('../files');
+const log = require('../logger');
+const { retrieveGameFromDb } = require('../database/game');
+const { db, connect } = require('../database/mongoose');
+const settings = require('../settings');
+const moment = require('moment/moment');
 
-async function main() {
+async function buildDbFromFolders() {
     await connect();
 
     log.info(`Reading all main paths`, settings.paths.main);
@@ -53,11 +53,6 @@ async function main() {
 
     db.close();
 }
-
-main().catch(e => {
-    log.error('Main process crashed', e);
-    db.close();
-});
 
 var path = require('path');
 
@@ -128,3 +123,5 @@ function selectStrategy(gameId) {
 
     return strategies[0];
 }
+
+module.exports = buildDbFromFolders;

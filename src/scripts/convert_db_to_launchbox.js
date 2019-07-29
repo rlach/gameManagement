@@ -1,15 +1,15 @@
-const { Game } = require('./database/game');
-const moment = require('moment');
+const { Game } = require('../database/game');
+const moment = require('moment/moment');
 const fs = require('fs');
-const log = require('./logger');
-const { db, connect } = require('./database/mongoose');
-const settings = require('./settings');
+const log = require('../logger');
+const { db, connect } = require('../database/mongoose');
+const settings = require('../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
 
-const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}\\Data\\Platforms/${settings.launchboxPlatform}.xml`;
+const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 
-async function main() {
+async function convertDbToLaunchbox() {
     await connect();
 
     let launchboxGames = [];
@@ -166,15 +166,16 @@ async function main() {
     };
 
     const xml = convert.js2xml(objectToExport, { compact: true });
+    if(!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Data`);
+    }
+    if(!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Data/Platforms`);
+    }
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
 }
-
-main().catch(e => {
-    log.error('Main process crashed', e);
-    db.close();
-});
 
 function getGenres(game) {
     const genres = game.genresEn ? game.genresEn : game.genresJp;
@@ -279,7 +280,18 @@ async function downloadImages(game) {
     }
     let filename = game.nameEn ? game.nameEn : game.nameJp;
     filename = filename.replace(/[\?*':\/\<\>"]/gi, '_'); //Replace banned characters with underscore like launchbox does
-    const targetPath = `${settings.paths.launchbox}\\Images\\${settings.launchboxPlatform}\\Box - Front/${filename}-01${
+
+    if(!fs.existsSync(`${settings.paths.launchbox}/Images`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Images`);
+    }
+    if(!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`);
+    }
+    if(!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`)) {
+        fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`);
+    }
+
+    const targetPath = `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front/${filename}-01${
         imageUrl.match(regexExtension)[0]
     }`;
 
@@ -288,7 +300,7 @@ async function downloadImages(game) {
         return;
     }
 
-    log.info('Downloading', {
+    log.debug('Downloading', {
         imageUrl,
         filename,
         targetPath
@@ -302,8 +314,6 @@ async function downloadImages(game) {
     } catch (e) {
         log.error('Error downloading image', e);
     }
-
-    log.info('past download');
 }
 
 function getUUID(gameId, matchingGame) {
@@ -313,3 +323,5 @@ function getUUID(gameId, matchingGame) {
         return UUID.v4();
     }
 }
+
+module.exports = convertDbToLaunchbox;

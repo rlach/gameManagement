@@ -1,15 +1,20 @@
-const { Game } = require('./database/game');
-const moment = require('moment');
+const { Game } = require('../database/game');
+const moment = require('moment/moment');
 const fs = require('fs');
-const log = require('./logger');
-const { db, connect } = require('./database/mongoose');
+const log = require('../logger');
+const { db, connect } = require('../database/mongoose');
 const convert = require('xml-js');
-const settings = require('./settings');
+const settings = require('../settings');
 
-async function main() {
+async function syncLaunchboxToDb() {
+    if(!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
+        log.info('Launchbox xml does not exist yet');
+        return;
+    }
+
     await connect();
     const launchboxXml = fs.readFileSync(
-        `${settings.paths.launchbox}\\Data\\Platforms/${settings.launchboxPlatform}.xml`,
+        `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`,
         'utf8'
     );
     const convertedObject = convert.xml2js(launchboxXml, { compact: true });
@@ -81,7 +86,4 @@ async function main() {
     await db.close();
 }
 
-main().catch(e => {
-    log.error('Main process crashed', e);
-    db.close();
-});
+module.exports = syncLaunchboxToDb;

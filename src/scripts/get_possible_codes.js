@@ -1,10 +1,10 @@
-const files = require('./files');
+const files = require('../files');
 const fs = require('fs');
-const log = require('./logger');
-const parserStrategies = require('./parsers');
-const settings = require('./settings');
+const log = require('../logger');
+const parserStrategies = require('../parsers');
+const settings = require('../settings');
 
-async function main() {
+async function getPossibleCodes() {
     log.info(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = await files.readDir(settings.paths.unsortedGames);
 
@@ -54,4 +54,4 @@ async function main() {
     log.info('Finished parsing');
 }
 
-main().catch(e => log.error('Main process crashed', e));
+module.exports = getPossibleCodes;

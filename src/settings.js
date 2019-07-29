@@ -27,10 +27,13 @@ module.exports = {
     },
     paths: {
         backup: './sample/launchbox',
-        launchbox: 'C:\\Users\\Alein\\LaunchBox',
-        unsortedGames: 'J:\\!NEWORDER\\!',
-        main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
+        // launchbox: 'C:\\Users\\Alein\\LaunchBox',
+        targetSortFolder: './sample/games/dlsite',
+        launchbox: './sample/launchbox',
+        unsortedGames: './sample/games/unsorted',
+        // unsortedGames: 'J:\\!NEWORDER\\!',
+        // main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
         // main: ['./sample/games/getchu']
-        // main: ['./sample/games/dlsite']
+        main: ['./sample/games/dlsite']
     }
 };
