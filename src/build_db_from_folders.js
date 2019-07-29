@@ -11,12 +11,12 @@ async function main() {
 
     log.info(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
-    for(const path of settings.paths.main) {
+    for (const path of settings.paths.main) {
         const singlePathFiles = (await files.readDir(path)).map(name => {
             return {
                 name,
                 path
-            }
+            };
         });
         foundFiles.push(...singlePathFiles);
     }
@@ -38,10 +38,10 @@ async function main() {
                 await game.save();
             }
 
-            if(!game.executableFile || settings.forceExecutableRefresh) {
+            if (!game.executableFile || settings.forceExecutableRefresh) {
                 log.debug('Updating executable path');
                 const executableFile = await findExecutableFile(file, strategy);
-                if(executableFile.deleted) {
+                if (executableFile.deleted) {
                     game.deleted = true;
                     await game.save();
                 } else {

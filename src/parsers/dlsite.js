@@ -56,32 +56,32 @@ class DlsiteStrategy {
     }
 
     async findGame(name) {
-        const replies = await Promise.all([search(name, 'adult-jp'), search(name, 'adult-en'), search(name, 'pro')])
+        const replies = await Promise.all([search(name, 'adult-jp'), search(name, 'adult-en'), search(name, 'pro')]);
         let replyEn = replies[1];
         let replyJp = replies[0];
         let replyPro = replies[2];
 
         const works = [];
 
-        if(replyEn.work.length === 0) {
+        if (replyEn.work.length === 0) {
             const replyEn2 = await search(name.substring(0, name.length / 2), 'adult-en');
             works.push(...replyEn2.work);
         } else {
-            works.push(...replyEn.work)
+            works.push(...replyEn.work);
         }
 
-        if(replyJp.work.length === 0) {
+        if (replyJp.work.length === 0) {
             const replyJp2 = await search(name.substring(0, name.length / 2), 'adult-jp');
             works.push(...replyJp2.work);
         } else {
-            works.push(...replyJp.work)
+            works.push(...replyJp.work);
         }
 
-        if(replyPro.work.length === 0) {
+        if (replyPro.work.length === 0) {
             const replyPro2 = await search(name.substring(0, name.length / 2), 'pro');
             works.push(...replyPro2.work);
         } else {
-            works.push(...replyPro.work)
+            works.push(...replyPro.work);
         }
 
         return works;
@@ -137,19 +137,22 @@ function getGameMetadata(root) {
 
         let releaseDate;
         const dateText = root.querySelector('#work_outline a').text.trim();
-        if(/\d/.test(dateText[0])) {
+        if (/\d/.test(dateText[0])) {
             releaseDate = moment(dateText, 'YYYY-MM-DD-').format(); //Japanese format
         } else {
             releaseDate = moment(dateText, 'MMM-DD-YYYY').format(); //English format
         }
-        if(releaseDate === 'Invalid Date') {
+        if (releaseDate === 'Invalid Date') {
             releaseDate = undefined;
         }
 
         let seriesText;
         try {
-            seriesText = root.querySelectorAll('#work_outline a').filter(a => a.attributes.href.includes('work.series'))[0].text.trim();
-        } catch(e) {
+            seriesText = root
+                .querySelectorAll('#work_outline a')
+                .filter(a => a.attributes.href.includes('work.series'))[0]
+                .text.trim();
+        } catch (e) {
             log.warn('Series text missing or invalid');
         }
 
@@ -197,10 +200,12 @@ async function getEnglishSite(id) {
 
 async function getProductInfo(id) {
     try {
-        return JSON.parse(await request.get(   {
-            method: 'GET',
-            uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`
-        }))[id];
+        return JSON.parse(
+            await request.get({
+                method: 'GET',
+                uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`
+            })
+        )[id];
     } catch (e) {
         log.warn(`Error getting productInfo for ${id} from ${this.name}`, {
             name: e.name,

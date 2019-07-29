@@ -1,6 +1,4 @@
-const settings = require('./settings');
-const log = require('./logger');
-const {promisify} = require('util');
+const { promisify } = require('util');
 
 const fs = require('fs');
 const find = require('fs-find');
@@ -8,7 +6,6 @@ const fsAsync = {
     readdir: promisify(fs.readdir),
     writeFile: promisify(fs.writeFile)
 };
-// const wsAsyncCreate = promisify(ws.create);
 const asyncFind = promisify(find);
 
 const bannedExeFileNames = [

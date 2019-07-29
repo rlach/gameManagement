@@ -1,4 +1,4 @@
-const {mongoose} = require('./mongoose');
+const { mongoose } = require('./mongoose');
 const log = require('./../logger');
 const moment = require('moment');
 
@@ -35,7 +35,7 @@ var gameSchema = new mongoose.Schema({
     executableFile: String,
     directory: String
 });
-gameSchema.index({id: 1});
+gameSchema.index({ id: 1 });
 
 var Game = mongoose.model('Game', gameSchema);
 
@@ -63,4 +63,4 @@ async function retrieveGameFromDb(id) {
     return game;
 }
 
-module.exports = {Game, retrieveGameFromDb};
+module.exports = { Game, retrieveGameFromDb };

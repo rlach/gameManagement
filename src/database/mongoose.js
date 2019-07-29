@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 var db = mongoose.connection;
 
 db.on('error', log.error.bind(log, 'connection error:'));
-db.once('open', function () {
+db.once('open', function() {
     log.info('Connected to database');
 });
 mongoose.set('useCreateIndex', true);
@@ -11,7 +11,7 @@ mongoose.set('useCreateIndex', true);
 async function connect() {
     await mongoose.connect(
         'mongodb://localhost/test',
-        {useNewUrlParser: true}
+        { useNewUrlParser: true }
     );
 }
 

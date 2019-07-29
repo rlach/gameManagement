@@ -1,8 +1,8 @@
-const {Game} = require('./database/game');
+const { Game } = require('./database/game');
 const moment = require('moment');
 const fs = require('fs');
 const log = require('./logger');
-const {db, connect} = require('./database/mongoose');
+const { db, connect } = require('./database/mongoose');
 const settings = require('./settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
@@ -16,11 +16,11 @@ async function main() {
 
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.info('Platform file already exists, backing up');
-        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`)
+        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`);
 
-        log.info('Also, read old file so we can keep ids unchanged')
+        log.info('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
-        const convertedObject = convert.xml2js(launchboxXml, {compact: true});
+        const convertedObject = convert.xml2js(launchboxXml, { compact: true });
         if (convertedObject.LaunchBox.Game.length > 0) {
             launchboxGames = convertedObject.LaunchBox.Game;
         }
@@ -44,8 +44,8 @@ async function main() {
         const gameProperties = {
             ApplicationPath: game.executableFile
                 ? {
-                    _text: game.executableFile
-                }
+                      _text: game.executableFile
+                  }
                 : {},
             Completed: {
                 _text: game.completed ? game.completed : 'false'
@@ -65,9 +65,11 @@ async function main() {
             ReleaseDate: {
                 _text: game.releaseDate ? game.releaseDate : moment().format()
             },
-            LastPlayedDate: matchingGame ? matchingGame.LastPlayedDate : {
-                _text: '1800-01-01T01:33:35.9365244+02:00'
-            },
+            LastPlayedDate: matchingGame
+                ? matchingGame.LastPlayedDate
+                : {
+                      _text: '1800-01-01T01:33:35.9365244+02:00'
+                  },
             Developer: {
                 _text: getDeveloper(game)
             },
@@ -80,29 +82,29 @@ async function main() {
             Notes:
                 game.descriptionEn || game.descriptionJp
                     ? {
-                        _text: game.descriptionEn ? game.descriptionEn : game.descriptionJp
-                    }
+                          _text: game.descriptionEn ? game.descriptionEn : game.descriptionJp
+                      }
                     : {},
             Platform: {
                 _text: settings.launchboxPlatform
             },
             Rating: game.rating
                 ? {
-                    _text: game.rating
-                }
+                      _text: game.rating
+                  }
                 : {},
             RootFolder: game.directory
                 ? {
-                    _text: game.directory
-                }
+                      _text: game.directory
+                  }
                 : {},
             SortTitle: {
                 _text: game.id
             },
             Source: game.source
                 ? {
-                    _text: game.source
-                }
+                      _text: game.source
+                  }
                 : {},
             StarRatingFloat: {
                 _text: game.stars ? game.stars : 0
@@ -113,18 +115,18 @@ async function main() {
             Title:
                 game.nameEn || game.nameJp
                     ? {
-                        _text: game.nameEn ? game.nameEn : game.nameJp
-                    }
+                          _text: game.nameEn ? game.nameEn : game.nameJp
+                      }
                     : {},
             Version: game.version
                 ? {
-                    _text: game.version
-                }
+                      _text: game.version
+                  }
                 : {},
             Series: game.series
                 ? {
-                    _text: game.series
-                }
+                      _text: game.series
+                  }
                 : {},
             Portable: {
                 _text: game.portable ? game.portable : 'false'
@@ -163,7 +165,7 @@ async function main() {
         }
     };
 
-    const xml = convert.js2xml(objectToExport, {compact: true});
+    const xml = convert.js2xml(objectToExport, { compact: true });
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
@@ -277,7 +279,9 @@ async function downloadImages(game) {
     }
     let filename = game.nameEn ? game.nameEn : game.nameJp;
     filename = filename.replace(/[\?*':\/\<\>"]/gi, '_'); //Replace banned characters with underscore like launchbox does
-    const targetPath = `${settings.paths.launchbox}\\Images\\${settings.launchboxPlatform}\\Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
+    const targetPath = `${settings.paths.launchbox}\\Images\\${settings.launchboxPlatform}\\Box - Front/${filename}-01${
+        imageUrl.match(regexExtension)[0]
+    }`;
 
     if (fs.existsSync(targetPath)) {
         log.info('Image already exists, skipping', targetPath);
@@ -306,6 +310,6 @@ function getUUID(gameId, matchingGame) {
     if (matchingGame && matchingGame.ID && matchingGame.ID._text) {
         return matchingGame.ID._text;
     } else {
-        return UUID.v4()
+        return UUID.v4();
     }
 }

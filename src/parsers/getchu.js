@@ -77,12 +77,14 @@ class GetchuStrategy {
         // await files.writeFile(`${name}.html`, reply);
         const root = parseSite(reply);
         // log.info('selected blueb', JSON.stringify(select(root, '.blueb'), null, 4));
-        const works = select(root, '.blueb').filter(b => b.name === 'A').map(b => {
-            return {
-                work_name: b.children && b.children[0] ? b.children[0].data: '',
-                workno: b.attribs && b.attribs.HREF ? b.attribs.HREF.match(GETCHU_ID_REGEX) : ''
-            }
-        });
+        const works = select(root, '.blueb')
+            .filter(b => b.name === 'A')
+            .map(b => {
+                return {
+                    work_name: b.children && b.children[0] ? b.children[0].data : '',
+                    workno: b.attribs && b.attribs.HREF ? b.attribs.HREF.match(GETCHU_ID_REGEX) : ''
+                };
+            });
 
         return { works };
     }
@@ -104,7 +106,7 @@ function getGameMetadataJp(root) {
         let releaseDayText;
         try {
             releaseDayText = select(root, '#tooltip-day').shift().children[0].data;
-        } catch(e) {
+        } catch (e) {
             log.debug('Release day element missing or invalid');
         }
 
@@ -220,12 +222,17 @@ async function getJapaneseSite(id) {
 
 async function getReviews(id) {
     try {
-        let reply = await callPage(`http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(id)}`);
+        let reply = await callPage(
+            `http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(id)}`
+        );
         const root = parseSite(reply);
 
         const averageRatingElement = select(root, '.r_ave').shift();
 
-        const averageRatingText = averageRatingElement && averageRatingElement.children && averageRatingElement.children.length > 0 ? averageRatingElement.children[0].data : '0.00';
+        const averageRatingText =
+            averageRatingElement && averageRatingElement.children && averageRatingElement.children.length > 0
+                ? averageRatingElement.children[0].data
+                : '0.00';
 
         return {
             averageRating: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])

@@ -19,8 +19,8 @@ async function main() {
     let scores = {};
     for (const file of foundFiles) {
         current++;
-        const newFloor = Math.floor(current / foundFiles.length * 100);
-        if(newFloor > lastFloor) {
+        const newFloor = Math.floor((current / foundFiles.length) * 100);
+        if (newFloor > lastFloor) {
             lastFloor = newFloor;
             log.info(`Processed ${newFloor}%`);
         }
@@ -67,11 +67,17 @@ async function main() {
             let score = 0;
             const strippedName = files.removeTagsAndMetadata(fileCodes.file);
             const exactMatch = fileCodes.dlsite.foundCodes.find(fc => fc.work_name === strippedName);
-            const noSpacesExactMatch = fileCodes.dlsite.foundCodes.find(fc => fc.work_name.replace(/ /gi, '') === strippedName.replace(/ /gi, ''));
+            const noSpacesExactMatch = fileCodes.dlsite.foundCodes.find(
+                fc => fc.work_name.replace(/ /gi, '') === strippedName.replace(/ /gi, '')
+            );
             const similarMatch = fileCodes.dlsite.foundCodes.find(fc => fc.work_name.includes(strippedName));
             const similarMatchSecondSide = fileCodes.dlsite.foundCodes.find(fc => strippedName.includes(fc.work_name));
-            const noSpacesSimilarMatch = fileCodes.dlsite.foundCodes.find(fc => fc.work_name.replace(/ /gi, '').includes(strippedName.replace(/ /gi, '')));
-            const noSpacesSimilarMatchSecondSide = fileCodes.dlsite.foundCodes.find(fc => strippedName.replace(/ /gi, '').includes(fc.work_name.replace(/ /gi, '')));
+            const noSpacesSimilarMatch = fileCodes.dlsite.foundCodes.find(fc =>
+                fc.work_name.replace(/ /gi, '').includes(strippedName.replace(/ /gi, ''))
+            );
+            const noSpacesSimilarMatchSecondSide = fileCodes.dlsite.foundCodes.find(fc =>
+                strippedName.replace(/ /gi, '').includes(fc.work_name.replace(/ /gi, ''))
+            );
 
             const EXACT_MATCH_WEIGHT = 3;
             const NO_SPACE_EXACT_MATCH_WEIGHT = 3;
@@ -124,13 +130,15 @@ async function main() {
                 scores[score] = 1;
             }
 
-            let finalBossName = fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode) ? fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode).work_name : fileCodes.getchu.foundCodes.works.find(fc => {
-                try {
-                    return fc.workno && (fc.workno[0] === finalBossCode)
-                } catch (e) {
-                    log.info(fc);
-                }
-            });
+            let finalBossName = fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode)
+                ? fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode).work_name
+                : fileCodes.getchu.foundCodes.works.find(fc => {
+                      try {
+                          return fc.workno && fc.workno[0] === finalBossCode;
+                      } catch (e) {
+                          log.info(fc);
+                      }
+                  });
             if (finalBossName && finalBossName.work_name) {
                 finalBossName = finalBossName.work_name;
             }
@@ -141,19 +149,27 @@ async function main() {
                     finalBossName,
                     score,
                     finalBossCode
-                })
+                });
             }
 
             const MINIMUM_SCORE_TO_ASK = 1;
             const MINIMUM_SCORE_TO_ACCEPT = 4;
             const SHOULD_ASK = true;
 
-            if (SHOULD_ASK && finalBossName && score > 0 && score >= MINIMUM_SCORE_TO_ASK && score < MINIMUM_SCORE_TO_ACCEPT) {
-                let answer = await inquirer.prompt([{
-                    type: 'confirm',
-                    name: 'same',
-                    message: `Are \n* ${finalBossName} \n* ${file} \nthe same? \nCode ${finalBossCode}\n>`,
-                }]);
+            if (
+                SHOULD_ASK &&
+                finalBossName &&
+                score > 0 &&
+                score >= MINIMUM_SCORE_TO_ASK &&
+                score < MINIMUM_SCORE_TO_ACCEPT
+            ) {
+                let answer = await inquirer.prompt([
+                    {
+                        type: 'confirm',
+                        name: 'same',
+                        message: `Are \n* ${finalBossName} \n* ${file} \nthe same? \nCode ${finalBossCode}\n>`
+                    }
+                ]);
                 if (answer.same) {
                     score = 999;
                 } else {
@@ -186,7 +202,7 @@ async function main() {
 
 function addCode(bossCodes, CODE_WEIGHT, code) {
     const improvedCode = code.replace('RE', 'RJ');
-    bossCodes[improvedCode] ? bossCodes[improvedCode] += CODE_WEIGHT : bossCodes[improvedCode] = CODE_WEIGHT;
+    bossCodes[improvedCode] ? (bossCodes[improvedCode] += CODE_WEIGHT) : (bossCodes[improvedCode] = CODE_WEIGHT);
 }
 
 main().catch(e => log.error(`Failure in main process`, e));
