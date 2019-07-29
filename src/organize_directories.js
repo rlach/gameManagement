@@ -38,30 +38,26 @@ async function main() {
             const bossCodes = {};
             let finalBossCode = '';
             const extractedCode = fileCodes.dlsite.extractedCode;
-            const RESULT_EXISTS_WEIGHT = 1;
-            const ONLY_ONE_RESULT_EXISTS_WEIGHT = 1;
-            const EXTRACTED_CODE_WEIGHT = 3;
-            const EXTRACTED_CODE_MATCHING_RESULT_WEIGHT = 3;
 
             fileCodes.dlsite.foundCodes.forEach(code => {
-                addCode(bossCodes, RESULT_EXISTS_WEIGHT, code.workno);
+                addCode(bossCodes, settings.advanced.scores.resultExists, code.workno);
             });
             if (fileCodes.dlsite.foundCodes.length === 1) {
-                addCode(bossCodes, ONLY_ONE_RESULT_EXISTS_WEIGHT, fileCodes.dlsite.foundCodes[0].workno);
+                addCode(bossCodes, settings.advanced.scores.onlyOneResultExists, fileCodes.dlsite.foundCodes[0].workno);
             }
 
             fileCodes.getchu.foundCodes.works.forEach(code => {
                 if (code.workno) {
-                    addCode(bossCodes, RESULT_EXISTS_WEIGHT, code.workno[0]);
+                    addCode(bossCodes, settings.advanced.scores.resultExists, code.workno[0]);
                 }
             });
             if (fileCodes.getchu.foundCodes.works.length === 1) {
-                addCode(bossCodes, ONLY_ONE_RESULT_EXISTS_WEIGHT, fileCodes.getchu.foundCodes.works[0].workno[0]);
+                addCode(bossCodes, settings.advanced.scores.onlyOneResultExists, fileCodes.getchu.foundCodes.works[0].workno[0]);
             }
             if (extractedCode !== '') {
-                addCode(bossCodes, EXTRACTED_CODE_WEIGHT, extractedCode);
+                addCode(bossCodes, settings.advanced.scores.extractedDlsiteCode, extractedCode);
                 if (fileCodes.dlsite.foundCodes.find(fc => fc.workno === extractedCode)) {
-                    addCode(bossCodes, EXTRACTED_CODE_MATCHING_RESULT_WEIGHT, extractedCode);
+                    addCode(bossCodes, settings.advanced.scores.matchForExtractedDlsiteCode, extractedCode);
                 }
             }
             let score = 0;
@@ -79,36 +75,23 @@ async function main() {
                 strippedName.replace(/ /gi, '').includes(fc.work_name.replace(/ /gi, ''))
             );
 
-            const EXACT_MATCH_WEIGHT = 3;
-            const NO_SPACE_EXACT_MATCH_WEIGHT = 3;
-            const NO_SPACE_SIMILAR_MATCH_WEIGHT = 2;
-            const NO_SPACE_SIMILAR_MATCH_SECOND_SIDE_WEIGHT = 2;
-            const SIMILAR_MATCH_WEIGHT = 2;
-            const SIMILAR_MATCH_SECOND_SIDE_WEIGHT = 2;
-
             if (exactMatch) {
-                addCode(bossCodes, EXACT_MATCH_WEIGHT, exactMatch.workno);
-                // log.info(`${strippedName} <=> ${exactMatch.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.exactMatch, exactMatch.workno);
             }
             if (noSpacesExactMatch) {
-                addCode(bossCodes, NO_SPACE_EXACT_MATCH_WEIGHT, noSpacesExactMatch.workno);
-                // log.info(`${strippedName} <=> ${noSpacesExactMatch.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.noSpaceExactMatch, noSpacesExactMatch.workno);
             }
             if (noSpacesSimilarMatch) {
-                addCode(bossCodes, NO_SPACE_SIMILAR_MATCH_WEIGHT, noSpacesSimilarMatch.workno);
-                // log.info(`${strippedName} <=> ${noSpacesSimilarMatch.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.similarMatch, noSpacesSimilarMatch.workno);
             }
             if (noSpacesSimilarMatchSecondSide) {
-                addCode(bossCodes, NO_SPACE_SIMILAR_MATCH_SECOND_SIDE_WEIGHT, noSpacesSimilarMatchSecondSide.workno);
-                // log.info(`${strippedName} <=> ${noSpacesSimilarMatchSecondSide.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.noSpaceSimilarMatchSecondSide, noSpacesSimilarMatchSecondSide.workno);
             }
             if (similarMatch) {
-                addCode(bossCodes, SIMILAR_MATCH_WEIGHT, similarMatch.workno);
-                // log.info(`${strippedName} <=> ${similarMatch.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.similarMatch, similarMatch.workno);
             }
             if (similarMatchSecondSide) {
-                addCode(bossCodes, SIMILAR_MATCH_SECOND_SIDE_WEIGHT, similarMatchSecondSide.workno);
-                // log.info(`${strippedName} <=> ${similarMatchSecondSide.work_name}`);
+                addCode(bossCodes, settings.advanced.scores.similarMatchSecondSide, similarMatchSecondSide.workno);
             }
             if (Object.keys(bossCodes).length > 0) {
                 log.debug('Boss codes', bossCodes);
@@ -152,16 +135,12 @@ async function main() {
                 });
             }
 
-            const MINIMUM_SCORE_TO_ASK = 1;
-            const MINIMUM_SCORE_TO_ACCEPT = 4;
-            const SHOULD_ASK = true;
-
             if (
-                SHOULD_ASK &&
+                settings.organizeDirectories.shouldAsk &&
                 finalBossName &&
                 score > 0 &&
-                score >= MINIMUM_SCORE_TO_ASK &&
-                score < MINIMUM_SCORE_TO_ACCEPT
+                score >= settings.organizeDirectories.minimumScoreToAsk &&
+                score < settings.organizeDirectories.minimumScoreToAccept
             ) {
                 let answer = await inquirer.prompt([
                     {
@@ -178,7 +157,7 @@ async function main() {
                 }
             }
 
-            if (score >= MINIMUM_SCORE_TO_ACCEPT) {
+            if (score >= settings.organizeDirectories.minimumScoreToAccept) {
                 const gameFolder = `${dlsiteFolder}/${finalBossCode}`;
                 if (!fs.existsSync(gameFolder)) {
                     fs.mkdirSync(gameFolder);
@@ -190,8 +169,6 @@ async function main() {
                 fs.renameSync(`${settings.paths.unsortedGames}/${file}`, `${gameFolder}/${file}`);
                 log.debug(`Moved ${settings.paths.unsortedGames}/${file} to ${gameFolder}/${file}`);
             }
-
-            // log.info(`Dlsite score for ${file} is ${dlsiteScore}`);
         } catch (e) {
             log.error('Error getting proper file codes', e);
             continue;
