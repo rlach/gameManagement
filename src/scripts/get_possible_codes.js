@@ -6,7 +6,7 @@ const settings = require('../settings');
 
 async function getPossibleCodes() {
     log.info(`Reading ${settings.paths.unsortedGames}`);
-    const foundFiles = await files.readDir(settings.paths.unsortedGames);
+    const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     const all = foundFiles.length;
     let current = 0;
@@ -44,7 +44,7 @@ async function getPossibleCodes() {
                 };
             }
             try {
-                await files.writeFile(foundCodesPath, JSON.stringify(fileResults, null, 4));
+                fs.writeFileSync(foundCodesPath, JSON.stringify(fileResults, null, 4));
             } catch (e) {
                 log.error('Error writing codes', e);
             }

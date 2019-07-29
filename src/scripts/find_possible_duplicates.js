@@ -1,4 +1,3 @@
-const files = require('../files');
 const log = require('../logger');
 const settings = require('../settings');
 const { readdirSync } = require('fs');
@@ -7,7 +6,7 @@ async function findPossibleDuplicates() {
     log.info(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
     for (const path of settings.paths.main) {
-        const singlePathFiles = (await files.readDir(path)).map(name => {
+        const singlePathFiles = fs.readdirSync(path).map(name => {
             return {
                 name,
                 path

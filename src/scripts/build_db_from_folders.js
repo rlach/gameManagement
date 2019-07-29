@@ -5,6 +5,7 @@ const { retrieveGameFromDb } = require('../database/game');
 const { db, connect } = require('../database/mongoose');
 const settings = require('../settings');
 const moment = require('moment/moment');
+const fs = require('fs');
 
 async function buildDbFromFolders() {
     await connect();
@@ -12,7 +13,7 @@ async function buildDbFromFolders() {
     log.info(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
     for (const path of settings.paths.main) {
-        const singlePathFiles = (await files.readDir(path)).map(name => {
+        const singlePathFiles = fs.readdirSync(path).map(name => {
             return {
                 name,
                 path
@@ -60,7 +61,7 @@ async function findExecutableFile(file) {
     let executableFile;
 
     const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
-    const subFiles = await files.readDir(`${file.path}/${file.name}`);
+    const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
         log.info('Game was deleted', { file });
         return {

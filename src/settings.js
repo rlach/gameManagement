@@ -11,6 +11,7 @@ module.exports = {
         minimumScoreToAsk: 1,
         minimumScoreToAccept: 4
     },
+    exeSearchDepth: 2,
     advanced: {
       scores: {
           resultExists: 1,

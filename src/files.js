@@ -1,12 +1,8 @@
 const { promisify } = require('util');
 
-const fs = require('fs');
 const find = require('fs-find');
-const fsAsync = {
-    readdir: promisify(fs.readdir),
-    writeFile: promisify(fs.writeFile)
-};
 const asyncFind = promisify(find);
+const settings = require('./settings');
 
 const bannedExeFileNames = [
     'セーブデータ場所設定ツール',
@@ -32,14 +28,10 @@ const bannedExeFileNames = [
 const executableExtensions = ['.exe', '.swf'];
 
 class Files {
-    async readDir(path) {
-        return fsAsync.readdir(path);
-    }
-
     async findExecutables(path) {
         return asyncFind(path, {
             file: f => hasProperExtension(f) && !isBaned(f),
-            depth: 2,
+            depth: settings.exeSearchDepth,
             followLinks: true
         });
     }
@@ -51,10 +43,6 @@ class Files {
         improvedName = improvedName.trim();
 
         return improvedName;
-    }
-
-    async writeFile(path, content) {
-        await fsAsync.writeFile(path, content);
     }
 }
 

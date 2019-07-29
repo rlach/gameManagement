@@ -6,7 +6,7 @@ const inquirer = require('inquirer');
 
 async function organizeDirectories() {
     log.info(`Reading ${settings.paths.unsortedGames}`);
-    const foundFiles = await files.readDir(settings.paths.unsortedGames);
+    const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     const targetFolder = `${settings.paths.targetSortFolder}`;
     if (!fs.existsSync(targetFolder)) {
@@ -153,7 +153,7 @@ async function organizeDirectories() {
                     score = 999;
                 } else {
                     fileCodes.noMatch = true;
-                    await files.writeFile(foundFilesPath, JSON.stringify(fileCodes, null, 4));
+                    fs.writeFileSync(foundFilesPath, JSON.stringify(fileCodes, null, 4));
                 }
             }
 
