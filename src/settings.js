@@ -33,7 +33,6 @@ module.exports = {
         unsortedGames: './sample/games/unsorted',
         // unsortedGames: 'J:\\!NEWORDER\\!',
         // main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
-        // main: ['./sample/games/getchu']
-        main: ['./sample/games/dlsite']
+        main: ['./sample/games/dlsite', './sample/games/getchu']
     }
 };

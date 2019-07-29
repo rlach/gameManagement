@@ -15,7 +15,8 @@ async function main() {
                 'organize directories',
                 'sync launchbox to db',
                 'build db from folders',
-                'convert db to launchbox'
+                'convert db to launchbox',
+                'find possible duplicates'
             ],
             default: 0
         }
@@ -35,6 +36,9 @@ async function main() {
             break;
         case 'convert db to launchbox':
             await scripts.convertDbToLaunchbox();
+            break;
+        case 'find possible duplicates':
+            await scripts.findPossibleDuplicates();
             break;
         case 'sync all':
         default:
