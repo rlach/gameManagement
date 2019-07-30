@@ -1,7 +1,9 @@
 module.exports = {
     logLevel: 'info',
-    forceSourceRefresh: true,
+    externalIdField: 'SortTitle', //Suggested: SortTitle, Source, Status or CustomField
+    forceSourceRefresh: false,
     forceExecutableRefresh: false,
+    forceAdditionalImagesRefresh: false,
     downloadImages: true,
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',
@@ -28,12 +30,12 @@ module.exports = {
     },
     paths: {
         backup: './sample/launchbox',
-        // launchbox: 'C:\\Users\\Alein\\LaunchBox',
-        targetSortFolder: './sample/games/dlsite',
-        launchbox: './sample/launchbox',
-        unsortedGames: './sample/games/unsorted',
-        // unsortedGames: 'J:\\!NEWORDER\\!',
-        // main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
-        main: ['./sample/games/dlsite', './sample/games/getchu']
+        targetSortFolder: 'J:/!NEWORDER/DLSITE',
+        launchbox: 'C:/Users/Alein/LaunchBox',
+        // launchbox: './sample/launchbox',
+        // unsortedGames: './sample/games/unsorted',
+        unsortedGames: 'J:\\!NEWORDER\\!',
+        main: ['J:\\!NEWORDER\\GETCHU', 'J:\\!NEWORDER\\DLSITE']
+        // main: ['./sample/games/dlsite', './sample/games/getchu']
     }
 };

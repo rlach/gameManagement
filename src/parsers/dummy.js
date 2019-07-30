@@ -15,6 +15,10 @@ class DummyStrategy {
         return [];
     }
 
+    async getAdditionalImages(id) {
+        return undefined;
+    }
+
     shouldUse(gameId) {
         return false;
     }

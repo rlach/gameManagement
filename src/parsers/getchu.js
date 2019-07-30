@@ -4,6 +4,7 @@ const select = require('soupselect').select;
 const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
+const { getVndbData } = require('./vndb');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
 const JAPANESE_ENCODING = 'EUC-JP';
@@ -21,7 +22,7 @@ class GetchuStrategy {
         let eng = {};
         if (jpn.name) {
             log.info(`Getting english site for ${jpn.name}`);
-            const engResult = await getEnglishSite(jpn.name);
+            const engResult = await getVndbData(jpn.name);
             if (engResult) {
                 eng = engResult;
             }
@@ -89,6 +90,10 @@ class GetchuStrategy {
         return { works };
     }
 
+    async getAdditionalImages(id) {
+        return undefined;
+    }
+
     shouldUse(gameId) {
         return gameId.match(GETCHU_ID_REGEX) !== undefined;
     }
@@ -125,74 +130,6 @@ function getGameMetadataJp(root) {
     } catch (e) {
         log.error('Metadata parsing failure', { e, root });
     }
-}
-
-//There is no English getchu, let's try getting data from VNDB
-const VNDB = require('vndb');
-const VNDBtags = require('./vndb-tags');
-
-async function getEnglishSite(name) {
-    let improvedName = name.replace(/\(([^)]+)\)/g, ''); //remove ()
-    improvedName = improvedName.replace(/（([^)]+)）/g, ''); //remove japanese ()
-    improvedName = improvedName.replace(/・/g, ''); // replace bad characters
-    log.info('Improved name', improvedName);
-    let vndb;
-    try {
-        vndb = await VNDB.start();
-        await vndb.write('login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}');
-        let foundVNs = JSON.parse(
-            (await vndb.write(
-                `get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`
-            )).replace('results ', '')
-        );
-
-        let VN;
-        if (foundVNs.num > 0) {
-            VN = foundVNs.items[0];
-        }
-
-        if (!VN) {
-            improvedName = improvedName.substring(0, improvedName.length / 2);
-            foundVNs = JSON.parse(
-                (await vndb.write(
-                    `get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`
-                )).replace('results ', '')
-            );
-            if (foundVNs.num > 0) {
-                VN = foundVNs.items[0];
-            } else {
-                return undefined;
-            }
-        }
-
-        const tags = VN.tags
-            .filter(tag => tag[1] > 1)
-            .map(tag => {
-                const foundTag = VNDBtags.find(t => t.id === tag[0]);
-                return foundTag ? foundTag : '';
-            })
-            .filter(tag => tag !== '');
-
-        log.info('About to return VN');
-        return {
-            name: VN.title,
-            releaseDate: moment(VN.released, 'YYYY-MM-DD').format(),
-            description: VN.description,
-            genres: tags.filter(t => t.cat === 'ero').map(t => t.name),
-            tags: tags.filter(t => t.cat === 'tech').map(t => t.name),
-            image: VN.image
-        };
-    } catch (e) {
-        log.info('Bluh');
-        log.error('Something happened when connecting to VNDB API', e);
-    } finally {
-        if (vndb) {
-            await vndb.end();
-        }
-    }
-
-    log.info('returning undefined');
-    return undefined;
 }
 
 function parseSite(rawHtml) {

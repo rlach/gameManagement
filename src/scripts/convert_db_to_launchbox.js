@@ -13,6 +13,7 @@ async function convertDbToLaunchbox() {
     await connect();
 
     let launchboxGames = [];
+    let originalObject;
 
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.info('Platform file already exists, backing up');
@@ -20,9 +21,9 @@ async function convertDbToLaunchbox() {
 
         log.info('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
-        const convertedObject = convert.xml2js(launchboxXml, { compact: true });
-        if (convertedObject.LaunchBox.Game.length > 0) {
-            launchboxGames = convertedObject.LaunchBox.Game;
+        originalObject = convert.xml2js(launchboxXml, { compact: true });
+        if (originalObject.LaunchBox.Game.length > 0) {
+            launchboxGames = originalObject.LaunchBox.Game;
         }
     }
 
@@ -82,7 +83,7 @@ async function convertDbToLaunchbox() {
             Notes:
                 game.descriptionEn || game.descriptionJp
                     ? {
-                          _text: game.descriptionEn ? game.descriptionEn : game.descriptionJp
+                          _text: (game.descriptionEn ? game.descriptionEn : game.descriptionJp).replace(invalidChars, '')
                       }
                     : {},
             Platform: {
@@ -153,17 +154,23 @@ async function convertDbToLaunchbox() {
         }
     }
 
-    const objectToExport = {
-        _declaration: {
-            _attributes: {
-                version: '1.0',
-                standalone: 'yes'
+    let objectToExport;
+    if(originalObject) {
+        originalObject.LaunchBox.Game = convertedGames;
+        objectToExport = originalObject;
+    } else {
+        objectToExport = {
+            _declaration: {
+                _attributes: {
+                    version: '1.0',
+                    standalone: 'yes'
+                }
+            },
+            LaunchBox: {
+                Game: convertedGames
             }
-        },
-        LaunchBox: {
-            Game: convertedGames
-        }
-    };
+        };
+    }
 
     const xml = convert.js2xml(objectToExport, { compact: true });
     if (!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
@@ -318,13 +325,13 @@ async function downloadImages(game) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`);
     }
     for (const [index, additionalImage] of game.additionalImages.entries()) {
-        log.info('Processing additionalImage', additionalImage);
+        log.debug('Processing additionalImage', additionalImage);
         const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
             settings.launchboxPlatform
             }/Screenshot - Gameplay/${filename}-${String(index + 1).padStart(2, '0')}${additionalImage.match(regexExtension)[0]}`;
 
         if (fs.existsSync(targetPathAdditionalImage)) {
-            log.info('Additional image already exists, skipping', targetPathAdditionalImage);
+            log.debug('Additional image already exists, skipping', targetPathAdditionalImage);
         } else {
             log.debug('Downloading additional image', {
                 additionalImage,
@@ -351,5 +358,9 @@ function getUUID(gameId, matchingGame) {
         return UUID.v4();
     }
 }
+
+
+// remove everything forbidden by XML 1.0 specifications, plus the unicode replacement character U+FFFD
+const invalidChars = /([^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFC\u{10000}-\u{10FFFF}])/ug;
 
 module.exports = convertDbToLaunchbox;

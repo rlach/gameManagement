@@ -2,6 +2,7 @@ const htmlParser = require('node-html-parser/dist/index');
 const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
+const { getVndbData } = require('./vndb');
 
 class DlsiteStrategy {
     constructor() {
@@ -22,6 +23,13 @@ class DlsiteStrategy {
         } else if (gameId.startsWith('VJ')) {
             const jpnSite = await getProSite(gameId);
             jpn = jpnSite ? jpnSite : {};
+            if(jpn.name) {
+                eng = await getVndbData(jpn.name);
+                if(!eng) {
+                    eng = {};
+                }
+                log.info('Got eng', eng)
+            }
         } else {
             log.error('Wrong file for strategy', { name: this.name });
             return;
@@ -31,8 +39,6 @@ class DlsiteStrategy {
         let productInfo;
         if (eng.name || jpn.name) {
             productInfo = await getProductInfo(gameId);
-
-            additionalImages = await getAdditionalImages(gameId);
         }
 
         return {
@@ -94,6 +100,56 @@ class DlsiteStrategy {
         return works;
     }
 
+    async getAdditionalImages(id) {
+        log.info(`Getting additional images for ${id}`);
+        try {
+            let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
+            if (id.startsWith('RE')) {
+                url = `https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/${id}.html`;
+            } else if(id.startsWith('VJ')) {
+                url = `https://www.dlsite.com/pro/popup/=/file/smp1/product_id/${id}.html`;
+            }
+            let reply = await request.get({
+                method: 'GET',
+                uri: url
+            });
+
+            const root = htmlParser.parse(reply);
+
+            if(id.startsWith('VJ')) {
+                return root.querySelectorAll('.target_type').map(tt => tt.attributes.src.replace('//', 'http://'));
+            } else {
+                const samplesCount = parseInt(
+                    root
+                        .querySelector('#page')
+                        .text.replace('1/', '')
+                        .trim()
+                );
+                const firstImage = root.querySelector('.target_type').attributes.src.replace('//', 'http://');
+                log.debug(`Samples found`, {
+                    samplesCount,
+                    id,
+                    queryResult: root.querySelector('#page').text,
+                    firstImage
+                });
+
+                const additionalImages = [];
+                for (let i = 1; i <= samplesCount; i++) {
+                    additionalImages.push(firstImage.replace('smp1', `smp${i}`));
+                }
+
+                return additionalImages;
+            }
+        } catch (e) {
+            log.debug(`Error getting additional images for ${id} from ${this.name}`, {
+                name: e.name,
+                statusCode: e.statusCode,
+                message: e.message
+            });
+            return undefined;
+        }
+    }
+
     shouldUse(gameId) {
         return gameId.startsWith('RJ') || gameId.startsWith('RE') || gameId.startsWith('VJ');
     }
@@ -142,15 +198,17 @@ function getGameMetadata(root, gameId) {
             imageSrc = imageSrc.replace('//', 'http://');
         }
 
+        let releaseDateMoment;
         let releaseDate;
         const dateText = root.querySelector('#work_outline a').text.trim();
         if (/\d/.test(dateText[0])) {
-            releaseDate = moment(dateText, 'YYYY-MM-DD-').format(); //Japanese format
+            releaseDateMoment = moment(dateText, 'YYYY-MM-DD-'); //Japanese format
         } else {
-            releaseDate = moment(dateText, 'MMM-DD-YYYY').format(); //English format
+            releaseDateMoment = moment(dateText, 'MMM-DD-YYYY'); //English format
         }
-        if (releaseDate === 'Invalid Date') {
-            releaseDate = undefined;
+        log.info('releaseDate', releaseDateMoment);
+        if (releaseDateMoment.isValid()) {
+            releaseDate = releaseDateMoment.format();
         }
 
         let seriesText;
@@ -163,14 +221,21 @@ function getGameMetadata(root, gameId) {
             log.warn('Series text missing or invalid');
         }
 
+        let genres;
+        try {
+            genres = root
+                .querySelector('.main_genre')
+                .childNodes.map(node => node.text.trim())
+                .filter(n => n !== '')
+        } catch(e) {
+            log.warn('Could not get genres');
+        }
+
         return {
             series: seriesText,
             name: root.querySelector('#work_name').text.trim(),
             description: root.querySelector('.work_article').text.trim(),
-            genres: root
-                .querySelector('.main_genre')
-                .childNodes.map(node => node.text.trim())
-                .filter(n => n !== ''),
+            genres: genres,
             tags: root
                 .querySelector('.work_genre')
                 .childNodes.map(node => node.text.trim())
@@ -213,49 +278,6 @@ async function getProductInfo(id) {
                 uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`
             })
         )[id];
-    } catch (e) {
-        log.debug(`Error getting productInfo for ${id} from ${this.name}`, {
-            name: e.name,
-            statusCode: e.statusCode,
-            message: e.message
-        });
-        return undefined;
-    }
-}
-
-async function getAdditionalImages(id) {
-    try {
-        let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
-        if (id.startsWith('RE')) {
-            url = `https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/${id}.html`;
-        }
-        let reply = await request.get({
-            method: 'GET',
-            uri: url
-        });
-
-        const root = htmlParser.parse(reply);
-
-        const samplesCount = parseInt(
-            root
-                .querySelector('#page')
-                .text.replace('1/', '')
-                .trim()
-        );
-        const firstImage = root.querySelector('.target_type').attributes.src.replace('//', 'http://');
-        log.debug(`Samples found`, {
-            samplesCount,
-            id,
-            queryResult: root.querySelector('#page').text,
-            firstImage
-        });
-
-        const additionalImages = [];
-        for (let i = 1; i <= samplesCount; i++) {
-            additionalImages.push(firstImage.replace('smp1', `smp${i}`));
-        }
-
-        return additionalImages;
     } catch (e) {
         log.debug(`Error getting productInfo for ${id} from ${this.name}`, {
             name: e.name,

@@ -6,9 +6,11 @@ const { db, connect } = require('../database/mongoose');
 const settings = require('../settings');
 const moment = require('moment/moment');
 const fs = require('fs');
+const vndb = require('../parsers/vndb');
 
 async function buildDbFromFolders() {
     await connect();
+    await vndb.connect();
 
     log.info(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
@@ -26,16 +28,22 @@ async function buildDbFromFolders() {
         const strategy = selectStrategy(file.name);
 
         let game = await retrieveGameFromDb(file.name);
-        if (game.executableFile && !settings.forceSourceRefresh && !settings.forceExecutableRefresh) {
+        if (game.executableFile && !settings.forceSourceRefresh && !settings.forceExecutableRefresh && !settings.forceAdditionalImagesRefresh) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
             if ((!game.nameEn && !game.nameJp) || settings.forceSourceRefresh) {
                 log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(file.name);
-                Object.assign(game, gameData);
+                if(gameData.nameJp || gameData.nameEn) {
+                    gameData.additionalImages = await strategy.getAdditionalImages(file.name);
+                }
+                Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
                 game.dateModified = moment().format();
+                await game.save();
+            } else if((game.nameEn || game.nameJp) && settings.forceAdditionalImagesRefresh) {
+                game.additionalImages = await strategy.getAdditionalImages(file.name);
                 await game.save();
             }
 
@@ -126,3 +134,8 @@ function selectStrategy(gameId) {
 }
 
 module.exports = buildDbFromFolders;
+
+function removeUndefined(obj) {
+    for (let k in obj) if (obj[k] === undefined) delete obj[k];
+    return obj;
+}
