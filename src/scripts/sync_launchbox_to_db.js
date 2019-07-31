@@ -1,3 +1,4 @@
+const cliProgress = require('cli-progress');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
@@ -7,6 +8,9 @@ const convert = require('xml-js');
 const settings = require('../settings');
 
 async function syncLaunchboxToDb() {
+    const progressBar = new cliProgress.Bar({
+        format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+    }, cliProgress.Presets.shades_classic);
     if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
         log.info('Launchbox xml does not exist yet');
         return;
@@ -20,7 +24,8 @@ async function syncLaunchboxToDb() {
     const convertedObject = convert.xml2js(launchboxXml, { compact: true });
     log.debug('Found games', convertedObject.LaunchBox.Game.length);
 
-    for (const launchboxGame of convertedObject.LaunchBox.Game) {
+    progressBar.start(convertedObject.LaunchBox.Game.length, 0);
+    for (const [index, launchboxGame] of convertedObject.LaunchBox.Game.entries()) {
         const dbGame = await findOne({ id: launchboxGame.SortTitle._text });
         if (!dbGame) {
             log.debug(`Game ${launchboxGame.SortTitle._text} does not exist in db`);
@@ -81,7 +86,9 @@ async function syncLaunchboxToDb() {
                 }
             }
         }
+        progressBar.update(index + 1);
     }
+    progressBar.stop();
 
     await db.close();
 }

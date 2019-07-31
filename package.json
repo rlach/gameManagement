@@ -2,6 +2,7 @@
   "dependencies": {
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
+    "cli-progress": "^2.1.1",
     "fs-find": "^0.4.0",
     "htmlparser": "^1.7.7",
     "iconv-lite": "^0.5.0",

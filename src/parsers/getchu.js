@@ -21,7 +21,7 @@ class GetchuStrategy {
         const jpn = jpnResult ? jpnResult : {};
         let eng = {};
         if (jpn.name) {
-            log.info(`Getting english site for ${jpn.name}`);
+            log.debug(`Getting english site for ${jpn.name}`);
             const engResult = await getVndbData(jpn.name);
             if (engResult) {
                 eng = engResult;

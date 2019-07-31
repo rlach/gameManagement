@@ -1,3 +1,4 @@
+const cliProgress = require('cli-progress');
 const files = require('../files');
 const fs = require('fs');
 const log = require('../logger');
@@ -5,6 +6,9 @@ const settings = require('../settings');
 const inquirer = require('inquirer');
 
 async function organizeDirectories() {
+    const progressBar = new cliProgress.Bar({
+        format: 'Organizing directories [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} directories'
+    }, cliProgress.Presets.shades_classic);
     log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
@@ -13,18 +17,10 @@ async function organizeDirectories() {
         fs.mkdirSync(targetFolder);
     }
 
-    let current = 0;
-    let lastFloor = 0;
     let gamesWithDuplicates = [];
     let scores = {};
-    for (const file of foundFiles) {
-        current++;
-        const newFloor = Math.floor((current / foundFiles.length) * 100);
-        if (newFloor > lastFloor) {
-            lastFloor = newFloor;
-            log.info(`Processed ${newFloor}%`);
-        }
-
+    progressBar.start(foundFiles.length, 0);
+    for (const [index, file] of foundFiles.entries()) {
         const foundFilesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
         if (!fs.existsSync(foundFilesPath)) {
             continue;
@@ -171,10 +167,11 @@ async function organizeDirectories() {
             }
         } catch (e) {
             log.error('Error getting proper file codes', e);
-            continue;
         }
+        progressBar.update(index + 1);
     }
-    log.info(`Score summary for unsorted files`, scores);
+    progressBar.stop();
+    log.debug(`Score summary for unsorted files`, scores);
 }
 
 function addCode(bossCodes, CODE_WEIGHT, code) {

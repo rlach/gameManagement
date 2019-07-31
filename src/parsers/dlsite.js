@@ -28,7 +28,7 @@ class DlsiteStrategy {
                 if(!eng) {
                     eng = {};
                 }
-                log.info('Got eng', eng)
+                log.debug('Got eng', eng)
             }
         } else {
             log.error('Wrong file for strategy', { name: this.name });
@@ -101,7 +101,7 @@ class DlsiteStrategy {
     }
 
     async getAdditionalImages(id) {
-        log.info(`Getting additional images for ${id}`);
+        log.debug(`Getting additional images for ${id}`);
         try {
             let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
             if (id.startsWith('RE')) {
@@ -206,7 +206,7 @@ function getGameMetadata(root, gameId) {
         } else {
             releaseDateMoment = moment(dateText, 'MMM-DD-YYYY'); //English format
         }
-        log.info('releaseDate', releaseDateMoment);
+        log.debug('releaseDate', releaseDateMoment);
         if (releaseDateMoment.isValid()) {
             releaseDate = releaseDateMoment.format();
         }
@@ -218,7 +218,7 @@ function getGameMetadata(root, gameId) {
                 .filter(a => a.attributes.href.includes('work.series'))[0]
                 .text.trim();
         } catch (e) {
-            log.warn('Series text missing or invalid');
+            log.debug('Series text missing or invalid');
         }
 
         let genres;

@@ -1,3 +1,4 @@
+const cliProgress = require('cli-progress');
 const parserStrategies = require('../parsers');
 const files = require('../files');
 const log = require('../logger');
@@ -9,10 +10,13 @@ const fs = require('fs');
 const vndb = require('../parsers/vndb');
 
 async function buildDbFromFolders() {
+    const progressBar = new cliProgress.Bar({
+        format: 'Building database from folders [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+    }, cliProgress.Presets.shades_classic);
     await connect();
     await vndb.connect();
 
-    log.info(`Reading all main paths`, settings.paths.main);
+    log.debug(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
     for (const path of settings.paths.main) {
         const singlePathFiles = fs.readdirSync(path).map(name => {
@@ -24,7 +28,8 @@ async function buildDbFromFolders() {
         foundFiles.push(...singlePathFiles);
     }
 
-    for (const file of foundFiles) {
+    progressBar.start(foundFiles.length, 0);
+    for (const [index, file] of foundFiles.entries()) {
         const strategy = selectStrategy(file.name);
 
         let game = await retrieveGameFromDb(file.name);
@@ -61,8 +66,9 @@ async function buildDbFromFolders() {
                 }
             }
         }
+        progressBar.update(index + 1);
     }
-
+    progressBar.stop();
     db.close();
 }
 
@@ -75,7 +81,7 @@ async function findExecutableFile(file) {
     const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
-        log.info('Game was deleted', { file });
+        log.debug('Game was deleted', { file });
         return {
             deleted: true
         };

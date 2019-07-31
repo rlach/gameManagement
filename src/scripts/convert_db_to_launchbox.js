@@ -1,3 +1,4 @@
+const cliProgress = require('cli-progress');
 const { Game } = require('../database/game');
 const moment = require('moment/moment');
 const fs = require('fs');
@@ -10,6 +11,9 @@ const UUID = require('uuid');
 const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 
 async function convertDbToLaunchbox() {
+    const progressBar = new cliProgress.Bar({
+        format: 'Converting database to launchbox [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+    }, cliProgress.Presets.shades_classic);
     await connect();
 
     let launchboxGames = [];
@@ -31,7 +35,8 @@ async function convertDbToLaunchbox() {
 
     const convertedGames = [];
 
-    for (const game of games) {
+    progressBar.start(games.length, 0);
+    for (const [index, game] of games.entries()) {
         if (game.deleted) {
             continue;
         }
@@ -155,6 +160,7 @@ async function convertDbToLaunchbox() {
                 ...externalGameProps
             });
         }
+        progressBar.update(index + 1);
     }
 
     let objectToExport;
@@ -185,6 +191,7 @@ async function convertDbToLaunchbox() {
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
+    progressBar.stop();
 }
 
 function getGenres(game) {

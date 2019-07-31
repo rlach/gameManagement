@@ -25,7 +25,7 @@ async function getVndbData(name) {
     let improvedName = name.replace(/\(([^)]+)\)/g, ''); //remove ()
     improvedName = improvedName.replace(/（([^)]+)）/g, ''); //remove japanese ()
     improvedName = improvedName.replace(/・/g, ''); // replace bad characters
-    log.info('Improved name', improvedName);
+    log.debug('Improved name', improvedName);
     try {
         let foundVNs = JSON.parse(
             (await vndb.write(`get vn basic,details,tags (search~"${improvedName}")`))
@@ -51,7 +51,7 @@ async function getVndbData(name) {
             })
             .filter(tag => tag !== '');
 
-        log.info('About to return VN');
+        log.debug('About to return VN');
         return {
             name: VN.title,
             releaseDate: moment(VN.released, 'YYYY-MM-DD').format(),
@@ -63,14 +63,13 @@ async function getVndbData(name) {
     } catch (e) {
         if (e.id === 'throttled') {
             let timeout = e.fullwait ? e.fullwait * 1000 : 30000;
-            log.info(`reached max vndb api usage, waiting ${timeout / 1000} seconds`);
+            log.debug(`reached max vndb api usage, waiting ${timeout / 1000} seconds`);
             await sleep(timeout);
             return await getVndbData(name);
         }
         log.error('Something happened when connecting to VNDB API', e);
     }
 
-    log.info('returning undefined');
     return undefined;
 }
 
