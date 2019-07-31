@@ -1,9 +1,6 @@
 module.exports = {
     logLevel: 'info',
     externalIdField: 'SortTitle', //Suggested: SortTitle, Source, Status or CustomField
-    forceSourceRefresh: false,
-    forceExecutableRefresh: false,
-    forceAdditionalImagesRefresh: false,
     downloadImages: true,
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',

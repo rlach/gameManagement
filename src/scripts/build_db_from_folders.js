@@ -28,11 +28,12 @@ async function buildDbFromFolders() {
         const strategy = selectStrategy(file.name);
 
         let game = await retrieveGameFromDb(file.name);
-        if (game.executableFile && !settings.forceSourceRefresh && !settings.forceExecutableRefresh && !settings.forceAdditionalImagesRefresh) {
+        if (game.executableFile && !game.forceSourceUpdate && !game.forceExecutableUpdate && !game.forceAdditionalImagesUpdate) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
-            if ((!game.nameEn && !game.nameJp) || settings.forceSourceRefresh) {
+            if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate) {
+                game.forceSourceUpdate = false;
                 log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(file.name);
                 if(gameData.nameJp || gameData.nameEn) {
@@ -42,14 +43,16 @@ async function buildDbFromFolders() {
                 game.source = strategy.name;
                 game.dateModified = moment().format();
                 await game.save();
-            } else if((game.nameEn || game.nameJp) && settings.forceAdditionalImagesRefresh) {
+            } else if((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
+                game.forceAdditionalImagesUpdate = false;
                 game.additionalImages = await strategy.getAdditionalImages(file.name);
                 await game.save();
             }
 
-            if (!game.executableFile || settings.forceExecutableRefresh) {
-                log.debug('Updating executable path');
+            if (!game.executableFile || game.forceExecutableUpdate) {
+                log.info('Updating executable path', game.id);
                 const executableFile = await findExecutableFile(file, strategy);
+                game.forceExecutableUpdate = false;
                 if (executableFile.deleted) {
                     game.deleted = true;
                     await game.save();
