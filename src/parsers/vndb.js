@@ -6,7 +6,7 @@ const moment = require('moment');
 let vndb;
 
 async function connect() {
-    if(!vndb) {
+    if (!vndb) {
         vndb = await VNDB.start();
         await vndb.write('login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}');
     }
@@ -15,7 +15,7 @@ async function connect() {
 }
 
 async function disconnect() {
-    if(vndb) {
+    if (vndb) {
         await vndb.end();
         delete vndb;
     }
@@ -28,37 +28,19 @@ async function getVndbData(name) {
     log.info('Improved name', improvedName);
     try {
         let foundVNs = JSON.parse(
-            (await vndb.write(
-                `get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`
-            )).replace('results ', '').replace('error ', '')
+            (await vndb.write(`get vn basic,details,tags (search~"${improvedName}")`))
+                .replace('results ', '')
+                .replace('error ', '')
         );
 
-        if(foundVNs.id === 'throttled') {
+        if (foundVNs.id === 'throttled') {
             throw foundVNs;
         }
 
-        let VN;
         if (foundVNs.num > 0) {
             VN = foundVNs.items[0];
-        }
-
-        if (!VN) {
-            improvedName = improvedName.substring(0, improvedName.length / 2);
-            foundVNs = JSON.parse(
-                (await vndb.write(
-                    `get vn basic,details,tags (original~"${improvedName}" or title~"${improvedName}")`
-                )).replace('results ', '').replace('error ', '')
-            );
-
-            if(foundVNs.id === 'throttled') {
-                throw foundVNs;
-            }
-
-            if (foundVNs.num > 0) {
-                VN = foundVNs.items[0];
-            } else {
-                return undefined;
-            }
+        } else {
+            return undefined;
         }
 
         const tags = VN.tags
@@ -79,11 +61,11 @@ async function getVndbData(name) {
             image: VN.image
         };
     } catch (e) {
-        if(e.id === 'throttled') {
+        if (e.id === 'throttled') {
             let timeout = e.fullwait ? e.fullwait * 1000 : 30000;
             log.info(`reached max vndb api usage, waiting ${timeout / 1000} seconds`);
-                await sleep(timeout);
-                return await getVndbData(name);
+            await sleep(timeout);
+            return await getVndbData(name);
         }
         log.error('Something happened when connecting to VNDB API', e);
     }
@@ -92,8 +74,8 @@ async function getVndbData(name) {
     return undefined;
 }
 
-const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+const sleep = milliseconds => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 module.exports = { getVndbData, connect, disconnect };
