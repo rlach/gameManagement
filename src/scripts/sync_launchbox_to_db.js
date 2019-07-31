@@ -34,7 +34,7 @@ async function syncLaunchboxToDb() {
             if (
                 settings.onlyUpdateNewer &&
                 dbGame.dateModified &&
-                moment(dbGame.dateModified).isSameOrBefore(moment(launchboxGame.DateModified._text))
+                moment(dbGame.dateModified).isSameOrAfter(moment(launchboxGame.DateModified._text))
             ) {
                 log.debug('Skipping game due to outdated data in launchbox');
             } else {

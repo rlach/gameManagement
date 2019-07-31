@@ -42,9 +42,10 @@ async function convertDbToLaunchbox() {
         }
 
         const matchingGame = launchboxGames.find(g => g.SortTitle._text === game.id);
+        const launchboxId = getUUID(game.id, matchingGame);
 
         if (settings.downloadImages) {
-            await downloadImages(game);
+            await downloadImages(game, launchboxId);
         }
 
         const gameProperties = {
@@ -83,7 +84,7 @@ async function convertDbToLaunchbox() {
                 _text: game.favorite ? game.favorite : false
             },
             ID: {
-                _text: getUUID(game.id, matchingGame)
+                _text: launchboxId
             },
             Notes:
                 game.descriptionEn || game.descriptionJp
@@ -289,14 +290,12 @@ const externalGameProps = {
 
 const download = require('image-downloader');
 
-async function downloadImages(game) {
+async function downloadImages(game, launchboxId) {
     const regexExtension = /\.\w{3,4}($|\?)/;
     const imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;
     if (!imageUrl) {
         return;
     }
-    let filename = game.nameEn ? game.nameEn : game.nameJp;
-    filename = filename.replace(/[\?*':\/\<\>"]/gi, '_'); //Replace banned characters with underscore like launchbox does
 
     if (!fs.existsSync(`${settings.paths.launchbox}/Images`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images`);
@@ -310,14 +309,14 @@ async function downloadImages(game) {
 
     const targetPathMainImage = `${settings.paths.launchbox}/Images/${
         settings.launchboxPlatform
-    }/Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
+    }/Box - Front/${launchboxId}-01${imageUrl.match(regexExtension)[0]}`;
 
     if (fs.existsSync(targetPathMainImage)) {
         log.debug('Image already exists, skipping', targetPathMainImage);
     } else {
         log.debug('Downloading main image', {
             imageUrl,
-            filename,
+            launchboxId,
             targetPath: targetPathMainImage
         });
 
@@ -339,7 +338,7 @@ async function downloadImages(game) {
             log.debug('Processing additionalImage', additionalImage);
             const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
                 settings.launchboxPlatform
-            }/Screenshot - Gameplay/${filename}-${String(index + 1).padStart(2, '0')}${
+            }/Screenshot - Gameplay/${launchboxId}-${String(index + 1).padStart(2, '0')}${
                 additionalImage.match(regexExtension)[0]
             }`;
 
@@ -348,7 +347,7 @@ async function downloadImages(game) {
             } else {
                 log.debug('Downloading additional image', {
                     additionalImage,
-                    filename,
+                    launchboxId,
                     targetPath: targetPathAdditionalImage
                 });
 
@@ -359,6 +358,13 @@ async function downloadImages(game) {
                     });
                 } catch (e) {
                     log.error('Error downloading image', e);
+                    if(e.message.includes('404')) {
+                        log.info('Got 404, removing image from DB');
+                        game.additionalImages.splice(index, 1);
+                        game.dateModified = new moment().format();
+                        game.save();
+                        break; //Just download rest next time
+                    }
                 }
             }
         }
