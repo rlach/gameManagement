@@ -3,8 +3,16 @@ const log = require('./logger');
 const scripts = require('./scripts');
 const { db } = require('./database/mongoose');
 const vndb = require('./parsers/vndb');
+const fs = require('fs');
+const settings = require('./settings-sample');
 
 async function main() {
+    if(!fs.existsSync('./settings.json')) {
+        fs.writeFileSync('./settings.json', JSON.stringify(settings, null, 4));
+        log.info('Settings file created. Please update it to your settings and run script again.')
+        return;
+    }
+
     let script;
 
     process.argv.forEach(function (val, index, array) {
