@@ -8,13 +8,14 @@ const convert = require('xml-js');
 const settings = require('../settings');
 
 async function syncLaunchboxToDb() {
-    const progressBar = new cliProgress.Bar({
-        format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-    }, cliProgress.Presets.shades_classic);
     if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
         log.info('Launchbox xml does not exist yet');
         return;
     }
+
+    const progressBar = new cliProgress.Bar({
+        format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+    }, cliProgress.Presets.shades_classic);
 
     await connect();
     const launchboxXml = fs.readFileSync(
@@ -26,11 +27,22 @@ async function syncLaunchboxToDb() {
 
     progressBar.start(convertedObject.LaunchBox.Game.length, 0);
     for (const [index, launchboxGame] of convertedObject.LaunchBox.Game.entries()) {
-        const dbGame = await findOne({ id: launchboxGame.SortTitle._text });
-        if (!dbGame) {
-            log.debug(`Game ${launchboxGame.SortTitle._text} does not exist in db`);
+        let externalGameIdFieldValue;
+        if(settings.externalIdField === 'CustomField') {
+            const idAdditionalField = convertedObject.LaunchBox.CustomField.find(f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text);
+            if(!idAdditionalField) {
+                log.debug(`Additional field doesn't exist for ${launchboxGame.ID._text}`);
+                continue;
+            }
+            externalGameIdFieldValue = idAdditionalField.Value._text;
         } else {
-            log.debug(`Syncing game ${launchboxGame.SortTitle._text}`);
+            externalGameIdFieldValue = launchboxGame[settings.externalIdField]._text;
+        }
+        const dbGame = await findOne({ id: externalGameIdFieldValue });
+        if (!dbGame) {
+            log.debug(`Game ${externalGameIdFieldValue} does not exist in db`);
+        } else {
+            log.debug(`Syncing game ${externalGameIdFieldValue}`);
             if (
                 settings.onlyUpdateNewer &&
                 dbGame.dateModified &&
@@ -39,10 +51,10 @@ async function syncLaunchboxToDb() {
                 log.debug('Skipping game due to outdated data in launchbox');
             } else {
                 let update;
-                // We don't know in what language user manually added data
-                // so lets just use the preference here
-                // Also, we only allow to update fields that are currently empty
-                // With exception of genres, which we allow to edit with no issues
+                /* We don't know in what language user manually added data
+                   so lets just use the preference here
+                   Also, we only allow to update fields that are currently empty
+                   With exception of genres, which we allow to edit with no issues*/
                 if (settings.preferredLanguage === 'en') {
                     update = {
                         nameEn: dbGame.nameEn ? dbGame.nameEn : launchboxGame.Title._text,
@@ -82,7 +94,7 @@ async function syncLaunchboxToDb() {
                     await saveGame(dbGame);
                     log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
                 } catch (e) {
-                    log.warn('Game failed to be saved', e);
+                    log.debug('Game failed to be saved', e);
                 }
             }
         }

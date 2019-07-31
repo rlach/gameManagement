@@ -75,9 +75,7 @@ class GetchuStrategy {
 
     async findGame(name) {
         const reply = await this.callFindGame(name);
-        // await files.writeFile(`${name}.html`, reply);
         const root = parseSite(reply);
-        // log.info('selected blueb', JSON.stringify(select(root, '.blueb'), null, 4));
         const works = select(root, '.blueb')
             .filter(b => b.name === 'A')
             .map(b => {
@@ -128,14 +126,14 @@ function getGameMetadataJp(root) {
                     : ''
         };
     } catch (e) {
-        log.error('Metadata parsing failure', { e, root });
+        log.debug('Metadata parsing failure', { e, root });
     }
 }
 
 function parseSite(rawHtml) {
     const handler = new htmlparser.DefaultHandler(function(error, dom) {
         if (error) {
-            log.error('Error parsing html', error);
+            log.debug('Error parsing html', error);
         } else {
             log.debug('Parsing done!');
         }
@@ -175,7 +173,7 @@ async function getReviews(id) {
             averageRating: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])
         };
     } catch (e) {
-        log.warn(`Error getting reviews for ${id} from ${getchuStrategy.name}`);
+        log.debug(`Error getting reviews for ${id} from ${getchuStrategy.name}`);
         return undefined;
     }
 }

@@ -31,7 +31,7 @@ class DlsiteStrategy {
                 log.debug('Got eng', eng)
             }
         } else {
-            log.error('Wrong file for strategy', { name: this.name });
+            log.debug('Wrong file for strategy', { name: this.name });
             return;
         }
 
@@ -228,7 +228,7 @@ function getGameMetadata(root, gameId) {
                 .childNodes.map(node => node.text.trim())
                 .filter(n => n !== '')
         } catch(e) {
-            log.warn('Could not get genres');
+            log.debug('Could not get genres');
         }
 
         return {
@@ -245,7 +245,7 @@ function getGameMetadata(root, gameId) {
             image: imageSrc
         };
     } catch (e) {
-        log.error('Metadata parsing failure', e);
+        log.debug('Metadata parsing failure', e);
     }
 }
 
@@ -291,7 +291,6 @@ async function getProductInfo(id) {
 async function getJapaneseSite(id) {
     try {
         let reply = await request.get(getOptions(id, 'jp'));
-        // require('fs').writeFileSync(`./sample/pages/dlsite-${id}.html`, reply);
         const root = htmlParser.parse(reply);
         return getGameMetadata(root, id);
     } catch (e) {

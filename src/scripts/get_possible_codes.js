@@ -41,7 +41,7 @@ async function getPossibleCodes() {
             try {
                 fs.writeFileSync(foundCodesPath, JSON.stringify(fileResults, null, 4));
             } catch (e) {
-                log.error('Error writing codes', e);
+                log.debug('Error writing codes', e);
             }
         }
         progressBar.update(index + 1);

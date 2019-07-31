@@ -1,9 +1,9 @@
 const cliProgress = require('cli-progress');
-const { Game } = require('../database/game');
+const {Game} = require('../database/game');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
-const { db, connect } = require('../database/mongoose');
+const {db, connect} = require('../database/mongoose');
 const settings = require('../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
@@ -17,6 +17,7 @@ async function convertDbToLaunchbox() {
     await connect();
 
     let launchboxGames = [];
+    let customFields = [];
     let originalObject;
 
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
@@ -25,9 +26,16 @@ async function convertDbToLaunchbox() {
 
         log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
-        originalObject = convert.xml2js(launchboxXml, { compact: true });
+        originalObject = convert.xml2js(launchboxXml, {compact: true});
         if (originalObject.LaunchBox.Game.length > 0) {
             launchboxGames = originalObject.LaunchBox.Game;
+        } else if (originalObject.LaunchBox.Game) {
+            launchboxGames.push(originalObject.LaunchBox.Game);
+        }
+        if (originalObject.LaunchBox.CustomField.length > 0) {
+            customFields = originalObject.LaunchBox.CustomField
+        } else if (originalObject.LaunchBox.CustomField) {
+            customFields.push(originalObject.LaunchBox.CustomField);
         }
     }
 
@@ -41,7 +49,15 @@ async function convertDbToLaunchbox() {
             continue;
         }
 
-        const matchingGame = launchboxGames.find(g => g.SortTitle._text === game.id);
+        let matchingGame;
+        if(settings.externalIdField === 'CustomField') {
+            const idAdditionalField = customFields.find(f => f.Name._text === 'externalId' && f.Value._text === game.id);
+            if(idAdditionalField) {
+                matchingGame = launchboxGames.find(g => g.ID._text === idAdditionalField.GameID._text );
+            }
+        } else {
+            matchingGame = launchboxGames.find(g => g[settings.externalIdField]._text === game.id);
+        }
         const launchboxId = getUUID(game.id, matchingGame);
 
         if (settings.downloadImages) {
@@ -51,8 +67,8 @@ async function convertDbToLaunchbox() {
         const gameProperties = {
             ApplicationPath: game.executableFile
                 ? {
-                      _text: game.executableFile
-                  }
+                    _text: game.executableFile
+                }
                 : {},
             Completed: {
                 _text: game.completed ? game.completed : 'false'
@@ -75,8 +91,8 @@ async function convertDbToLaunchbox() {
             LastPlayedDate: matchingGame
                 ? matchingGame.LastPlayedDate
                 : {
-                      _text: '1800-01-01T01:33:35.9365244+02:00'
-                  },
+                    _text: '1800-01-01T01:33:35.9365244+02:00'
+                },
             Developer: {
                 _text: getDeveloper(game)
             },
@@ -89,32 +105,35 @@ async function convertDbToLaunchbox() {
             Notes:
                 game.descriptionEn || game.descriptionJp
                     ? {
-                          _text: (game.descriptionEn ? game.descriptionEn : game.descriptionJp).replace(
-                              invalidChars,
-                              ''
-                          )
-                      }
+                        _text: (game.descriptionEn ? game.descriptionEn : game.descriptionJp).replace(
+                            invalidChars,
+                            ''
+                        )
+                    }
                     : {},
             Platform: {
                 _text: settings.launchboxPlatform
             },
             Rating: game.rating
                 ? {
-                      _text: game.rating
-                  }
+                    _text: game.rating
+                }
                 : {},
             RootFolder: game.directory
                 ? {
-                      _text: game.directory
-                  }
+                    _text: game.directory
+                }
                 : {},
-            SortTitle: {
+            SortTitle: settings.externalIdField === 'SortTitle' ? {
                 _text: game.id
-            },
+            } : {},
+            Status: settings.externalIdField === 'Status' ? {
+                _text: game.id
+            } : {},
             Source: game.source
                 ? {
-                      _text: game.source
-                  }
+                    _text: settings.externalIdField === 'Source' ? game.id : game.source
+                }
                 : {},
             StarRatingFloat: {
                 _text: game.stars ? game.stars : 0
@@ -125,18 +144,18 @@ async function convertDbToLaunchbox() {
             Title:
                 game.nameEn || game.nameJp
                     ? {
-                          _text: game.nameEn ? game.nameEn : game.nameJp
-                      }
+                        _text: game.nameEn ? game.nameEn : game.nameJp
+                    }
                     : {},
             Version: game.version
                 ? {
-                      _text: game.version
-                  }
+                    _text: game.version
+                }
                 : {},
             Series: game.series
                 ? {
-                      _text: game.series
-                  }
+                    _text: game.series
+                }
                 : {},
             Portable: {
                 _text: game.portable ? game.portable : 'false'
@@ -160,6 +179,19 @@ async function convertDbToLaunchbox() {
                 ...gameProperties,
                 ...externalGameProps
             });
+            if(settings.externalIdField === 'CustomField') {
+                customFields.push({
+                    GameID: {
+                        _text: launchboxId
+                    },
+                    Name: {
+                        _text: 'externalId'
+                    },
+                    Value: {
+                        _text: game.id
+                    }
+                })
+            }
         }
         progressBar.update(index + 1);
     }
@@ -167,6 +199,7 @@ async function convertDbToLaunchbox() {
     let objectToExport;
     if (originalObject) {
         originalObject.LaunchBox.Game = convertedGames;
+        originalObject.LaunchBox.CustomField = customFields;
         objectToExport = originalObject;
     } else {
         objectToExport = {
@@ -177,12 +210,13 @@ async function convertDbToLaunchbox() {
                 }
             },
             LaunchBox: {
-                Game: convertedGames
+                Game: convertedGames,
+                CustomField: customFields
             }
         };
     }
 
-    const xml = convert.js2xml(objectToExport, { compact: true });
+    const xml = convert.js2xml(objectToExport, {compact: true});
     if (!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Data`);
     }
@@ -224,7 +258,6 @@ const externalGameProps = {
     },
     ScummVMGameDataFolderPath: {},
     ScummVMGameType: {},
-    Status: {},
     UseDosBox: {
         _text: 'false'
     },
@@ -326,7 +359,7 @@ async function downloadImages(game, launchboxId) {
                 dest: targetPathMainImage
             });
         } catch (e) {
-            log.error('Error downloading image', e);
+            log.debug('Error downloading image', e);
         }
     }
 
@@ -357,9 +390,9 @@ async function downloadImages(game, launchboxId) {
                         dest: targetPathAdditionalImage
                     });
                 } catch (e) {
-                    log.error('Error downloading image', e);
-                    if(e.message.includes('404')) {
-                        log.info('Got 404, removing image from DB');
+                    log.debug('Error downloading image', e);
+                    if (e.message.includes('404')) {
+                        log.debug('Got 404, removing image from DB');
                         game.additionalImages.splice(index, 1);
                         game.dateModified = new moment().format();
                         game.save();

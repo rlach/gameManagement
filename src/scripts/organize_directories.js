@@ -115,7 +115,7 @@ async function organizeDirectories() {
                       try {
                           return fc.workno && fc.workno[0] === finalBossCode;
                       } catch (e) {
-                          log.info(fc);
+                          log.debug(`getchu found code error`, fc);
                       }
                   });
             if (finalBossName && finalBossName.work_name) {
@@ -123,7 +123,7 @@ async function organizeDirectories() {
             }
 
             if (score > 2) {
-                log.info(`Scoring finished`, {
+                log.debug(`Scoring finished`, {
                     file,
                     finalBossName,
                     score,
@@ -158,7 +158,7 @@ async function organizeDirectories() {
                 if (!fs.existsSync(gameFolder)) {
                     fs.mkdirSync(gameFolder);
                 } else {
-                    log.warn(`There is a duplicate`, finalBossCode);
+                    log.debug(`There is a duplicate`, finalBossCode);
                     gamesWithDuplicates.push(finalBossCode);
                 }
 
@@ -166,7 +166,7 @@ async function organizeDirectories() {
                 log.debug(`Moved ${settings.paths.unsortedGames}/${file} to ${gameFolder}/${file}`);
             }
         } catch (e) {
-            log.error('Error getting proper file codes', e);
+            log.debug('Error getting proper file codes', e);
         }
         progressBar.update(index + 1);
     }

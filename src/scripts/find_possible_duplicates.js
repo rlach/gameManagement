@@ -22,7 +22,7 @@ async function findPossibleDuplicates() {
             .map(dirent => dirent.name);
 
         if (subdirectories.length > 1) {
-            log.info(`${file.name} contains ${subdirectories.length - 1} possible duplicate(s)`);
+            log.debug(`${file.name} contains ${subdirectories.length - 1} possible duplicate(s)`);
             duplicates[file.name] = subdirectories.length - 1;
         }
     }

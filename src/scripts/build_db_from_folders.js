@@ -128,7 +128,7 @@ async function saveFileAndDirectory(target, game) {
         game.dateModified = moment().format();
         await saveGame(game);
     } catch (e) {
-        log.error(`Could not update game`, e);
+        log.debug(`Could not update game`, e);
     }
 }
 

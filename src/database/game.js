@@ -3,7 +3,7 @@ const log = require('./../logger');
 const moment = require('moment');
 
 if (settings.database === 'nedb') {
-    log.info('Using nedb GAME');
+    log.debug('Using nedb database');
     const { db } = require('./mongoose');
 
     async function retrieveGameFromDb(id) {
@@ -34,7 +34,7 @@ if (settings.database === 'nedb') {
 
     module.exports = { Game, retrieveGameFromDb, saveGame, updateMany, findOne };
 } else {
-    log.info('Using mongoose GAME');
+    log.debug('Using mongodb database');
     const { mongoose } = require('./mongoose');
 
     var gameSchema = new mongoose.Schema({

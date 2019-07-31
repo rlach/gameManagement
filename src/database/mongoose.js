@@ -4,11 +4,8 @@ if (settings.database === 'nedb') {
     const { datastore } = require('nedb-promise');
 
     const DB = datastore({
-        // these options are passed through to nedb.Datastore
-
         filename: 'games.db',
-
-        autoload: true // so that we don't have to call loadDatabase()
+        autoload: true
     });
 
     DB.close = () => {};
@@ -34,7 +31,7 @@ if (settings.database === 'nedb') {
 
     db.on('error', log.error.bind(log, 'connection error:'));
     db.once('open', function() {
-        log.info('Connected to database');
+        log.debug('Connected to database');
     });
     mongoose.set('useCreateIndex', true);
 
