@@ -5,6 +5,7 @@ module.exports = {
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',
     onlyUpdateNewer: true,
+    database: 'nedb', //'nedb' or 'mongodb'
     organizeDirectories: {
         shouldAsk: true,
         minimumScoreToAsk: 1,

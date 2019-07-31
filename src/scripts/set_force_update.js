@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const log = require('../logger');
 const { connect } = require('../database/mongoose');
-const { Game } = require('../database/game');
+const { updateMany } = require('../database/game');
 
 async function setForceUpdate() {
     await connect();
@@ -66,7 +66,7 @@ async function setForceUpdate() {
         forceAdditionalImagesUpdate: answers.fields.includes('additionalImages')
     };
 
-    const result = await Game.updateMany(searchQuery, { $set: updateQuery }).exec();
+    const result = await updateMany(searchQuery, { $set: updateQuery });
     log.info('Result: ', result);
 }
 

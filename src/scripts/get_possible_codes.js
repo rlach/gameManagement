@@ -5,7 +5,7 @@ const parserStrategies = require('../parsers');
 const settings = require('../settings');
 
 async function getPossibleCodes() {
-    log.info(`Reading ${settings.paths.unsortedGames}`);
+    log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     const all = foundFiles.length;
@@ -29,9 +29,9 @@ async function getPossibleCodes() {
             /^\d+$/.test(file) ||
             fs.existsSync(foundCodesPath)
         ) {
-            log.info(`Skipping file ${file}`);
+            log.debug(`Skipping file ${file}`);
         } else {
-            log.info(`Processing file ${file}`);
+            log.debug(`Processing file ${file}`);
             let strategies = Object.values(parserStrategies);
             const fileResults = {
                 file
@@ -51,7 +51,7 @@ async function getPossibleCodes() {
         }
     }
 
-    log.info('Finished parsing');
+    log.debug('Finished parsing');
 }
 
 module.exports = getPossibleCodes;

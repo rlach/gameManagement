@@ -1,13 +1,13 @@
-const { Game } = require('../database/game');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
 const { db, connect } = require('../database/mongoose');
+const { findOne, saveGame } = require('../database/game');
 const convert = require('xml-js');
 const settings = require('../settings');
 
 async function syncLaunchboxToDb() {
-    if(!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
+    if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
         log.info('Launchbox xml does not exist yet');
         return;
     }
@@ -18,20 +18,20 @@ async function syncLaunchboxToDb() {
         'utf8'
     );
     const convertedObject = convert.xml2js(launchboxXml, { compact: true });
-    log.info('Found games', convertedObject.LaunchBox.Game.length);
+    log.debug('Found games', convertedObject.LaunchBox.Game.length);
 
     for (const launchboxGame of convertedObject.LaunchBox.Game) {
-        const dbGame = await Game.findOne({ id: launchboxGame.SortTitle._text });
+        const dbGame = await findOne({ id: launchboxGame.SortTitle._text });
         if (!dbGame) {
-            log.info(`Game ${launchboxGame.SortTitle._text} does not exist in db`);
+            log.debug(`Game ${launchboxGame.SortTitle._text} does not exist in db`);
         } else {
-            log.info(`Syncing game ${launchboxGame.SortTitle._text}`);
+            log.debug(`Syncing game ${launchboxGame.SortTitle._text}`);
             if (
                 settings.onlyUpdateNewer &&
                 dbGame.dateModified &&
                 moment(dbGame.dateModified).isSameOrBefore(moment(launchboxGame.DateModified._text))
             ) {
-                log.info('Skipping game due to outdated data in launchbox');
+                log.debug('Skipping game due to outdated data in launchbox');
             } else {
                 let update;
                 // We don't know in what language user manually added data
@@ -74,7 +74,7 @@ async function syncLaunchboxToDb() {
                 Object.assign(dbGame, update);
 
                 try {
-                    await dbGame.save();
+                    await saveGame(dbGame);
                     log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
                 } catch (e) {
                     log.warn('Game failed to be saved', e);

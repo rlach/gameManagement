@@ -42,20 +42,20 @@ async function buildDbFromFolders() {
                 Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
                 game.dateModified = moment().format();
-                await game.save();
+                await saveGame(game);
             } else if((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
                 game.forceAdditionalImagesUpdate = false;
                 game.additionalImages = await strategy.getAdditionalImages(file.name);
-                await game.save();
+                await saveGame(game);
             }
 
             if (!game.executableFile || game.forceExecutableUpdate) {
-                log.info('Updating executable path', game.id);
+                log.debug('Updating executable path', game.id);
                 const executableFile = await findExecutableFile(file, strategy);
                 game.forceExecutableUpdate = false;
                 if (executableFile.deleted) {
                     game.deleted = true;
-                    await game.save();
+                    await saveGame(game);
                 } else {
                     await saveFileAndDirectory(executableFile, game);
                 }
@@ -67,6 +67,7 @@ async function buildDbFromFolders() {
 }
 
 var path = require('path');
+const {saveGame} = require("../database/game");
 
 async function findExecutableFile(file) {
     let executableFile;
@@ -119,7 +120,7 @@ async function saveFileAndDirectory(target, game) {
         game.directory = target.directory;
         game.executableFile = target.file;
         game.dateModified = moment().format();
-        await game.save();
+        await saveGame(game);
     } catch (e) {
         log.error(`Could not update game`, e);
     }

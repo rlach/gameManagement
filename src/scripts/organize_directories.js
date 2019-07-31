@@ -5,7 +5,7 @@ const settings = require('../settings');
 const inquirer = require('inquirer');
 
 async function organizeDirectories() {
-    log.info(`Reading ${settings.paths.unsortedGames}`);
+    log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     const targetFolder = `${settings.paths.targetSortFolder}`;
@@ -174,7 +174,7 @@ async function organizeDirectories() {
             continue;
         }
     }
-    log.info(`Found $files with dlsite score of at least 1 out of ${foundFiles.length}`, scores);
+    log.info(`Score summary for unsorted files`, scores);
 }
 
 function addCode(bossCodes, CODE_WEIGHT, code) {

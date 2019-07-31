@@ -3,7 +3,7 @@ const settings = require('../settings');
 const fs = require('fs');
 
 async function findPossibleDuplicates() {
-    log.info(`Reading all main paths`, settings.paths.main);
+    log.debug(`Reading all main paths`, settings.paths.main);
     const foundFiles = [];
     const duplicates = {};
     for (const path of settings.paths.main) {

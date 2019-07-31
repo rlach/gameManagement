@@ -16,10 +16,10 @@ async function convertDbToLaunchbox() {
     let originalObject;
 
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
-        log.info('Platform file already exists, backing up');
+        log.debug('Platform file already exists, backing up');
         fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`);
 
-        log.info('Also, read old file so we can keep ids unchanged');
+        log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
         originalObject = convert.xml2js(launchboxXml, { compact: true });
         if (originalObject.LaunchBox.Game.length > 0) {
@@ -83,7 +83,10 @@ async function convertDbToLaunchbox() {
             Notes:
                 game.descriptionEn || game.descriptionJp
                     ? {
-                          _text: (game.descriptionEn ? game.descriptionEn : game.descriptionJp).replace(invalidChars, '')
+                          _text: (game.descriptionEn ? game.descriptionEn : game.descriptionJp).replace(
+                              invalidChars,
+                              ''
+                          )
                       }
                     : {},
             Platform: {
@@ -155,7 +158,7 @@ async function convertDbToLaunchbox() {
     }
 
     let objectToExport;
-    if(originalObject) {
+    if (originalObject) {
         originalObject.LaunchBox.Game = convertedGames;
         objectToExport = originalObject;
     } else {
@@ -303,7 +306,7 @@ async function downloadImages(game) {
     }/Box - Front/${filename}-01${imageUrl.match(regexExtension)[0]}`;
 
     if (fs.existsSync(targetPathMainImage)) {
-        log.info('Image already exists, skipping', targetPathMainImage);
+        log.debug('Image already exists, skipping', targetPathMainImage);
     } else {
         log.debug('Downloading main image', {
             imageUrl,
@@ -324,28 +327,32 @@ async function downloadImages(game) {
     if (!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`)) {
         fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`);
     }
-    for (const [index, additionalImage] of game.additionalImages.entries()) {
-        log.debug('Processing additionalImage', additionalImage);
-        const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
-            settings.launchboxPlatform
-            }/Screenshot - Gameplay/${filename}-${String(index + 1).padStart(2, '0')}${additionalImage.match(regexExtension)[0]}`;
+    if (game.additionalImages) {
+        for (const [index, additionalImage] of game.additionalImages.entries()) {
+            log.debug('Processing additionalImage', additionalImage);
+            const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
+                settings.launchboxPlatform
+            }/Screenshot - Gameplay/${filename}-${String(index + 1).padStart(2, '0')}${
+                additionalImage.match(regexExtension)[0]
+            }`;
 
-        if (fs.existsSync(targetPathAdditionalImage)) {
-            log.debug('Additional image already exists, skipping', targetPathAdditionalImage);
-        } else {
-            log.debug('Downloading additional image', {
-                additionalImage,
-                filename,
-                targetPath: targetPathAdditionalImage
-            });
-
-            try {
-                await download.image({
-                    url: additionalImage,
-                    dest: targetPathAdditionalImage
+            if (fs.existsSync(targetPathAdditionalImage)) {
+                log.debug('Additional image already exists, skipping', targetPathAdditionalImage);
+            } else {
+                log.debug('Downloading additional image', {
+                    additionalImage,
+                    filename,
+                    targetPath: targetPathAdditionalImage
                 });
-            } catch (e) {
-                log.error('Error downloading image', e);
+
+                try {
+                    await download.image({
+                        url: additionalImage,
+                        dest: targetPathAdditionalImage
+                    });
+                } catch (e) {
+                    log.error('Error downloading image', e);
+                }
             }
         }
     }
@@ -359,8 +366,7 @@ function getUUID(gameId, matchingGame) {
     }
 }
 
-
 // remove everything forbidden by XML 1.0 specifications, plus the unicode replacement character U+FFFD
-const invalidChars = /([^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFC\u{10000}-\u{10FFFF}])/ug;
+const invalidChars = /([^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFC\u{10000}-\u{10FFFF}])/gu;
 
 module.exports = convertDbToLaunchbox;
