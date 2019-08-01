@@ -6,7 +6,7 @@ const moment = require('moment');
 const { removeUndefined } = require('../objects');
 const log = require('./../logger');
 
-const DMM_ID_REGEX = new RegExp(/[a-z]+_\d+/gi);
+const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);
 
 class DummyStrategy {
     constructor() {
@@ -52,10 +52,19 @@ let dummyStrategy = new DummyStrategy();
 module.exports = dummyStrategy;
 
 async function getJapaneseSite(id) {
+    let uri;
+    if(id.match(/d_\d+/)) {
+        uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`
+    } else if(id.match(/d_[a-z]+\d+/)) {
+        uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`
+    } else {
+        uri = `https://dlsoft.dmm.co.jp/detail/${id}/`
+    }
+
     try {
         let reply = await request.get({
             method: 'GET',
-            uri: `https://www.dmm.co.jp/en/dc/doujin/-/detail/=/cid=${id}/`
+            uri: uri
         });
         const root = parseSite(reply);
         return getGameMetadata(root);
@@ -73,7 +82,7 @@ function getGameMetadata(root) {
     const images = select(root, '.fn-colorbox')
         .map(a => (a.attribs ? a.attribs.href : ''))
         .filter(a => a !== '');
-    const mainImage = images.splice(0, 1);
+    const mainImage = images.splice(0, 1)[0];
     const informationList = getInformationList(root);
 
     return {

@@ -35,6 +35,7 @@ async function setForceUpdate() {
                 new inquirer.Separator('= By source page ='),
                 { name: 'dlsite', value: 'dlsite' },
                 { name: 'getchu', value: 'getchu' },
+                { name: 'dmm', value: 'dmm' },
                 new inquirer.Separator('= By game ID ='),
                 { name: 'starting with VJ', value: 'VJ' },
                 { name: 'starting with RJ', value: 'RJ' }
@@ -47,7 +48,7 @@ async function setForceUpdate() {
     let searchQuery = {
         $or: []
     };
-    const sources = answers.filters.filter(element => ['dlsite', 'getchu'].includes(element));
+    const sources = answers.filters.filter(element => ['dlsite', 'getchu', 'dmm'].includes(element));
     if (sources.length > 0) {
         searchQuery.$or.push({ source: { $in: sources } });
     }
