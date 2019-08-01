@@ -46,13 +46,17 @@ async function setForceUpdate() {
     log.debug('answers', answers);
 
     let searchQuery = {
-        $or: []
     };
     const sources = answers.filters.filter(element => ['dlsite', 'getchu', 'dmm'].includes(element));
+    const idFilters = answers.filters.filter(element => ['VJ', 'RJ'].includes(element));
+    if (idFilters.length > 0 || sources.length > 0) {
+        searchQuery['$or'] = [];
+    }
+
     if (sources.length > 0) {
         searchQuery.$or.push({ source: { $in: sources } });
     }
-    const idFilters = answers.filters.filter(element => ['VJ', 'RJ'].includes(element));
+
     if (idFilters.length > 0) {
         const expression = `^(${idFilters.join('|')})`;
         const regex = RegExp(expression);

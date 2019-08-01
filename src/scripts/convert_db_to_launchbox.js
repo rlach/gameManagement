@@ -45,10 +45,6 @@ async function convertDbToLaunchbox() {
 
     progressBar.start(games.length, 0);
     for (const [index, game] of games.entries()) {
-        if (game.deleted) {
-            continue;
-        }
-
         let matchingGame;
         if(settings.externalIdField === 'CustomField') {
             const idAdditionalField = customFields.find(f => f.Name._text === 'externalId' && f.Value._text === game.id);
@@ -59,6 +55,12 @@ async function convertDbToLaunchbox() {
             matchingGame = launchboxGames.find(g => g[settings.externalIdField]._text === game.id);
         }
         const launchboxId = getUUID(game.id, matchingGame);
+
+        if (game.deleted && matchingGame) {
+            const matchingGameIndex = launchboxGames.findIndex(g => g.ID._text === matchingGame.ID._text);
+            launchboxGames.splice(matchingGameIndex, 1);
+            continue;
+        }
 
         if (settings.downloadImages) {
             await downloadImages(game, launchboxId);

@@ -2,13 +2,13 @@ const cliProgress = require('cli-progress');
 const parserStrategies = require('../parsers');
 const files = require('../files');
 const log = require('../logger');
-const { retrieveGameFromDb } = require('../database/game');
-const { db, connect } = require('../database/mongoose');
+const {retrieveGameFromDb, updateMany} = require('../database/game');
+const {db, connect} = require('../database/mongoose');
 const settings = require('../settings');
 const moment = require('moment/moment');
 const fs = require('fs');
 const vndb = require('../parsers/vndb');
-const { removeUndefined } = require('../objects');
+const {removeUndefined} = require('../objects');
 
 async function buildDbFromFolders() {
     const progressBar = new cliProgress.Bar(
@@ -31,6 +31,8 @@ async function buildDbFromFolders() {
         });
         foundFiles.push(...singlePathFiles);
     }
+
+    await updateMany({id: {$nin: foundFiles.map(f => f.name)}}, {deleted: true});
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
@@ -89,7 +91,7 @@ async function buildDbFromFolders() {
 }
 
 var path = require('path');
-const { saveGame } = require('../database/game');
+const {saveGame} = require('../database/game');
 
 async function findExecutableFile(file) {
     let executableFile;
@@ -97,7 +99,7 @@ async function findExecutableFile(file) {
     const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
-        log.debug('Game was deleted', { file });
+        log.debug('Game was deleted', {file});
         return {
             deleted: true
         };
@@ -114,7 +116,7 @@ async function findExecutableFile(file) {
     }
 
     if (foundFiles.length == 0) {
-        log.debug(`There is no exe`, { file });
+        log.debug(`There is no exe`, {file});
     } else if (foundFiles.length === 1) {
         log.debug('Found single exe file', foundFiles[0].file);
         executableFile.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
