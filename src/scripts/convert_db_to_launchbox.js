@@ -32,10 +32,10 @@ async function convertDbToLaunchbox() {
         } else if (originalObject.LaunchBox.Game) {
             launchboxGames.push(originalObject.LaunchBox.Game);
         }
-        if (originalObject.LaunchBox.CustomField.length > 0) {
+        if (originalObject.LaunchBox.CustomField && originalObject.LaunchBox.CustomField.length > 0) {
             customFields = originalObject.LaunchBox.CustomField
         } else if (originalObject.LaunchBox.CustomField) {
-            customFields.push(originalObject.LaunchBox.CustomField);
+            customFields = [originalObject.LaunchBox.CustomField]
         }
     }
 

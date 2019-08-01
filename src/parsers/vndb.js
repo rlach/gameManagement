@@ -37,6 +37,7 @@ async function getVndbData(name) {
             throw foundVNs;
         }
 
+        let VN;
         if (foundVNs.num > 0) {
             VN = foundVNs.items[0];
         } else {
@@ -53,12 +54,12 @@ async function getVndbData(name) {
 
         log.debug('About to return VN');
         return {
-            name: VN.title,
+            nameEn: VN.title,
             releaseDate: moment(VN.released, 'YYYY-MM-DD').format(),
-            description: VN.description,
-            genres: tags.filter(t => t.cat === 'ero').map(t => t.name),
-            tags: tags.filter(t => t.cat === 'tech').map(t => t.name),
-            image: VN.image
+            descriptionEn: VN.description,
+            genresEn: tags.filter(t => t.cat === 'ero').map(t => t.name),
+            tagsEn: tags.filter(t => t.cat === 'tech').map(t => t.name),
+            imageUrlEn: VN.image
         };
     } catch (e) {
         if (e.id === 'throttled') {

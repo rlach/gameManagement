@@ -1,13 +1,12 @@
-const iconv = require('iconv-lite');
-const htmlparser = require('htmlparser');
 const select = require('soupselect').select;
-const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
+const { callPage } = require('../html');
+const { parseSite } = require('../html');
+const { removeUndefined } = require('../objects');
 const { getVndbData } = require('./vndb');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
-const JAPANESE_ENCODING = 'EUC-JP';
 
 class GetchuStrategy {
     constructor() {
@@ -30,22 +29,11 @@ class GetchuStrategy {
 
         const reviews = await getReviews(gameId);
 
-        return {
-            releaseDate: jpn.releaseDate ? jpn.releaseDate : eng.releaseDate,
-            communityStars: reviews && reviews.averageRating ? reviews.averageRating : undefined,
-            nameEn: eng.name,
-            nameJp: jpn.name,
-            descriptionEn: eng.description,
-            descriptionJp: jpn.description,
-            genresEn: eng.genres,
-            genresJp: jpn.genres,
-            tagsEn: eng.tags,
-            tagsJp: jpn.tags,
-            makerEn: eng.maker,
-            makerJp: jpn.maker,
-            imageUrlJp: jpn.image,
-            imageUrlEn: eng.image
-        };
+        const result = {};
+        Object.assign(result, removeUndefined(jpn));
+        Object.assign(result, removeUndefined(eng));
+        Object.assign(result, removeUndefined(reviews));
+        return result;
     }
 
     extractCode(name) {
@@ -55,22 +43,11 @@ class GetchuStrategy {
     }
 
     async callFindGame(name) {
-        return new Promise((resolve, reject) => {
-            request
-                .get({
-                    uri: `http://www.getchu.com/php/search.phtml?search_keyword=${encodeURIComponent(
-                        name
-                    )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`
-                })
-                .pipe(iconv.decodeStream(JAPANESE_ENCODING))
-                .collect(function(err, decodedBody) {
-                    if (err) {
-                        return reject(err);
-                    } else {
-                        return resolve(decodedBody);
-                    }
-                });
-        });
+        return callPage(
+            `http://www.getchu.com/php/search.phtml?search_keyword=${encodeURIComponent(
+                name
+            )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`
+        );
     }
 
     async findGame(name) {
@@ -93,7 +70,7 @@ class GetchuStrategy {
     }
 
     shouldUse(gameId) {
-        return gameId.match(GETCHU_ID_REGEX) !== undefined;
+        return gameId.match(GETCHU_ID_REGEX);
     }
 }
 
@@ -114,13 +91,13 @@ function getGameMetadataJp(root) {
         }
 
         return {
-            name: titleElement && titleElement.children[0] ? titleElement.children[0].data.trim() : '',
+            nameJp: titleElement && titleElement.children[0] ? titleElement.children[0].data.trim() : '',
             releaseDate: releaseDayText ? moment(releaseDayText, 'YYYY/MM/DD').format() : undefined,
-            description: description
+            descriptionJp: description
                 .map(desc => desc.children.map(descChild => (descChild.type === 'text' ? descChild.data : '')))
                 .join('\n'),
-            maker: makerElement && makerElement.attribs ? makerElement.attribs.title.trim() : '',
-            image:
+            makerJp: makerElement && makerElement.attribs ? makerElement.attribs.title.trim() : '',
+            imageUrlJp:
                 imageElement && imageElement.attribs
                     ? imageElement.attribs.href.replace('.', 'http://www.getchu.com')
                     : ''
@@ -128,20 +105,6 @@ function getGameMetadataJp(root) {
     } catch (e) {
         log.debug('Metadata parsing failure', { e, root });
     }
-}
-
-function parseSite(rawHtml) {
-    const handler = new htmlparser.DefaultHandler(function(error, dom) {
-        if (error) {
-            log.debug('Error parsing html', error);
-        } else {
-            log.debug('Parsing done!');
-        }
-    });
-    const parser = new htmlparser.Parser(handler);
-    parser.parseComplete(rawHtml);
-    log.debug('Dom parsed!');
-    return handler.dom;
 }
 
 async function getJapaneseSite(id) {
@@ -170,33 +133,10 @@ async function getReviews(id) {
                 : '0.00';
 
         return {
-            averageRating: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])
+            communityStars: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])
         };
     } catch (e) {
         log.debug(`Error getting reviews for ${id} from ${getchuStrategy.name}`);
         return undefined;
     }
-}
-
-async function callPage(uri) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function() {
-            reject('Promise timed out after ' + 30000 + ' ms');
-        }, 30000);
-
-        request
-            .get({
-                method: 'GET',
-                uri: uri,
-                encoding: null
-            })
-            .pipe(iconv.decodeStream(JAPANESE_ENCODING))
-            .collect(function(err, decodedBody) {
-                if (err) {
-                    return reject(err);
-                } else {
-                    return resolve(decodedBody);
-                }
-            });
-    });
 }

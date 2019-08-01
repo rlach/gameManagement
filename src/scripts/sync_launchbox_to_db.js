@@ -13,9 +13,12 @@ async function syncLaunchboxToDb() {
         return;
     }
 
-    const progressBar = new cliProgress.Bar({
-        format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-    }, cliProgress.Presets.shades_classic);
+    const progressBar = new cliProgress.Bar(
+        {
+            format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+        },
+        cliProgress.Presets.shades_classic
+    );
 
     await connect();
     const launchboxXml = fs.readFileSync(
@@ -28,9 +31,13 @@ async function syncLaunchboxToDb() {
     progressBar.start(convertedObject.LaunchBox.Game.length, 0);
     for (const [index, launchboxGame] of convertedObject.LaunchBox.Game.entries()) {
         let externalGameIdFieldValue;
-        if(settings.externalIdField === 'CustomField') {
-            const idAdditionalField = convertedObject.LaunchBox.CustomField.find(f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text);
-            if(!idAdditionalField) {
+        if (settings.externalIdField === 'CustomField') {
+            const idAdditionalField = convertedObject.LaunchBox.CustomField
+                ? convertedObject.LaunchBox.CustomField.find(
+                      f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text
+                  )
+                : undefined;
+            if (!idAdditionalField) {
                 log.debug(`Additional field doesn't exist for ${launchboxGame.ID._text}`);
                 continue;
             }

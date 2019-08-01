@@ -1,7 +1,8 @@
-const htmlParser = require('node-html-parser/dist/index');
+const select = require('soupselect').select;
 const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
+const { parseSite } = require('../html');
 const { getVndbData } = require('./vndb');
 
 class DlsiteStrategy {
@@ -23,19 +24,18 @@ class DlsiteStrategy {
         } else if (gameId.startsWith('VJ')) {
             const jpnSite = await getProSite(gameId);
             jpn = jpnSite ? jpnSite : {};
-            if(jpn.name) {
+            if (jpn.name) {
                 eng = await getVndbData(jpn.name);
-                if(!eng) {
+                if (!eng) {
                     eng = {};
                 }
-                log.debug('Got eng', eng)
+                log.debug('Got eng', eng);
             }
         } else {
-            log.debug('Wrong file for strategy', { name: this.name });
+            log.debug('Wrong file for strategy', { name: this.name, gameId });
             return;
         }
 
-        let additionalImages;
         let productInfo;
         if (eng.name || jpn.name) {
             productInfo = await getProductInfo(gameId);
@@ -57,8 +57,7 @@ class DlsiteStrategy {
             imageUrlJp: jpn.image,
             imageUrlEn: eng.image,
             releaseDate: jpn.releaseDate ? jpn.releaseDate : eng.releaseDate,
-            series: eng.series ? eng.series : jpn.series,
-            additionalImages
+            series: eng.series ? eng.series : jpn.series
         };
     }
 
@@ -106,7 +105,7 @@ class DlsiteStrategy {
             let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
             if (id.startsWith('RE')) {
                 url = `https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/${id}.html`;
-            } else if(id.startsWith('VJ')) {
+            } else if (id.startsWith('VJ')) {
                 url = `https://www.dlsite.com/pro/popup/=/file/smp1/product_id/${id}.html`;
             }
             let reply = await request.get({
@@ -114,22 +113,18 @@ class DlsiteStrategy {
                 uri: url
             });
 
-            const root = htmlParser.parse(reply);
+            const root = parseSite(reply);
 
-            if(id.startsWith('VJ')) {
-                return root.querySelectorAll('.target_type').map(tt => tt.attributes.src.replace('//', 'http://'));
+            if (id.startsWith('VJ')) {
+                return select(root, '.target_type').map(tt => tt.attribs.src.replace('//', 'http://'));
             } else {
                 const samplesCount = parseInt(
-                    root
-                        .querySelector('#page')
-                        .text.replace('1/', '')
-                        .trim()
+                    select(root, '#page')[0].children[0].data.replace('1/', '').trim()
                 );
-                const firstImage = root.querySelector('.target_type').attributes.src.replace('//', 'http://');
+                const firstImage = select(root, '.target_type')[0].attribs.src.replace('//', 'http://');
                 log.debug(`Samples found`, {
                     samplesCount,
                     id,
-                    queryResult: root.querySelector('#page').text,
                     firstImage
                 });
 
@@ -193,14 +188,16 @@ function getOptions(id, type) {
 
 function getGameMetadata(root, gameId) {
     try {
-        let imageSrc = root.querySelector('.slider_item').firstChild.attributes.src;
+        let imageSrc = select(root, '.slider_item img')[0].attribs.src;
         if (imageSrc.startsWith('//')) {
             imageSrc = imageSrc.replace('//', 'http://');
         }
 
         let releaseDateMoment;
         let releaseDate;
-        const dateText = root.querySelector('#work_outline a').text.trim();
+        const dateText = select(root, '#work_outline a')
+            .find(wo => wo.raw.includes('/year/'))
+            .children[0].data.trim();
         if (/\d/.test(dateText[0])) {
             releaseDateMoment = moment(dateText, 'YYYY-MM-DD-'); //Japanese format
         } else {
@@ -213,35 +210,37 @@ function getGameMetadata(root, gameId) {
 
         let seriesText;
         try {
-            seriesText = root
-                .querySelectorAll('#work_outline a')
-                .filter(a => a.attributes.href.includes('work.series'))[0]
-                .text.trim();
+            seriesText = select(root, '#work_outline a')
+                .find(a => a.data.includes('work.series'))
+                .children[0].data.trim();
         } catch (e) {
             log.debug('Series text missing or invalid');
         }
 
         let genres;
         try {
-            genres = root
-                .querySelector('.main_genre')
-                .childNodes.map(node => node.text.trim())
-                .filter(n => n !== '')
-        } catch(e) {
+            genres = select(root, '.main_genre')
+                .find(mg => mg.children.find(mgc => mgc.raw.includes('href')))
+                .children.map(c => (c.children && c.children[0] ? c.children[0].data.trim() : ''))
+                .filter(r => r !== '');
+        } catch (e) {
             log.debug('Could not get genres');
         }
 
+        const description = select(root, '.work_article')[0].children.filter(c => c.type === 'text').map(c => c.data.trim()).join('\n');
+        const tags = select(root, '.work_genre span').map(t => t.attribs.title);
+
+        const workName = select(root, '#work_name a')[0].children[0].data.trim();
+        const maker = select(root, '.maker_name a')[0].children[0].data.trim();
+
         return {
             series: seriesText,
-            name: root.querySelector('#work_name').text.trim(),
-            description: root.querySelector('.work_article').text.trim(),
+            name: workName,
+            description: description,
             genres: genres,
-            tags: root
-                .querySelector('.work_genre')
-                .childNodes.map(node => node.text.trim())
-                .filter(n => n !== ''),
+            tags: tags,
             releaseDate: releaseDate,
-            maker: root.querySelector('.maker_name').text.trim(),
+            maker: maker,
             image: imageSrc
         };
     } catch (e) {
@@ -258,7 +257,7 @@ async function getEnglishSite(id) {
 
     try {
         const reply = await request.get(getOptions(idEn, 'en'));
-        const root = htmlParser.parse(reply);
+        const root = parseSite(reply);
         return getGameMetadata(root, id);
     } catch (e) {
         log.debug(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
@@ -291,7 +290,7 @@ async function getProductInfo(id) {
 async function getJapaneseSite(id) {
     try {
         let reply = await request.get(getOptions(id, 'jp'));
-        const root = htmlParser.parse(reply);
+        const root = parseSite(reply);
         return getGameMetadata(root, id);
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
@@ -312,7 +311,7 @@ async function getProSite(id) {
             log.debug('Pro does not exist, trying announce', { id });
             reply = await request.get(getOptions(id, 'proAnnounce'));
         }
-        const root = htmlParser.parse(reply);
+        const root = parseSite(reply);
         return getGameMetadata(root, id);
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {

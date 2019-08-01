@@ -1,17 +1,79 @@
-<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ1234567/What this game named is [yolo] v1.00 (fooBar)/yolo.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:32+02:00</DateAdded><DateModified>2019-07-31T16:00:33+02:00</DateModified><ReleaseDate>2019-07-31T16:00:44+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>cd5bfabd-7cc2-4fc9-a3aa-e02de1dbeab4</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ1234567</RootFolder><SortTitle>RJ1234567</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/952377/otter/little.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:40+02:00</DateAdded><DateModified>2019-07-31T16:00:44+02:00</DateModified><ReleaseDate>2017-04-28T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>4f15bc7a-d8b2-4648-8d20-40fbb909a6ae</ID><Notes>You are a stressed out, miserable salaryman. One day a lawyer comes to tell you that your only aunt has died. She had a daughter, who had been abused by her from the time she was born. You take it upon yourself to care for this girl, healing both yourself and her in the process.</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/952377</RootFolder><SortTitle>952377</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Fureai ~Kizu Darake no Shoujo o Amayakasu~</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Lolicon</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/675572/sampleGetchuGame/fake.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>5</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:37+02:00</DateAdded><DateModified>2019-07-31T16:00:40+02:00</DateModified><ReleaseDate>2010-04-23T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>bbd1d9ad-3dbd-4f17-bb81-89afef42a83d</ID><Notes>The plain lands of “Eos” located in west “Serenus.”
+<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dmm/d_082865/yo.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>4</CommunityStarRating><CommunityStarRatingTotalVotes>7</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T17:34:52+02:00</DateAdded><DateModified>2019-08-01T17:37:26+02:00</DateModified><ReleaseDate>2015-07-15T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>こんでんちゅ☆みるく</Developer><Favorite>false</Favorite><ID>f4a34e74-4d54-40dd-a18a-a0b9395bd07e</ID><Notes>最愛の妹が謎組織に狙われた！？
+やりたい放題の妄想・暴走お兄ちゃんは、果たして妹を救えるのか？
+ハートフルな妹系本格派○辱アドベンチャーゲーム！
 
-Seven fortresses located in the northern boundaries of Eos served as the setting for the war between the Alliance and Legion. This conflict, however, was in its final stages with the decline of the Dark Elf queen’s power. Under the High Elf’s calling, the “Seven Shields Alliance” was formed to stand against the Legion. The Alliance issued a request to the group of mercenaries headed by the protagonist, known as the “Black Dogs.” They were to be the vanguard for an all-out-war in order to put an end to this conflict, but…
+追記:ご購入様特典として、ヒロインの1人「姫園  遙」とイチャイチャするゲームを同梱しました。（10/22）
 
-Upon invading the Dark Elf queen’s country, the Black Dogs turned that land into their stronghold and began to invade their former allies’ countries. Panic, shock, indignation, sorrow… After the betrayal, the Black Dogs’ leader issued an unbelievable declaration - the founding of the “Cuntry,” where women are obligated to partake in sexual service for all men.
+＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+日時:  6月2日（土）
+内容:  「数人でターゲットを拘束し、輪○す。詳細については極秘」
+＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+‥えっ…なっ、なんだよ、これ…ッ！？
+そんなバカな‥こんなことあり得ない！！
+だって、この子、どうみても…藍…じゃないかッ！！！
 
-The women of the Alliance would soon learn first-hand that this declaration was neither a lie, nor an exaggeration…
+＊＊＊～～＊＊＊～～＊＊＊～～＊＊＊
 
-[Edited from [url=http://blog.mangagamer.org/2017/02/24/kuroinu-chapter-1-now-available-for-pre-order/]MangaGamer Blog[/url]]</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/675572</RootFolder><SortTitle>675572</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Kuroinu ~Kedakaki Seijo wa Hakudaku ni Somaru~</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>All the Way Through;Cunnilingus;Pregnant Sex;Excessive Semen;Doggy Style;Gang Rape;Tentacle Rape;Sitting Sex;Sex in Front of an Audience;Sexual Slavery;High Sexual Content;Fingering;Nukige;Inflation;Anilingus;Slime Monster Rape;Multiple Penetration;Urination Fetish;Futanari on Female;Defloration;Sexual Slavery (Non-consensual);Sex with Sleepers;Rape;High Amounts of Rape;Handjob;Single Hole Multiple Penetration;Twin Boobjob;Single Hole Multiple Objects Insertion;Sex With Monsters;Seventh Posture;Object Insertion;Single Hole Multiple Tentacle Penetration;Group Sex of One Female and Several Males;Lactation During Sex;Sex in Public Places;Masturbation;Hairjob;Twin Blowjob;Anal Sex;Bondage;Standing Sex;Ahegao;Quickie Fix Position;Cowgirl;Huge Insertion;Piledriver;Double Dildos;Boobjob;Stuck-in-Wall Sex;Glory Hole Sex;Blowjob;Bukkake;Sexual Slavery (Choukyou Variation);Penis Growth;Deepthroat;Enema;Public Cum Dumpster;Background Moans;Outdoor Sex;Gokkun</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/VJ008300/dfsfsd/fake.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>4.6</CommunityStarRating><CommunityStarRatingTotalVotes>882</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:35+02:00</DateAdded><DateModified>2019-07-31T16:00:37+02:00</DateModified><ReleaseDate>2014-02-21T00:00:00+01:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>ninetail/dualtail</Developer><Favorite>false</Favorite><ID>c19df41d-da73-470c-ac70-ff135b104137</ID><Notes>A theocratic empire is trying to unite the continent under its banner. Their next target is a small city-state ruled by the protagonist, an Ether researcher. The Empire sends the Dragon Priestess Milia to subjugate the heretic nation, which has eschewed religion in the name of science. Can the protagonist beat back the superior might of the Empire with clever tactics and Ether-based technologies? Or will he finally meet his end by the blade of his former friend, tasked with silencing his heresy once and for all?
+ネットの友人に教えてもらった、妙に厳重にセキュリティのかけられた
+会員制の夜のおかずサイト、「あなたの街の犯し屋さん」
 
-[From the review on [url=http://sanahtlig.blogspot.com/2015/10/review-venus-blood-gaia.html]Sanahtlig's Corner[/url]]</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/VJ008300</RootFolder><SortTitle>VJ008300</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Venus Blood -Gaia-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Pregnant Sex;Mindbreak;Bestiality;Consensual Sex Involving Tentacles;Tentacle Rape;Sex with Insects</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ070222/aname/agame.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:30+02:00</DateAdded><DateModified>2019-07-31T16:00:31+02:00</DateModified><ReleaseDate>2019-07-31T16:00:44+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>7d05098b-b543-4ac1-8f23-cc5519ef89d7</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ070222</RootFolder><SortTitle>RJ070222</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><CommunityStarRating>4.78</CommunityStarRating><CommunityStarRatingTotalVotes>41</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:28+02:00</DateAdded><DateModified>2019-07-31T16:11:56+02:00</DateModified><ReleaseDate>2017-12-29T00:00:00+01:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>acerola</Developer><Favorite>false</Favorite><ID>790edb1c-e698-42f2-9ac0-722117a93778</ID><Notes>[Story]
+このサイトでは、女の子は通し番号とお菓子の名前で呼ばれる事になっていて、
+実名は一切出ない。
 
-The heroine Yukino Makihara was born in an ordinary family, 
-and had been raised in an ordinary environment. Now She lives 
+現実離れした過激な内容と、ひたすら自分の欲望を満たすためだけに動く男たち。
+少しわざとらしい気もするが、夜のおかずとしては十分！
+
+「商品の少女たちは、適正のあるものをターゲットとして捕獲し、
+現実に性奴隷調教を受けてから、会員様に提供致しております。」
+
+なんて書いてあって手が込んでいるよな。ははは。
+そう、思っていた…あの時までは…
+
+コンビニでバイトしている最中に出会った、ボンテージファッションに
+首輪・目隠しをされ、泣きながら、ひたすら男に強○されていた少女…
+
+タイトル:『コンビニで、目隠しファック敢行！』
+
+今日更新されていた動画を再生して、膝が震える…
+…あの時の、オレが映っている…
+このサイト、やらせじゃないっていうのかよ！
+
+藍が…
+
+オレの大切な妹が…
+
+犯し屋さんに狙われた！！！
+
+
+～概要～
+・ジャンル:妹系ハートフル凌辱アドベンチャーゲーム
+・マルチエンディング形式。エンディング数:  9種（エンディングリスト有り）
+・CGモード搭載  （基本CG: 51枚）
+・シーン回想モード搭載（エロシーンは約60シーン）
+・エロシーンの94％は、アフターエフェクツ動画が有ります（約100個）
+（動画数には、表情差分やアングル変更は含んでおりません。）
+・女性キャラフルボイス  隠語無修正  （総ワード数  :  3，500ワード超）
+エロシーンのある女性キャラは、総勢12人！  （下記以外にも登場します）
+
+【CAST】
+峰岸  藍  ・・・     御苑生  メイ
+姫園  遙  ・・・     カンザキカナリ
+永坂  唯  ・・・     榊木  春乃
+園崎  里亞  ・・・   貴坂  理緒
+姫園  紫乃  ・・・ 紫苑  みやび
+片桐  凛奈  ・・・ 樹  ひなの
+花小路  雪乃  ・・ 澄川  桃子
+藤代  セリ  ・・・ 紫苑  みやび
+藤代  花音  ・・・ カンザキカナリ
+鷺沼  愛梨  ・・・ 澄川  桃子
+
+※物語の流れ上、少々残虐な表現・CGがございます。苦手な方は特にご注意下さい。
+※PC環境や常駐ソフト等との相性によりエラー症状が出る場合もありますので、体験版で動作確認をお願い致します。
+※詳細はHPにございます。エロシーン体験版やサンプル動画等もありますので、是非お立ち寄り下さい！
+</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dmm/d_082865</RootFolder><SortTitle/><Status/><Source>dmm</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Okashiya-san ni Nerawareta!</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Suspension Bondage;Consumption of Pornography;Spreader Bar;Vibrators;Production of Pornography (Professional);Sex in a Vehicle;Netorare Type B;BDSM;Quickie Fix Position;Multiple Penetration;Wake-up Sex;Group Sex of Multiple Females and Males;Ahegao;Exhibitionism;Fingering;Sex in Classroom;Production of Pornography (Amateur);Sexual Blindfold;Gaping;Masturbation;Sounds of Copulation;Sex Engine;Group Sex of One Male and Several Females;Anal Toys;Standing Sex;Footjob;Clamps (BDSM);Heroine with Pubic Hair;Cunnilingus;Female Ejaculation;Gang Rape;Spoons;Sitting Sex;Blowjob;Rape Involving Drugs;Anal Sex;Reverse Cowgirl;Handjob;Defloration;Voyeurism;Outdoor Sex;Facesitting;Sexual Slavery;Urination Fetish;Boobjob;Suction on Nipples;Petplay;Rape with Blackmail;Huge Insertion;Missionary Position;Double Handjob;Sex in Public Places;Sex in Front of an Audience;Dildos;Double Penetration (Group Sex);Bathroom Sex;Bukkake;Group Sex of One Female and Several Males;Nukige;Blood-related Brother/Sister Incest;Doggy Style;Bondage;Cowgirl</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ1234567/What this game named is [yolo] v1.00 (fooBar)/yolo.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:03+02:00</DateAdded><DateModified>2019-08-01T16:23:05+02:00</DateModified><ReleaseDate>2019-08-01T17:37:26+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>e5aa6073-c78d-4e1b-aacf-b4facc67a4b4</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ1234567</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath/><Completed>false</Completed><CommunityStarRating>4.78</CommunityStarRating><CommunityStarRatingTotalVotes>41</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:00+02:00</DateAdded><DateModified>2019-08-01T17:37:18+02:00</DateModified><ReleaseDate>2017-12-29T00:00:00+01:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>acerola</Developer><Favorite>false</Favorite><ID>c712eeb6-7c4a-4f17-8c67-65232a4c6d3e</ID><Notes>[Story]
+
+The heroine Yukino Makihara was born in an ordinary family,
+and had been raised in an ordinary environment. Now She lives
 in her uncle's house because of her school's location.
 
 She is a bit clumsy and careless, often gets misfortunes.
@@ -20,12 +82,12 @@ But she works hard on study despite of such things.
 A turning point of her life comes when she has an accidental
 eye contact with a boy in same school at a library.
 
-His name is Souji. As talking with him a number of times, 
-she is getting attracted by his serious attitude to his 
-dream to be a doctor and bright personality. 
+His name is Souji. As talking with him a number of times,
+she is getting attracted by his serious attitude to his
+dream to be a doctor and bright personality.
 
-After getting in a relationship with him, Yukino sets her 
-mind to go to the university which he wants to go to. 
+After getting in a relationship with him, Yukino sets her
+mind to go to the university which he wants to go to.
 But her family isn't affluent enough to let her do so...
 
 Thus, she begins to earn money.
@@ -34,8 +96,8 @@ Thus, she begins to earn money.
 
 [Game Flow]
 
-Yukino takes action after school. There are many 
-ways of spending time: to gather information, to 
+Yukino takes action after school. There are many
+ways of spending time: to gather information, to
 go to work, to have a rest in her house and so forth.
 
 Her job availability is limited depending on her health.
@@ -81,95 +143,291 @@ Yukino's boyfriend Souji's perspective, unlocked on a certain condition.
 
 - Internet BBS
 A BBS on the Internet seen from Souji's point of view.
-Peeping photos and sex photos are posted, and later......?</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RE212828</RootFolder><SortTitle>RE212828</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>NTRed Class Rep Yukino ~H Days of Class Rep Who Can't Say No~</Title><Version/><Series>Netorare RPG</Series><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Cuckoldry;Naughty;Ashamed;Orgy Sex;Gangbang;Big Breasts</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/988206/母性カノジョ/nottrue.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:24+02:00</DateAdded><DateModified>2019-07-31T16:00:28+02:00</DateModified><ReleaseDate>2018-03-30T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>d201681e-c2d8-47ea-9a9b-e95c2dca39c1</ID><Notes>Kazuya was mistreated by his boss, and he was both physically and mentally exhausted. The only one who still helped him was his senpai at the workplace, Miori. He can keep going on because of her support. However before long, he quit the job upon her recommendation.
+Peeping photos and sex photos are posted, and later......?</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RE212828</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>NTRed Class Rep Yukino ~H Days of Class Rep Who Can&amp;#039;t Say No~</Title><Version/><Series>Netorare RPG</Series><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Cuckoldry;Naughty;Ashamed;Orgy Sex;Gangbang;Big Breasts</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ070222/aname/agame.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:01+02:00</DateAdded><DateModified>2019-08-01T16:23:02+02:00</DateModified><ReleaseDate>2019-08-01T17:37:26+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>f2f8e0ba-d39d-47ce-b948-446269537bf4</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ070222</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ123456/lol/exek.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:02+02:00</DateAdded><DateModified>2019-08-01T16:23:03+02:00</DateModified><ReleaseDate>2019-08-01T17:37:26+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>c0d3a7f5-9ad0-4d9f-a8f7-b0bb11dcd0c9</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ123456</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/988206/母性カノジョ/nottrue.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:19:10+02:00</DateAdded><DateModified>2019-08-01T16:23:00+02:00</DateModified><ReleaseDate>2018-03-30T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>f5635866-ad26-4e88-a276-8bfbfcc132b1</ID><Notes>
+上司から不遇に扱われ続け、心も体も疲れていた主人公。,,
+それでも唯一、先輩社員の橘美織だけは味方でいてくれた。,,
+,,
+美織の存在を心の支えに、頑張り続ける主人公。,,
+しかしやがて、彼女に勧められるがままに仕事を辞めて、,,
+彼女の家でひたすらに甘やかされる日々が始まる。,,
+,,
+,,,
+,,
+この言葉に主人公は救われ、ずっと張り詰めていた彼も、,,
+慈母のような彼女に無心に甘えることを覚えていく――,
 
-“It’s fine not to give it your all.”
+,,
+「母性カノジョ -子宮 帰還編-」をご予約いただいた方に予約キャンペーンとして,,
+,, をプレゼント！,
 
-With those words, it seemed like all the stress disappeared and he could just enjoy a simple life where she would take care of him all day long.
+,,
+マスターアップイラストいただきました！,</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/988206</RootFolder><SortTitle/><Status/><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>母性カノジョ -子宮 帰還編-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ249908/錬精術士コレットのHな搾精物語～精液を集める錬精術士～/錬精術士コレットのHな搾精物語～精液を集める錬精術士～.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:05+02:00</DateAdded><DateModified>2019-08-01T16:23:06+02:00</DateModified><ReleaseDate>2019-08-01T17:37:26+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer></Developer><Favorite>false</Favorite><ID>4b4d8158-c309-403b-bbe2-cb7e45f3338b</ID><Notes/><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ249908</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title/><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/675572/sampleGetchuGame/fake.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>5</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T16:23:07+02:00</DateAdded><DateModified>2019-08-01T17:12:40+02:00</DateModified><ReleaseDate>2010-04-23T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>1e465e6c-246a-4ad1-b262-7c9bf6dabcd7</ID><Notes>
 
-[From [url=https://omochikaeri.wordpress.com/2018/03/15/march-2018-eroge-releases/]Hau~ Omochikaeri~![/url]]</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/988206</RootFolder><SortTitle>988206</SortTitle><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Bosei Kanojo -Shikyuu Kikan Hen-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Defloration;Ejaculation Choice;Sexual Content</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ123456/lol/exek.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>3.82</CommunityStarRating><CommunityStarRatingTotalVotes>17</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:31+02:00</DateAdded><DateModified>2019-07-31T16:00:32+02:00</DateModified><ReleaseDate>2013-10-15T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>がしゃどくろ</Developer><Favorite>false</Favorite><ID>d2414117-c28b-4208-8090-d8a0a84e8657</ID><Notes>六花と付き合い始めてからそれなりに経ち、
-デートもキスもしたもののエッチはまだだった勇太たち。
+,,
+,,
 
-勇太の家で食後に2人きりで話していたら、
-六花の不意打ちに興奮した勇太は、更なる契約を求め…
+セレヌス大陸の西方に位置する平原地帯・エオス。,,
+その北方の境界線にある七つの砦を中心に、数百年にわたって行われていた同盟軍と魔軍との攻防戦は、ダークエルフの女王の力の衰えをきっかけにして、最終的な局面を迎えるようにみえた。,,
+,,
+女神の生まれ代わりであるハイエルフ呼びかけの元、『七盾同盟』 を結成し魔軍に対抗し続けた同盟軍は、この戦いに終止符を打つため、主人公を頭とする傭兵軍団――黒犬傭兵団に総力戦の前衛を依頼する。,,
+しかし黒犬傭兵団はダークエルフの女王の国を侵略した後、その国に本拠地を移し、かつての味方の国へ侵攻を開始した。,,
+驚き、慌て、憤り、悲しみ……様々な反応をみせる同盟側に対して、傭兵軍団を率いる裏切りの主人公が出した宣言に、同盟側の人々は耳を疑った。,,
+,,
+国中の女たちが、訪れる不特定多数の男性たちに性的奉仕を行う 『奉仕国家』 の建国宣言―――,,
+そして、同盟側の女たちは、この建国宣言が嘘でも誇張でもないことを、その身をもって知ることになる。,
 
-JPEG26枚（PDF28ページ）の作品です。</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ123456</RootFolder><SortTitle>RJ123456</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>俺の炎に抱かれて消えろ</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>ラブラブ/あまあま;処女</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ249908/錬精術士コレットのHな搾精物語～精液を集める錬精術士～/錬精術士コレットのHな搾精物語～精液を集める錬精術士～.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>4.77</CommunityStarRating><CommunityStarRatingTotalVotes>9216</CommunityStarRatingTotalVotes><DateAdded>2019-07-31T16:00:33+02:00</DateAdded><DateModified>2019-07-31T16:00:35+02:00</DateModified><ReleaseDate>2019-07-04T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>acerola</Developer><Favorite>false</Favorite><ID>7e5107d7-99b3-4244-be6a-82f9eea58af6</ID><Notes>* ver1.14
+,,
+キャンペーン期間中に「黒獣～気高き聖女は白濁に染まる～」をご予約のお客様に、『抜かずに入れられない！黒獣ドラマCD』をプレゼント！,</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/675572</RootFolder><SortTitle/><Status/><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>黒獣（クロイヌ）～気高き聖女は白濁に染まる～</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/952377/otter/little.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>0</CommunityStarRating><CommunityStarRatingTotalVotes>0</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T17:12:40+02:00</DateAdded><DateModified>2019-08-01T17:12:42+02:00</DateModified><ReleaseDate>2017-04-28T00:00:00+02:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>このブランドの公式サイトを開く</Developer><Favorite>false</Favorite><ID>327f988a-38a3-4297-9eb5-b52330774501</ID><Notes>
+,,
+弁護士からの連絡で、唯一の肉親である叔母が死んだと告げられた。,,
+そして、その叔母には虐待を与えていた娘がいて、引き取ることになった。,,
+,,
+ふとしたことから性的関係を結んでしまい、家族とはどういうことか思い悩むことになる。,,
+,,</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/getchu/952377</RootFolder><SortTitle/><Status/><Source>getchu</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>ふれあい ～傷だらけの少女を甘やかす～</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre></Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><Game><ApplicationPath>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/VJ008300/dfsfsd/fake.exe</ApplicationPath><Completed>false</Completed><CommunityStarRating>4.6</CommunityStarRating><CommunityStarRatingTotalVotes>882</CommunityStarRatingTotalVotes><DateAdded>2019-08-01T17:17:03+02:00</DateAdded><DateModified>2019-08-01T17:17:43+02:00</DateModified><ReleaseDate>2014-02-21T00:00:00+01:00</ReleaseDate><LastPlayedDate>1800-01-01T01:33:35.9365244+02:00</LastPlayedDate><Developer>ninetail/dualtail</Developer><Favorite>false</Favorite><ID>08dfa2b6-7cc4-44e4-9dca-544093f1ab95</ID><Notes>■ストーリー
+遥かな太古から偉大な五神獣によって、繁栄の時代を謳歌していたパラストラ島。
+しかし、世界は数百年前より緩やかに荒廃する黄昏の時代を迎えていた。
+大地は渇き、海は干上がり、出生率は激減し、原因不明の病が発症し、
+さらには、異獣と呼ばれる異形の魔物が各地に蔓延りはじめている……。
+魔導都市エネルゲイアの大公テオフラッドは、新エネルギー『エーテル』による世界の救済を提唱するが、
+それを邪法とし、滅ぼそうとする聖竜帝国グランレイドと激しく敵対するのだった―。
 
-* Story
+■「VenusBlood-GAIA-」の新要素
+●主従ダブル調教
+これまでのVBシリーズとは違う、新たな試み。
+神獣の巫女と、彼女と関係の深いキャラクターを、同時に調教していくことで、
+ヒロインたちに、さらに深い背徳感と快楽を教え込む事が出来ます。
+Hシーンの進め方、日常シーンの掛け合いが、これまでの1on1の会話から、
+主従＋主人公の3人会話の機会が増えることにより、賑やか度もアップ！
 
-Deep in the mountains lived two peaceful girls.
-One was the mysterious girl, known as Priscilla the Alchemist,
-and her student who she had found and raised called Colette.
+●リーダーシステム
+リーダーを選ぶことで、戦闘に恩恵が！
+『リーダースキル』は、リーダーに選んだときしか発揮されない、強力なスキル。
 
-Priscilla had invented her own form of alchemy that used cum,
-and had been living a lazy life while sharing her teachings with Colette.
+●リンクシステム
+リーダーに選んだユニットと絆が深い場合、パラメータがアップする、戦いの絆。
+母親から生まれた子供は、デフォルトで母親に対してリンク関係を保持しています。
+（例：ミリアから生まれたファイアドラゴンは、ミリアがリーダーの時にパワーアップする。）
+また、物語上関係性の深いキャラクター同士、リンク関係を結んでいます。
+（例：ククルとエルミンの姉弟は、お互いにリンク関係を結んでいます。）
+さらに、物語の進行によってはヒロインと主人公は新たなリンク関係を結ぶことができます。
+（例：キャルミラの好感度が高いと、主人公がリーダーの時にパワーアップする。）
 
-However, an unexpected visitor came by one day, 
-and Priscilla had decided to leave the mountain.
+●レギオンバトル
+強大な力を持つ、神獣たちとの戦いは、鍛え上げた味方の精鋭3師団を同時に投入可能！
+最大で、神獣 VS 18体のユニットで繰り拡げられる大ボス戦、レギオンバトルを勝ち抜こう！
 
-Now, Colette must finally live on her own.
+●フェイスウィンドウ式を採用
+今作では、フェイスウィンドウを採用しました。
+背景に立ち絵が立たせられないようなシーンでも、
+フェイスが出ることによってキャラクター会話の臨場感がアップ！
+VBFから採用された、主人公陣営に最初からいる近衛ユニット。
+一般兵よりも有能でかつシナリオでもたまに喋る、忠実な味方。
+その近衛ユニットたちにフェイスがつきました！
 
-Though Colette had the skills to be a professional alchemist,
-she still had some reservations about cum collecting.
+■登場キャラクター
+【魔導機公】
+●テオフラッド・ホーエンハイム（主人公）
+元学者にして、魔導都市エネルゲイアの大公でもある人物。
+エーテルによるパラストラの平和を実現しようとしている。
+魔族と人間の血が入り混じっており、やや魔族の血が濃い。
+明るく竹を割ったような性格で、市民にも人気がある。
+あまりウダウダと考え込まず、知識と直感と経験を信じて行動する。
+心臓にエーテルドライブを埋め込んでおり、その機構によって強大なエネルギーを操ることが出来る。
+触手などの変異生物を操る力は、その副産物ともいえる。
+銃器などのエーテル兵装による射撃戦闘を得意とするものの、
+本質はその卓越した戦略眼と深い知識に根ざした指揮能力にある。
 
-Priscilla decided to give one final lesson to help Colette, 
-and Colette was able to experience her "first time".
+「俺が世界を変えてやる。方法はちょっとエキセントリックになるがな」
 
-Having made her first cum collection and success in alchemy, 
-Priscilla was able to let Colette leave the nest and go off into 
-the world on her own.
+【気高き聖竜騎士】
+●ミリア・エリファード　（CV：葵時緒）
+グランレイド帝国の最上級騎士である、聖竜騎士の称号を持つ少女。
+物事に対して常にベストな結果を求め、その為に全力で行動する。
+力なき人々を守るという誓いを胸に抱く、高潔ながらも心優しき騎士。
+過去、神獣の巫女を輩出したこともあるグランレイドの由緒ある家系の出自。
+竜の巫女と聖竜騎士の二つの重い使命を背負っているが、
+その重圧に負けず、物事を悲観的に捉えない前向きな性格。
+天才剣士と呼ばれているが、才能以上に努力を積み重ねてきたタイプ。
+学術機関『数秘院』に所属していた頃のテオフラッドを知る数少ない人物でもある。
 
-Colette the Cum Collecting Alchemist-
-She will go on a journey where she will make new connections,
-help those in need, and end up in various incidents.
+「私は、弱き人々を守る騎士になる！これ以上、目の前で大切なものをなくしたくないから！」
 
-Her grand adventure begins!
+【麗しき緑の守護者】
+●ククル・カナン　（CV：御苑生メイ）
+森林国家ディアヘルムを守るエルフの槍使い。
+森を愛し、自然を愛し、そこに住む人々や動物のために戦う自身の役目に誇りを持っている。
+その育ちゆえかエネルゲイアの機械文明を過度に危険視しており、視野狭窄の向きがないでもない。
+それを除けばとても心優しい性格で、弟のエルミンをことの外大事にしている。
+その溺愛ぶりには、間違いなくブラコンの気が入っているとか。
 
+「エーテル？機械？目先の便利さを求めても、堕落するだけ。……別に、興味なんてない」
 
-* System:
-- Alchemy
-By combining materials and [cum], you can create new items!
-You can use the cum that your comrades collect as well, so collect 
-lots of cum and gather various materials!
+【心優しき射手】
+●エルミン・カナン　（CV：手塚りょうこ）
+ククルの弟であり、極めて異例ながら、男でありつつも
+神獣の巫女の血統としての高い資質も持っている稀有な存在。
+外の世界とは隔絶された環境で育ったためか、穢れを知らない純粋な心根を持ち、
+ククルのことを実の姉以上に慕っている。
+どことなく、女性のような顔立ちと雰囲気を持っているため、
+ややもすれば可憐というような印象を相手に与えてしまう。
 
-- Control up to 3 Characters!
-Choose characters from the guild and take them on your journey!
+「ボクだってディアヘルムの戦士だ！森を守る為に戦うよ！」
 
-- Hornyness level
-When the Hornyness amount is high, you can perform more intense 
-sexual interactions. It increases as you use skills and get sexually harassed.
+【無垢なる祈り手】
+●清明院 トモエ　（CV：三十三七）
+高天原のシャーマンの中でも随一の素養を持つ少女。
+神獣タマモを降霊できるたった一人の存在である。
+タマモとはひとつの身体を共有する関係。
+朝廷には神獣の巫女としてまつりあげられており、
+当初は大人達の指図に従順に従うだけの気弱な少女だったが、
+タマモにその体を貸し、言葉を交す内に次第に自分の意志も出来てきた。
+守護神獣の威光を振りかざす朝廷のやり方には、微かな違和感を持っている。
 
-- Lewdness level
-This time the Lewdness has S &amp; M amounts, that increases through sex.
-The higher the amount, the more sexually promiscuous she becomes.
-When the Lewdness and Hornyness reach a certain point she...!?
-Then the S or M amount reaches a certain point she...!?
+「みんな、頑張ろうね！わたしがついてるから！」
 
-- Karma level
-Karma goes up/down when she does good or bad things.
-If she does good things, the meter doesn't increase, and sometimes goes down.
-However, if she does lots of bad things the meter increases and...!?
+【忠義の女侍】
+●麻鳥 シグレ　（CV：ももぞの薫）
+高天原の巫女、トモエの側仕えであり、護衛を兼ねる女性。
+忠義に生きる凛々しき女侍。
+トモエが朝廷内で心を許す数少ない人物で、シグレもまた主の為なら命を捧げる覚悟でいる。
+武装は、斬魔刀と小太刀を利用した二刀流。
+鬼人種の怪力を発揮し、通常の種族では実現不可能な剣技を駆使する。
 
-- Pleading system
-This system allows her to plead for cum! 
-It applies to the sub-characters as well, and use this command to collect
-lots and lots of cum!
+「拙者の剣にて、邪智暴虐の輩を斬るッ！」
 
-- Fetish system
-The girls each have their preferred sexual activities. 
-By repeating a certain sex act, it can awaken a fetish within her and...!?
+【知恵と調和の金狐】
+●タマモ　（CV：渋谷ひめ）
+巫女トモエに宿る神獣タマモの意識が前面に出ている状態。
+限定的だが、神獣の力を行使することができ、高い潜在能力を秘めている。
+ここまで神獣と意識をリンクして、力を引き出せるのは、歴代の巫女の中でもトモエが初めてだという。
+タマモ自身は明るくひょうきんな性格で、彼女をばっちゃと呼ぶトモエと
+本当の祖母と孫のような関係を築いている。
 
-- Mid-battle sex
-If captured during battle, she will be violated. 
-Though her health will decrease after being violated, she can also obtain cum.
-Going out of your way to get violated and obtain cum is also a viable technique!
+「ウチこそ傾界九尾タマモじゃ！神獣の力に恐れおののくがよいぞ！」
 
-- Approval system
-The sub-character girls have an approval rating meter.
-Though hiring them costs money, when their approval rating reaches MAX,
-you no longer have to pay to hire them.
-* In addition, when the approval rating increases...!?
+【黄金の海の海賊姫】
+●メアリー・ドレーク　（CV：柚木サチ）
+パラストラ東部に位置する群島国家フォートラフス公認の私掠船団ゴールデンハインドの頭領。
+実質的にフォートラフスの海域を牛耳っている大海賊。
+彼女自身は、気さくで、明朗快活な女性。
+それでいて戦闘においては、斧による男以上の豪快な戦いっぷりから、
+海賊船のクルーからも頼りにされ、信頼されている。
+海の男たちの荒事や、キナ臭い取引などの、いわゆる裏稼業特有の場にも慣れている。
 
+「また会おう、この広い海のどこかで……ね」
 
-* We have created new pixel and music material for this work!
-Enjoy even more lewd pixel H!</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/RJ249908</RootFolder><SortTitle>RJ249908</SortTitle><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>Colette the Cum Collecting Alchemist</Title><Version/><Series>Cosplay RPG</Series><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>Foreign Object;Naughty;Ashamed;Humiliation;Gangbang;Interspecies Sex</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><Status/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game></LaunchBox>
+【お調子者の商人】
+●ルクレツィア　（CV：藤堂みさき）
+物語の序盤で魔導都市の噂を聞きつけて、エネルゲイアにやってくる商人。
+フェザー商会というキャラバンを運営しており、各国の世情に詳しい。
+お調子者で日和見なところがあるものの、商人としての才覚はなかなかのもので、
+日夜商売に明け暮れている。
+直接的な戦いはあまり得意ではないが、自らの竪琴演奏による魔法の歌で味方を支援する事が出来る。
+座右の銘は、『沈黙は金、雄弁は銀』とか。
+
+「沈黙は金、雄弁は銀なり～、ですぅ♪くっふっふ～、新商品、今なら2割引きです～！」
+
+【吸血公女】
+●キャルミラ・ド・アルハザード十三世　（CV：桃也みなみ）
+常時上空を闇の霧が覆う、永遠なる夜の国アルハザードを治める当主にして神獣の巫女。
+吸血鬼の真祖であり、アルハザードに棲む夜の眷属の頂点に位置する。
+どんな状況でも優雅に振る舞う事を良しとしており、人前で弱みは絶対に見せない。
+アイドル的なカリスマを持っており、芸術や魔術を奨励する内政の手腕も高く、
+彼女の力と美貌に惚れ込んでいる者は数多い。
+元来アルハザード公国自体が他国に対して閉鎖的なため、長らくその文化と国の内情は秘密となっている。
+
+「お～っほっほっほ！何事もエレガントに、ですわ！」
+
+【永遠なる従者】
+●ヴァニラ　（CV：青井美海）
+キャルミラお付きの侍女長。
+アルハザード領主の屋敷の一切を取り仕切る万能メイド。
+魔法の指輪を依り代にしてキャルミラに召喚され、主従の契約をしているゴーストに近しい存在。
+キャルミラの幸せを常に願い、キャルミラが喜ぶためなら一切の手間と労力を惜しまない。
+キャルミラのあるところ、どこにでも現れて世話をする。
+
+「不肖ながら、このヴァニラが誠心誠意、ご奉仕させて頂きます」
+
+【悪魔秘書】
+●レイン・ジーデルン　（CV：ヒマリ）
+魔導都市エネルゲイアで大公テオフラッドつきの秘書をしている夢魔。
+常に革新的な考えを求めており、その点においてテオフラッドには全幅の信頼を寄せている。
+公務においては大公の業務のサポート、戦場ではテオフラッドの援護や戦術補佐が主な職務。
+夢魔特有の抜群スタイルを持ち、特に腰から脚にかけてのラインは、
+数多の男をトリコにする魔性の艶めかしさを持つ。
+淫欲を好む種族であり、彼女も例に漏れず、テオフラッドとは夜の営みを存分に愉しむ間柄。
+
+「野望を持って、貪欲に生きましょ。枯れた人生なんて、つまらないだけよ？」
+
+【おとぼけ機人警護兵】
+●ララ　（CV：咲ゆたか）
+エーテルドライブを原動力にして動く機人（エンブリオ）。
+護衛兵としての役割を務め、テオフラッドの様々なサポートを行う。
+本人の性格は忠実だが、生まれたばかりなのでやや世間知らず。
+試作品のため燃費効率が悪く、エネルギー切れを防ぐために、よくファジー睡眠モードが発動する。
+エーテル補給ドリンクが手放せない。
+エンブリオの特徴として、感情の起伏は少なめで笑顔などはほとんど浮かべないが、
+嫌な時はうへぇーっというような感じで露骨に表情に出す。
+
+「エーテル残量、枯渇。マスター、補給の要請を……ZZZ」
+
+【竜の女帝】
+●エステリア・バハムート　（CV：榊木春乃）
+強大な神力をその身に宿す、グランレイド帝国の女帝。
+その実態は竜帝国を守護する神獣『天轟聖竜』そのものであり、
+他国の神獣とは違い人の姿に化身して、自らグランレイドの統治をおこなっている。
+神獣そのものながら、人の身になる事で民衆の支持を得ている事もあってか、
+民には女神のごとく崇められている。
+性格は、厳格にして冷酷冷徹。
+その身に宿す神力も、到底人の及ばぬ領域に達している。
+
+「恐ろしきはエーテル。厭うべきはエーテル。あの忌まわしき力の存在を許してはなりません」
+
+【誅戮の炎騎士】
+●アーシュ・ハロス　（CV：梅椿鬼）
+グランレイド帝国・聖竜騎士団の大将軍。
+ミリアの上官でもあり、帝国への忠誠心の塊のような人物。
+帝国の敵となる者や、異端とされる者たちには一切の容赦をせず、味方にも恐れられるほど。
+徹底して帝国の正義を貫こうとするその姿は、ときとして敵には悪魔のごとく映る。
+かつて敗れ、幸運にも生き残った僅かな者達は、例外なく彼女を恐れ、
+邪悪なる正義、断罪の魔女など、様々な名で呼ぶ。
+ミリアとは、騎士のあり方に対して根本的に考え方が違う。
+
+「ふふふ、さぁ、行きなさい。聖竜の御名のもと、穢れし邪法の使徒に誅戮を」
+
+【小さき太陽の少女】
+●ティティ　（CV：沢代りず）
+テオフラッドと共に暮らす、病弱な少女。
+ちょっと人見知りなところがあるものの、いたって普通の女の子。
+テオフラッドの娘であり、守るべき対象でもある。
+他人を思いやる純粋無垢な心を持ち、無邪気で明るく振舞うその姿に、
+魔導都市の面々は、一様に和み、心を癒されている。
+ある意味マスコット的な立場にもあり、みんなの人気者。
+その姿は、小さな太陽を思わせ、人々に生きる希望を与える。
+彼女は、その体に魔導都市に関わる重大な秘密を秘めているのだが……。
+
+「ケーキつくったの。テオ、みんなと一緒に食べよう！」
+
+【仮面の悪魔】
+●ベリオス・メギストス　（CV：笹崎こじろう）
+度々、テオフラッドたち魔導都市の軍勢と敵対することになる仮面をつけた謎の人物。
+魔導都市と同じくエーテル技術を使いこなし、機人兵だけでなく、
+制御不能といわれた異獣すらも利用して、エネルゲイアに攻撃を仕掛けてくる。
+世界を憎み、人を憎み、全てを憎む、破壊の権化。
+果たしてその正体は……？
+
+「ククク！ああ、いい……！最高の気分だ！エーテルの力は暴力に使われた時がその力を最大限に発揮する！」
+
+【殺戮人形】
+●ルル　（CV：MAIKO）
+ベリオスに忠実な近衛兵で最新鋭エーテルドライブを搭載した高機能エンブリオ。
+無口で忠実。命令を実行するのに感情を動かさないキリングマシーン。
+エネルゲイア側の動力不安定なララとは違い、完全な動力での稼働を可能としている。
+
+「オマエが生き残るに相応しいか、審判を下してやろう」
+
+●謎の少女
+全てが謎に包まれた少女。
+パラストラの歴史に深く関わりがあるようだが……。
+
+「おじさま、どんな野望をその胸に秘めているのですか？」</Notes><Platform>WINDOWS</Platform><Rating/><RootFolder>/home/lchr/dev/projects/stellarity/gameManagement/sample/games/dlsite/VJ008300</RootFolder><SortTitle/><Status/><Source>dlsite</Source><StarRatingFloat>0</StarRatingFloat><StarRating>0</StarRating><Title>VenusBlood -GAIA-</Title><Version/><Series/><Portable>false</Portable><Hide>false</Hide><Broken>false</Broken><Genre>道具/異物;ロリ;女王様/お姫様;ファンタジー;妊娠/孕ませ;産卵;陵辱;調教;触手;異種姦;処女</Genre><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><PlayCount>0</PlayCount><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><CustomField><GameID>e5aa6073-c78d-4e1b-aacf-b4facc67a4b4</GameID><Name>externalId</Name><Value>RJ1234567</Value></CustomField><CustomField><GameID>c712eeb6-7c4a-4f17-8c67-65232a4c6d3e</GameID><Name>externalId</Name><Value>RE212828</Value></CustomField><CustomField><GameID>f2f8e0ba-d39d-47ce-b948-446269537bf4</GameID><Name>externalId</Name><Value>RJ070222</Value></CustomField><CustomField><GameID>c0d3a7f5-9ad0-4d9f-a8f7-b0bb11dcd0c9</GameID><Name>externalId</Name><Value>RJ123456</Value></CustomField><CustomField><GameID>f5635866-ad26-4e88-a276-8bfbfcc132b1</GameID><Name>externalId</Name><Value>988206</Value></CustomField><CustomField><GameID>f4a34e74-4d54-40dd-a18a-a0b9395bd07e</GameID><Name>externalId</Name><Value>d_082865</Value></CustomField><CustomField><GameID>4b4d8158-c309-403b-bbe2-cb7e45f3338b</GameID><Name>externalId</Name><Value>RJ249908</Value></CustomField><CustomField><GameID>08dfa2b6-7cc4-44e4-9dca-544093f1ab95</GameID><Name>externalId</Name><Value>VJ008300</Value></CustomField><CustomField><GameID>1e465e6c-246a-4ad1-b262-7c9bf6dabcd7</GameID><Name>externalId</Name><Value>675572</Value></CustomField><CustomField><GameID>327f988a-38a3-4297-9eb5-b52330774501</GameID><Name>externalId</Name><Value>952377</Value></CustomField></LaunchBox>

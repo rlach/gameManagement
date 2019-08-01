@@ -8,11 +8,15 @@ const settings = require('../settings');
 const moment = require('moment/moment');
 const fs = require('fs');
 const vndb = require('../parsers/vndb');
+const { removeUndefined } = require('../objects');
 
 async function buildDbFromFolders() {
-    const progressBar = new cliProgress.Bar({
-        format: 'Building database from folders [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-    }, cliProgress.Presets.shades_classic);
+    const progressBar = new cliProgress.Bar(
+        {
+            format: 'Building database from folders [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+        },
+        cliProgress.Presets.shades_classic
+    );
     await connect();
     await vndb.connect();
 
@@ -31,9 +35,18 @@ async function buildDbFromFolders() {
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
         const strategy = selectStrategy(file.name);
+        if (!strategy) {
+            log.debug('No strategy for file', file);
+            continue;
+        }
 
         let game = await retrieveGameFromDb(file.name);
-        if (game.executableFile && !game.forceSourceUpdate && !game.forceExecutableUpdate && !game.forceAdditionalImagesUpdate) {
+        if (
+            game.executableFile &&
+            !game.forceSourceUpdate &&
+            !game.forceExecutableUpdate &&
+            !game.forceAdditionalImagesUpdate
+        ) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
@@ -41,14 +54,17 @@ async function buildDbFromFolders() {
                 game.forceSourceUpdate = false;
                 log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(file.name);
-                if(gameData.nameJp || gameData.nameEn) {
+                if (
+                    (gameData.nameJp || gameData.nameEn) &&
+                    (!gameData.additionalImages || gameData.additionalImages.length === 0)
+                ) {
                     gameData.additionalImages = await strategy.getAdditionalImages(file.name);
                 }
                 Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
                 game.dateModified = moment().format();
                 await saveGame(game);
-            } else if((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
+            } else if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
                 game.forceAdditionalImagesUpdate = false;
                 game.additionalImages = await strategy.getAdditionalImages(file.name);
                 await saveGame(game);
@@ -73,7 +89,7 @@ async function buildDbFromFolders() {
 }
 
 var path = require('path');
-const {saveGame} = require("../database/game");
+const { saveGame } = require('../database/game');
 
 async function findExecutableFile(file) {
     let executableFile;
@@ -139,13 +155,6 @@ function selectStrategy(gameId) {
             return strategy;
         }
     }
-
-    return strategies[0];
 }
 
 module.exports = buildDbFromFolders;
-
-function removeUndefined(obj) {
-    for (let k in obj) if (obj[k] === undefined) delete obj[k];
-    return obj;
-}
