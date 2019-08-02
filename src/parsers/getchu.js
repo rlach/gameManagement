@@ -1,4 +1,3 @@
-const select = require('soupselect').select;
 const log = require('./../logger');
 const moment = require('moment');
 const { callPage } = require('../html');
@@ -43,24 +42,26 @@ class GetchuStrategy {
     }
 
     async callFindGame(name) {
-        return callPage(
-            `http://www.getchu.com/php/search.phtml?search_keyword=${encodeURIComponent(
-                name
-            )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`
-        );
+        const uri = `http://www.getchu.com/php/search.phtml?search_keyword=${encodeURIComponent(
+            name
+        )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`;
+        log.debug('Uri called for search', uri);
+        return callPage(uri);
     }
 
     async findGame(name) {
         const reply = await this.callFindGame(name);
-        const root = parseSite(reply);
-        const works = select(root, '.blueb')
-            .filter(b => b.name === 'A')
-            .map(b => {
-                return {
-                    work_name: b.children && b.children[0] ? b.children[0].data : '',
-                    workno: b.attribs && b.attribs.HREF ? b.attribs.HREF.match(GETCHU_ID_REGEX) : ''
-                };
-            });
+        const query = parseSite(reply);
+        const works = query('.blueb')
+            .map((i, e) => ({
+                workno: query(e)
+                    .attr('href')
+                    .match(GETCHU_ID_REGEX)[0],
+                work_name: query(e)
+                    .text()
+                    .trim()
+            }))
+            .get();
 
         return { works };
     }
@@ -78,45 +79,45 @@ class GetchuStrategy {
 let getchuStrategy = new GetchuStrategy();
 module.exports = getchuStrategy;
 
-function getGameMetadataJp(root) {
+function getGameMetadataJp(query) {
     try {
-        const titleElement = select(root, '#soft-title').shift();
-        const makerElement = select(root, '.glance').shift();
-        const imageElement = select(root, '.highslide').shift();
-        const description = select(root, '.tablebody');
-        let releaseDayText;
-        try {
-            releaseDayText = select(root, '#tooltip-day').shift().children[0].data;
-        } catch (e) {
-            log.debug('Release day element missing or invalid');
-        }
+        let releaseDayText = query('#tooltip-day').text();
 
         return {
-            nameJp: titleElement && titleElement.children[0] ? titleElement.children[0].data.trim() : '',
+            nameJp: query('#soft-title')
+                .children()
+                .remove()
+                .end()
+                .text()
+                .trim(),
             releaseDate: releaseDayText ? moment(releaseDayText, 'YYYY/MM/DD').format() : undefined,
-            descriptionJp: description
-                .map(desc => desc.children.map(descChild => (descChild.type === 'text' ? descChild.data : '')))
-                .join('\n'),
-            makerJp: makerElement && makerElement.attribs ? makerElement.attribs.title.trim() : '',
-            imageUrlJp:
-                imageElement && imageElement.attribs
-                    ? imageElement.attribs.href.replace('.', 'http://www.getchu.com')
-                    : '',
-            additionalImages: getAdditionalImages(root)
+            descriptionJp: query('.tablebody')
+                .text()
+                .trim(),
+            makerJp: query('.glance').attr('title'),
+            imageUrlJp: query('.highslide img')
+                .attr('src')
+                .replace('./', 'http://getchu/'),
+            additionalImages: getAdditionalImages(query)
         };
     } catch (e) {
-        log.debug('Metadata parsing failure', { e, root });
+        log.debug('Metadata parsing failure', e);
     }
 }
 
-function getAdditionalImages(root) {
-    try {
-        return select(root, '.soft')
-            .filter(a => a.attribs.alt.startsWith('SAMPLE'))
-            .map(a => a.attribs.src.replace('./', 'http://www.getchu.com/'));
-    } catch (e) {
-        log.debug('Error getting additional images');
-    }
+function getAdditionalImages(query) {
+    return query('.soft')
+        .filter((i, e) =>
+            query(e)
+                .attr('alt')
+                .startsWith('SAMPLE')
+        )
+        .map((i, e) =>
+            query(e)
+                .attr('src')
+                .replace('./', 'http://getchu/')
+        )
+        .get();
 }
 
 async function getJapaneseSite(id) {
@@ -135,14 +136,11 @@ async function getReviews(id) {
         let reply = await callPage(
             `http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(id)}`
         );
-        const root = parseSite(reply);
+        const query = parseSite(reply);
 
-        const averageRatingElement = select(root, '.r_ave').shift();
+        let averageRatingText = query('.r_ave').text();
 
-        const averageRatingText =
-            averageRatingElement && averageRatingElement.children && averageRatingElement.children.length > 0
-                ? averageRatingElement.children[0].data
-                : '0.00';
+        averageRatingText = averageRatingText ? averageRatingText : '0.00';
 
         return {
             communityStars: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])

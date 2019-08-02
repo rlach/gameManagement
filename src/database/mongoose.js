@@ -43,7 +43,7 @@ if (settings.database === 'nedb') {
     }
 
     async function dropDatabase() {
-        await mongoose.connection.db.dropDatabase();
+        await db.dropDatabase();
     }
 
     module.exports = {

@@ -1,4 +1,3 @@
-const select = require('soupselect').select;
 const request = require('request-promise');
 const { parseSite } = require('../html');
 const { getVndbData } = require('./vndb');
@@ -8,7 +7,7 @@ const log = require('./../logger');
 
 const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);
 
-class DummyStrategy {
+class DmmStrategy {
     constructor() {
         this.name = 'dmm';
     }
@@ -48,17 +47,17 @@ class DummyStrategy {
     }
 }
 
-let dummyStrategy = new DummyStrategy();
-module.exports = dummyStrategy;
+let dmmStrategy = new DmmStrategy();
+module.exports = dmmStrategy;
 
 async function getJapaneseSite(id) {
     let uri;
-    if(id.match(/d_\d+/)) {
-        uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`
-    } else if(id.match(/d_[a-z]+\d+/)) {
-        uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`
+    if (id.match(/d_\d+/)) {
+        uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
+    } else if (id.match(/d_[a-z]+\d+/)) {
+        uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`;
     } else {
-        uri = `https://dlsoft.dmm.co.jp/detail/${id}/`
+        uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
     }
 
     try {
@@ -66,8 +65,7 @@ async function getJapaneseSite(id) {
             method: 'GET',
             uri: uri
         });
-        const root = parseSite(reply);
-        return getGameMetadata(root);
+        return getGameMetadata(parseSite(reply));
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
@@ -78,59 +76,59 @@ async function getJapaneseSite(id) {
     }
 }
 
-function getGameMetadata(root) {
-    const images = select(root, '.fn-colorbox')
-        .map(a => (a.attribs ? a.attribs.href : ''))
-        .filter(a => a !== '');
+function getGameMetadata(query) {
+    const images = query('.fn-colorbox')
+        .map((i, e) => query(e).attr('href'))
+        .get();
     const mainImage = images.splice(0, 1)[0];
-    const informationList = getInformationList(root);
+    const informationList = getInformationList(query);
 
     return {
-        nameJp: getTitle(root),
-        genresJp: getGenres(root),
+        nameJp: getTitle(query),
+        genresJp: getGenres(query),
         imageUrlJp: mainImage,
         additionalImages: images,
-        descriptionJp: select(root, '.summary__txt')
-            .pop()
-            .children.filter(c => c.type === 'text')
-            .map(c => c.data.trim())
-            .join('\n'),
+        descriptionJp: query('.summary__txt')
+            .text()
+            .trim(),
         releaseDate: informationList['配信開始日']
             ? moment(informationList['配信開始日'], 'YYYY-MM-DD HH:mm').format()
             : undefined,
         series: informationList['シリーズ'] === '----' ? undefined : informationList['シリーズ'],
         tagsJp: informationList['ゲームジャンル'] ? [informationList['ゲームジャンル']] : undefined,
-        makerJp: getMaker(root),
-        video: getVideo(root),
-        communityStars: getCommunityStars(root),
-        communityStarVotes: getCommunityVotes(root)
+        makerJp: getMaker(query),
+        video: getVideo(query),
+        communityStars: getCommunityStars(query),
+        communityStarVotes: getCommunityVotes(query)
     };
 }
 
-function getInformationList(root) {
+function getInformationList(query) {
     const informationList = {};
-    select(root, '.informationList').forEach(il => {
-        try {
-            let keyElement = il.children.find(c => c.attribs && c.attribs.class.includes('informationList__ttl'));
-            let valueElement = il.children.find(c => c.attribs && c.attribs.class.includes('informationList__txt'));
-            if (keyElement && valueElement) {
-                let foundKey = keyElement.children.find(c => c.type === 'text').data.trim();
-                let foundValue = valueElement.children.find(c => c.type === 'text').data.trim();
+    query('.informationList')
+        .each((i, e) => {
+            const foundKey = query(e)
+                .find('.informationList__ttl')
+                .text()
+                .trim();
+            const foundValue = query(e)
+                .find('.informationList__txt')
+                .text()
+                .trim();
+            if (foundKey && foundValue) {
                 informationList[foundKey] = foundValue;
             }
-        } catch (e) {
-            log.debug('Could not get information list');
-        }
-    });
+        })
+        .get();
     return informationList;
 }
 
-function getCommunityVotes(root) {
+function getCommunityVotes(query) {
     try {
         return Number.parseInt(
-            select(root, '.d-review__evaluates strong')[0]
-                .children.find(c => c.type === 'text')
-                .data.trim()
+            query('.d-review__evaluates strong')
+                .text()
+                .trim()
                 .match(/\d+/)[0]
         );
     } catch (e) {
@@ -138,12 +136,12 @@ function getCommunityVotes(root) {
     }
 }
 
-function getCommunityStars(root) {
+function getCommunityStars(query) {
     try {
         return Number.parseFloat(
-            select(root, '.d-review__average strong')[0]
-                .children.find(c => c.type === 'text')
-                .data.trim()
+            query('.d-review__average strong')
+                .text()
+                .trim()
                 .match(/(\d+(\.\d+)?)/)[0]
         );
     } catch (e) {
@@ -151,39 +149,39 @@ function getCommunityStars(root) {
     }
 }
 
-function getGenres(root) {
-    return select(root, '.genreTag__txt')
-        .map(t => {
-            try {
-                return t.children.find(c => c.type === 'text').data.trim();
-            } catch (e) {
-                log.debug('Genres could not be mapped');
-            }
-        })
-        .filter(g => g !== '');
+function getGenres(query) {
+    return query('.genreTag__txt')
+        .map((i, e) =>
+            query(e)
+                .text()
+                .trim()
+        )
+        .get();
 }
 
-function getMaker(root) {
+function getMaker(query) {
     try {
-        return select(root, '.circleName__txt')[0]
-            .children.find(c => c.type === 'text')
-            .data.trim();
+        return query('.circleName__txt')
+            .text()
+            .trim();
     } catch (e) {
         log.debug('Maker not found or wrong');
     }
 }
 
-function getTitle(root) {
+function getTitle(query) {
     try {
-        return select(root, 'meta[property="og:title"]')[0].attribs.content;
+        return query('meta[property="og:title"]')
+            .attr('content')
+            .trim();
     } catch (e) {
         log.debug('Og:title meta property not found or wrong');
     }
 }
 
-function getVideo(root) {
+function getVideo(query) {
     try {
-        return select(root, '.productPreview__item source')[0].attribs.src;
+        return query('.productPreview__item source').attr('src');
     } catch (e) {
         log.debug('Could not get video source');
     }

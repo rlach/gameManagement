@@ -1,22 +1,25 @@
 const iconv = require('iconv-lite');
-const htmlparser = require('htmlparser');
 const request = require('request-promise');
 const log = require('./logger');
+const { Parser } = require('htmlparser2');
+const { DomHandler } = require('domhandler');
+const cheerio = require('cheerio');
 
 const JAPANESE_ENCODING = 'EUC-JP';
 
 function parseSite(rawHtml) {
-    const handler = new htmlparser.DefaultHandler(function(error, dom) {
+    const handler = new DomHandler(function(error, dom) {
         if (error) {
             log.debug('Error parsing html', error);
         } else {
             log.debug('Parsing done!');
         }
     });
-    const parser = new htmlparser.Parser(handler);
-    parser.parseComplete(rawHtml);
+    const parser = new Parser(handler);
+    parser.write(rawHtml);
+    parser.end();
     log.debug('Dom parsed!');
-    return handler.dom;
+    return cheerio.load(handler.dom);
 }
 
 async function callPage(uri) {

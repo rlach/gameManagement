@@ -1,4 +1,3 @@
-const select = require('soupselect').select;
 const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
@@ -113,15 +112,26 @@ class DlsiteStrategy {
                 uri: url
             });
 
-            const root = parseSite(reply);
+            const query = parseSite(reply);
 
             if (id.startsWith('VJ')) {
-                return select(root, '.target_type').map(tt => tt.attribs.src.replace('//', 'http://'));
+                return query('.target_type')
+                    .map((i, e) =>
+                        query(e)
+                            .attr('src')
+                            .replace('//', 'http://')
+                    )
+                    .get();
             } else {
                 const samplesCount = parseInt(
-                    select(root, '#page')[0].children[0].data.replace('1/', '').trim()
+                    query('#page')
+                        .text()
+                        .replace('1/', '')
+                        .trim()
                 );
-                const firstImage = select(root, '.target_type')[0].attribs.src.replace('//', 'http://');
+                const firstImage = query('.target_type')
+                    .attr('src')
+                    .replace('//', 'http://');
                 log.debug(`Samples found`, {
                     samplesCount,
                     id,
@@ -186,18 +196,24 @@ function getOptions(id, type) {
     };
 }
 
-function getGameMetadata(root, gameId) {
+function getGameMetadata(query) {
     try {
-        let imageSrc = select(root, '.slider_item img')[0].attribs.src;
-        if (imageSrc.startsWith('//')) {
-            imageSrc = imageSrc.replace('//', 'http://');
-        }
+        let imageSrc = query('.slider_item img')
+            .attr('src')
+            .replace('//', 'http://');
 
         let releaseDateMoment;
         let releaseDate;
-        const dateText = select(root, '#work_outline a')
-            .find(wo => wo.raw.includes('/year/'))
-            .children[0].data.trim();
+        const dateText = query('#work_outline a')
+            .filter(
+                (i, e) =>
+                    query(e).attr('href') &&
+                    query(e)
+                        .attr('href')
+                        .includes('/year')
+            )
+            .text()
+            .trim();
         if (/\d/.test(dateText[0])) {
             releaseDateMoment = moment(dateText, 'YYYY-MM-DD-'); //Japanese format
         } else {
@@ -210,28 +226,44 @@ function getGameMetadata(root, gameId) {
 
         let seriesText;
         try {
-            seriesText = select(root, '#work_outline a')
-                .find(a => a.data.includes('work.series'))
-                .children[0].data.trim();
+            seriesText = query('#work_outline a')
+                .filter((i, e) =>
+                    query(e)
+                        .attr('href')
+                        .includes('work.series')
+                )
+                .text()
+                .trim();
         } catch (e) {
             log.debug('Series text missing or invalid');
         }
 
         let genres;
         try {
-            genres = select(root, '.main_genre')
-                .find(mg => mg.children.find(mgc => mgc.raw.includes('href')))
-                .children.map(c => (c.children && c.children[0] ? c.children[0].data.trim() : ''))
-                .filter(r => r !== '');
+            genres = query('.main_genre a')
+                .map((i, e) =>
+                    query(e)
+                        .text()
+                        .trim()
+                )
+                .get();
         } catch (e) {
             log.debug('Could not get genres');
         }
 
-        const description = select(root, '.work_article')[0].children.filter(c => c.type === 'text').map(c => c.data.trim()).join('\n');
-        const tags = select(root, '.work_genre span').map(t => t.attribs.title);
+        const description = query('.work_article')
+            .text()
+            .trim();
+        const tags = query('.work_genre span')
+            .map((i, e) => query(e).attr('title'))
+            .get();
 
-        const workName = select(root, '#work_name a')[0].children[0].data.trim();
-        const maker = select(root, '.maker_name a')[0].children[0].data.trim();
+        const workName = query('#work_name a')
+            .text()
+            .trim();
+        const maker = query('.maker_name a')
+            .text()
+            .trim();
 
         return {
             series: seriesText,
