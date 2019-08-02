@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const { parseSite } = require('../html');
-const { getVndbData } = require('./vndb');
+const { getVndbData } = require('../vndb');
 const moment = require('moment');
 const { removeUndefined } = require('../objects');
 const log = require('./../logger');
@@ -13,7 +13,7 @@ class DmmStrategy {
     }
 
     async fetchGameData(gameId) {
-        const jpn = await getJapaneseSite(gameId);
+        const jpn = await getSite(gameId);
         let eng;
 
         if (jpn && jpn.nameJp) {
@@ -38,7 +38,7 @@ class DmmStrategy {
     }
 
     async getAdditionalImages(id) {
-        const site = await getJapaneseSite(id);
+        const site = await getSite(id);
         return site.additionalImages;
     }
 
@@ -50,14 +50,18 @@ class DmmStrategy {
 let dmmStrategy = new DmmStrategy();
 module.exports = dmmStrategy;
 
-async function getJapaneseSite(id) {
+async function getSite(id) {
     let uri;
+    let method;
     if (id.match(/d_\d+/)) {
         uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
+        method = getGameMetadata;
     } else if (id.match(/d_[a-z]+\d+/)) {
         uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`;
+        method = getMonoGameMetadata;
     } else {
         uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
+        method = getProGameMetadata;
     }
 
     try {
@@ -65,7 +69,7 @@ async function getJapaneseSite(id) {
             method: 'GET',
             uri: uri
         });
-        return getGameMetadata(parseSite(reply));
+        return method(parseSite(reply));
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
@@ -101,6 +105,127 @@ function getGameMetadata(query) {
         communityStars: getCommunityStars(query),
         communityStarVotes: getCommunityVotes(query)
     };
+}
+
+function getMonoGameMetadata(query) {
+    const releaseDateText = findTableValue(query, '発売日')
+        .find('td')
+        .last()
+        .text();
+    const seriesText = findTableValue(query, 'シリーズ')
+        .find('td')
+        .last()
+        .text()
+        .trim();
+
+    return {
+        nameJp: getTitle(query),
+        genresJp: findTableValue(query, 'ジャンル')
+            .find('a')
+            .map((i, e) => query(e).text())
+            .get(),
+        imageUrlJp: query('a[name="package-image"]').attr('href'),
+        additionalImages: query('a[name="sample-image"] img')
+            .map((i, e) => query(e).attr('src'))
+            .get(),
+        descriptionJp: query('div.mg-b20.lh4 p.mg-b20')
+            .text()
+            .trim(),
+        releaseDate: releaseDateText ? moment(releaseDateText, 'YYYY-MM-DD').format() : undefined,
+        series: seriesText === '----' ? undefined : seriesText,
+        tagsJp: query('.side-menu')
+            .filter((i, e) =>
+                query(e)
+                    .find('p')
+                    .text()
+                    .includes('題材ジャンル')
+            )
+            .find('a')
+            .map((i, e) =>
+                query(e)
+                    .text()
+                    .trim()
+            )
+            .get(),
+        makerJp: findTableValue(query, 'サークル名')
+            .find('td')
+            .last()
+            .text()
+            .trim(),
+        communityStars: getCommunityStars(query),
+        communityStarVotes: getCommunityVotes(query)
+    };
+}
+
+function findTableValue(query, value) {
+    return query('table.mg-b20 tr').filter((i, e) =>
+        query(e)
+            .find('td')
+            .text()
+            .includes(value)
+    );
+}
+
+function getProGameMetadata(query) {
+    const images = query('#item-rotationbnr img')
+        .map((i, e) => query(e).attr('src'))
+        .get();
+    const softwareDetail = getSoftwareDetail(query);
+
+    return {
+        nameJp: getTitle(query),
+        genresJp: query('table[summary="ジャンル"] a')
+            .map((i, e) =>
+                query(e)
+                    .text()
+                    .trim()
+            )
+            .get(),
+        imageUrlJp: query('.bx-package img').attr('src'),
+        additionalImages: images,
+        descriptionJp: query('.area-detail-read .text-overflow')
+            .text()
+            .trim(),
+        releaseDate: softwareDetail['配信開始日']
+            ? moment(softwareDetail['配信開始日'], 'YYYY-MM-DD').format()
+            : undefined,
+        series: softwareDetail['シリーズ'] === '----' ? undefined : softwareDetail['シリーズ'],
+        tagsJp: softwareDetail['ゲームジャンル'] ? [softwareDetail['ゲームジャンル']] : undefined,
+        makerJp: query('.area-bskt a')
+            .filter((i, e) =>
+                query(e)
+                    .attr('href')
+                    .includes('article=maker')
+            )
+            .text()
+            .trim(),
+        communityStars: getCommunityStars(query),
+        communityStarVotes: getCommunityVotes(query)
+    };
+}
+
+function getSoftwareDetail(query) {
+    const softwareDetail = {};
+    query('.software-detail table')
+        .not('.spec-table')
+        .not('.tbl-bps')
+        .find('tr')
+        .each((i, e) => {
+            const foundKey = query(e)
+                .find('td')
+                .first()
+                .text()
+                .replace('：', '')
+                .trim();
+            const foundValue = query(e)
+                .find('td')
+                .last()
+                .text()
+                .trim();
+            softwareDetail[foundKey] = foundValue;
+        })
+        .get();
+    return softwareDetail;
 }
 
 function getInformationList(query) {

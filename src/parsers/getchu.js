@@ -3,7 +3,7 @@ const moment = require('moment');
 const { callPage } = require('../html');
 const { parseSite } = require('../html');
 const { removeUndefined } = require('../objects');
-const { getVndbData } = require('./vndb');
+const { getVndbData } = require('../vndb');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
 

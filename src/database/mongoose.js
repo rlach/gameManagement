@@ -14,14 +14,8 @@ if (settings.database === 'nedb') {
         return;
     }
 
-    async function dropDatabase() {
-        await DB.remove({}, { multi: true });
-        await DB.loadDatabase();
-    }
-
     module.exports = {
         db: DB,
-        dropDatabase,
         connect
     };
 } else {
@@ -42,13 +36,8 @@ if (settings.database === 'nedb') {
         );
     }
 
-    async function dropDatabase() {
-        await db.dropDatabase();
-    }
-
     module.exports = {
         mongoose: mongoose,
-        dropDatabase,
         connect,
         db: db
     };

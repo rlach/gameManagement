@@ -2,7 +2,7 @@ const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
 const { parseSite } = require('../html');
-const { getVndbData } = require('./vndb');
+const { getVndbData } = require('../vndb');
 
 class DlsiteStrategy {
     constructor() {

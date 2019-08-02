@@ -7,7 +7,7 @@ const {db, connect} = require('../database/mongoose');
 const settings = require('../settings');
 const moment = require('moment/moment');
 const fs = require('fs');
-const vndb = require('../parsers/vndb');
+const vndb = require('../vndb');
 const {removeUndefined} = require('../objects');
 
 async function buildDbFromFolders() {

@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const log = require('./logger');
 const scripts = require('./scripts');
 const { db } = require('./database/mongoose');
-const vndb = require('./parsers/vndb');
+const vndb = require('./vndb');
 const fs = require('fs');
 const settings = require('./settings-sample');
 
@@ -43,8 +43,7 @@ async function main() {
                         { name: ' 5) convert database to launchbox xml', value: 'dbToLaunchbox' },
                         new inquirer.Separator('= Helper tools ='),
                         { name: 'Find possible duplicates in organized games', value: 'findDuplicates' },
-                        { name: 'Mark games for force update of selected fields', value: 'setForceUpdate' },
-                        { name: 'Clear the database (unrecoverable!)', value: 'clearDb' }
+                        { name: 'Mark games for force update of selected fields', value: 'setForceUpdate' }
                     ],
                     default: 0
                 }
@@ -75,9 +74,6 @@ async function main() {
             break;
         case 'setForceUpdate':
             await scripts.setForceUpdate();
-            break;
-        case 'clearDb':
-            await scripts.clearDb();
             break;
         case 'syncAll':
         default:

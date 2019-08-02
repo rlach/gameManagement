@@ -1,7 +1,7 @@
 const VNDB = require('vndb');
-const VNDBtags = require('./vndb-tags');
-const log = require('../logger');
-const moment = require('moment');
+const VNDBtags = require('./assets/vndb-tags');
+const log = require('./logger');
+const moment = require('moment/moment');
 
 let vndb;
 
