@@ -66,7 +66,8 @@ class GetchuStrategy {
     }
 
     async getAdditionalImages(id) {
-        return undefined;
+        const result = await getJapaneseSite(id);
+        return result ? result.additionalImages : undefined;
     }
 
     shouldUse(gameId) {
@@ -100,10 +101,21 @@ function getGameMetadataJp(root) {
             imageUrlJp:
                 imageElement && imageElement.attribs
                     ? imageElement.attribs.href.replace('.', 'http://www.getchu.com')
-                    : ''
+                    : '',
+            additionalImages: getAdditionalImages(root)
         };
     } catch (e) {
         log.debug('Metadata parsing failure', { e, root });
+    }
+}
+
+function getAdditionalImages(root) {
+    try {
+        return select(root, '.soft')
+            .filter(a => a.attribs.alt.startsWith('SAMPLE'))
+            .map(a => a.attribs.src.replace('./', 'http://www.getchu.com/'));
+    } catch (e) {
+        log.debug('Error getting additional images');
     }
 }
 
