@@ -5,3 +5,4 @@ yarn-error.log
 settings.json
 games.db
 duplicates.txt
+*.xml.*

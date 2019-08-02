@@ -7,6 +7,7 @@ const {db, connect} = require('../database/mongoose');
 const settings = require('../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
+const backup = require('file-backup');
 
 const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 
@@ -22,7 +23,8 @@ async function convertDbToLaunchbox() {
 
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.debug('Platform file already exists, backing up');
-        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`);
+
+        await backup(LAUNCHBOX_PLATFORM_XML, settings.amountOfBackups);
 
         log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
