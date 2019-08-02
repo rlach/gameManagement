@@ -6,9 +6,12 @@ const parserStrategies = require('../parsers');
 const settings = require('../settings');
 
 async function getPossibleCodes() {
-    const progressBar = new cliProgress.Bar({
-        format: 'Getting game codes [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-    }, cliProgress.Presets.shades_classic);
+    const progressBar = new cliProgress.Bar(
+        {
+            format: 'Getting game codes [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
+        },
+        cliProgress.Presets.shades_classic
+    );
     log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
@@ -31,11 +34,18 @@ async function getPossibleCodes() {
             const fileResults = {
                 file
             };
+
+            const promises = [];
             for (const strategy of strategies) {
+                promises.push(strategy.findGame(files.removeTagsAndMetadata(file)));
+            }
+            const results = await Promise.all(promises);
+
+            for (const [index, strategy] of strategies.entries()) {
                 log.debug('Strategy', { strategy, file });
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
-                    foundCodes: await strategy.findGame(files.removeTagsAndMetadata(file))
+                    foundCodes: results[index]
                 };
             }
             try {

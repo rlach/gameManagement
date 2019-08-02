@@ -42,13 +42,13 @@ async function organizeDirectories() {
                 addCode(bossCodes, settings.advanced.scores.onlyOneResultExists, fileCodes.dlsite.foundCodes[0].workno);
             }
 
-            fileCodes.getchu.foundCodes.works.forEach(code => {
+            fileCodes.getchu.foundCodes.forEach(code => {
                 if (code.workno) {
                     addCode(bossCodes, settings.advanced.scores.resultExists, code.workno[0]);
                 }
             });
-            if (fileCodes.getchu.foundCodes.works.length === 1) {
-                addCode(bossCodes, settings.advanced.scores.onlyOneResultExists, fileCodes.getchu.foundCodes.works[0].workno[0]);
+            if (fileCodes.getchu.foundCodes.length === 1) {
+                addCode(bossCodes, settings.advanced.scores.onlyOneResultExists, fileCodes.getchu.foundCodes[0].workno[0]);
             }
             if (extractedCode !== '') {
                 addCode(bossCodes, settings.advanced.scores.extractedDlsiteCode, extractedCode);
@@ -111,7 +111,7 @@ async function organizeDirectories() {
 
             let finalBossName = fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode)
                 ? fileCodes.dlsite.foundCodes.find(fc => fc.workno === finalBossCode).work_name
-                : fileCodes.getchu.foundCodes.works.find(fc => {
+                : fileCodes.getchu.foundCodes.find(fc => {
                       try {
                           return fc.workno && fc.workno[0] === finalBossCode;
                       } catch (e) {

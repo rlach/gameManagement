@@ -4,6 +4,7 @@ const { getVndbData } = require('../vndb');
 const moment = require('moment');
 const { removeUndefined } = require('../objects');
 const log = require('./../logger');
+const { callPage } = require('../html');
 
 const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);
 
@@ -34,7 +35,9 @@ class DmmStrategy {
     }
 
     async findGame(name) {
-        return []; //TODO: findName
+        const results = await Promise.all([getDoujinResults(name), getProResults(name)]);
+
+        return [...results[0], ...results[1]];
     }
 
     async getAdditionalImages(id) {
@@ -49,6 +52,60 @@ class DmmStrategy {
 
 let dmmStrategy = new DmmStrategy();
 module.exports = dmmStrategy;
+
+async function getDoujinResults(name) {
+    const uri = `https://www.dmm.co.jp/search/=/searchstr=${encodeURIComponent(
+        name
+    )}/analyze=V1EBAFYOUQA_/limit=30/n1=FgRCTw9VBA4GAV5NWV8I/n2=Aw1fVhQKX1ZRAlhMUlo5Uw4QXF9e/sort=ranking/#hd-search-area`;
+    log.debug('Uri called for search', uri);
+
+    const reply = await request.get({
+        method: 'GET',
+        uri: uri
+    });
+
+    const query = parseSite(reply);
+    return query('.tileListTtl__txt a')
+        .map((i, e) => ({
+            workno: query(e)
+                .attr('href')
+                .match(DMM_ID_REGEX)[0],
+            work_name: query(e)
+                .text()
+                .trim()
+        }))
+        .get();
+}
+
+async function getProResults(name) {
+    const uri = `https://www.dmm.co.jp/search/=/searchstr=${encodeURIComponent(
+        name
+    )}/analyze=V1EBAFYOUQA_/limit=30/n1=FgRCTw9VBA4GFVJfUlsD/n2=Aw1fVhQKX1ZRAlhMUlo5RwICV1tV/sort=ranking/#hd-search-area`;
+    log.debug('Uri called for search', uri);
+
+    const reply = await request.get({
+        method: 'GET',
+        uri: uri
+    });
+
+    const query = parseSite(reply);
+    return query('.d-sect .d-item #list .tmb a')
+        .filter((i, e) =>
+            query(e)
+                .attr('href')
+                .includes('ref=search&amp;i3')
+        )
+        .map((i, e) => ({
+            workno: query(e)
+                .attr('href')
+                .match(DMM_ID_REGEX)[0],
+            work_name: query(e)
+                .find('img')
+                .attr('alt')
+                .trim()
+        }))
+        .get();
+}
 
 async function getSite(id) {
     let uri;

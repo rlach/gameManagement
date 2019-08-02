@@ -52,7 +52,7 @@ class GetchuStrategy {
     async findGame(name) {
         const reply = await this.callFindGame(name);
         const query = parseSite(reply);
-        const works = query('.blueb')
+        return query('.blueb')
             .map((i, e) => ({
                 workno: query(e)
                     .attr('href')
@@ -62,8 +62,6 @@ class GetchuStrategy {
                     .trim()
             }))
             .get();
-
-        return { works };
     }
 
     async getAdditionalImages(id) {
