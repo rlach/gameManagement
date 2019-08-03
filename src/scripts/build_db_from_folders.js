@@ -43,6 +43,21 @@ async function buildDbFromFolders() {
         }
 
         let game = await retrieveGameFromDb(file.name);
+        if (!game.engine) {
+            game.engine = await files.recognizeGameType(file);
+            if(game.engine) {
+                game.dateModified = moment().format();
+                await saveGame(game);
+            }
+        }
+        if (game.deleted) {
+            const executableFile = await findExecutableFile(file, strategy);
+            if(!executableFile.deleted) {
+                game.deleted = false;
+                game.dateModified = moment().format();
+                await saveGame(game);
+            }
+        }
         if (
             game.executableFile &&
             !game.forceSourceUpdate &&

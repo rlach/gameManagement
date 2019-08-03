@@ -2,11 +2,11 @@ const fs = require('fs');
 
 let settings;
 
-if(!settings) {
-    if(fs.existsSync('./settings.json')) {
-        settings = JSON.parse(fs.readFileSync('./settings.json'));
-    } else {
-        settings = require('./settings-sample');
+if (!settings) {
+    settings = require('./settings-sample');
+    if (fs.existsSync('./settings.json')) {
+        const readSettings = JSON.parse(fs.readFileSync('./settings.json'));
+        Object.assign(settings, readSettings);
     }
 }
 

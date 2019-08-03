@@ -5,14 +5,13 @@ module.exports = {
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',
     onlyUpdateNewer: true,
-    amountOfBackups: 5,
     database: 'nedb', //'nedb' or 'mongodb'
     organizeDirectories: {
         shouldAsk: true,
         minimumScoreToAsk: 1,
         minimumScoreToAccept: 4
     },
-    exeSearchDepth: 2,
+    exeSearchDepth: 3,
     advanced: {
       scores: {
           resultExists: 1,
@@ -33,5 +32,27 @@ module.exports = {
         launchbox: './sample/launchbox',
         unsortedGames: './sample/games/unsorted',
         main: ['./sample/games/dlsite', './sample/games/getchu']
-    }
+    },
+    executableExtensions: ['.exe', '.swf'],
+    bannedFilenames: [
+        'セーブデータ場所設定ツール',
+        'ファイル破損チェックツール',
+        'unins',
+        'conf',
+        'setup',
+        'setting',
+        'install',
+        'check',
+        'update',
+        'alpharomdie',
+        'セーブデータフォルダを開く',
+        'unity',
+        'アンインストール',
+        '設定',
+        'delfile',
+        '結合ナビ',
+        'acmp.exe',
+        'courier.exe',
+        'courier_i.exe'
+    ]
 };

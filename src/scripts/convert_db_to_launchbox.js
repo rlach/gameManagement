@@ -7,7 +7,6 @@ const {db, connect} = require('../database/mongoose');
 const settings = require('../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
-const backup = require('file-backup');
 
 const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 
@@ -24,7 +23,7 @@ async function convertDbToLaunchbox() {
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.debug('Platform file already exists, backing up');
 
-        await backup(LAUNCHBOX_PLATFORM_XML, settings.amountOfBackups);
+        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`);
 
         log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
@@ -48,10 +47,10 @@ async function convertDbToLaunchbox() {
     progressBar.start(games.length, 0);
     for (const [index, game] of games.entries()) {
         let matchingGame;
-        if(settings.externalIdField === 'CustomField') {
+        if (settings.externalIdField === 'CustomField') {
             const idAdditionalField = customFields.find(f => f.Name._text === 'externalId' && f.Value._text === game.id);
-            if(idAdditionalField) {
-                matchingGame = launchboxGames.find(g => g.ID._text === idAdditionalField.GameID._text );
+            if (idAdditionalField) {
+                matchingGame = launchboxGames.find(g => g.ID._text === idAdditionalField.GameID._text);
             }
         } else {
             matchingGame = launchboxGames.find(g => g[settings.externalIdField]._text === game.id);
@@ -175,6 +174,25 @@ async function convertDbToLaunchbox() {
             }
         };
 
+        if (game.engine) {
+            const engineAdditionalField = customFields.find(f => f.Name._text === 'engine' && f.GameID._text === launchboxId);
+            if (engineAdditionalField) {
+                engineAdditionalField.Value._text = game.engine;
+            } else {
+                customFields.push({
+                    GameID: {
+                        _text: launchboxId
+                    },
+                    Name: {
+                        _text: 'engine'
+                    },
+                    Value: {
+                        _text: game.engine
+                    }
+                });
+            }
+        }
+
         if (matchingGame) {
             Object.assign(matchingGame, gameProperties);
             convertedGames.push(matchingGame);
@@ -183,7 +201,7 @@ async function convertDbToLaunchbox() {
                 ...gameProperties,
                 ...externalGameProps
             });
-            if(settings.externalIdField === 'CustomField') {
+            if (settings.externalIdField === 'CustomField') {
                 customFields.push({
                     GameID: {
                         _text: launchboxId
