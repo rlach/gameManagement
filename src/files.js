@@ -50,7 +50,7 @@ class Files {
                     || f.matcher.toLowerCase() === 'gameexe.dat' //Siglus engine
                     || f.matcher.toLowerCase() === 'scene.pck' //Siglus engine
                     || f.matcher.toLowerCase() === 'data.xp3' //KiriKiri
-                    || f.matcher.toLowerCase().endsWith('.ns2') // ????
+                    || f.matcher.toLowerCase().endsWith('.ns2') // NSCR2
                     || f.matcher.toLowerCase() === 'ams.cfg' // Bruns Engine
                     || f.matcher.toLowerCase().endsWith('.ypf') // YU-RIS
                     || f.matcher.toLowerCase().endsWith('.iar') // sol-fa-soft
@@ -138,7 +138,7 @@ class Files {
                 return 'kiriKiri';
             }
             if (gameRelatedFiles.find(f => f.name.toLowerCase().endsWith('.ns2'))) {
-                return '????';
+                return 'NSCR2';
             }
             if (gameRelatedFiles.find(f => f.name.toLowerCase() === 'mono.dll')) {
                 return 'unity';

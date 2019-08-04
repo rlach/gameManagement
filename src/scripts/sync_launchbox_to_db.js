@@ -95,6 +95,10 @@ async function syncLaunchboxToDb() {
                     directory: launchboxGame.RootFolder._text
                 });
 
+                if(settings.externalIdField !== 'Status') {
+                    update.status = launchboxGame.Status._text;
+                }
+
                 Object.assign(dbGame, update);
 
                 try {

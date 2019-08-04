@@ -59,6 +59,7 @@ if (settings.database === 'nedb') {
         favorite: Boolean,
         rating: Number,
         stars: Number,
+        status: String,
         communityStars: Number,
         communityStarVotes: Number,
         version: String,

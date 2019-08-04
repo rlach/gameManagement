@@ -132,7 +132,9 @@ async function convertDbToLaunchbox() {
             } : {},
             Status: settings.externalIdField === 'Status' ? {
                 _text: game.id
-            } : {},
+            } : {
+                _text: game.status
+            },
             Source: game.source
                 ? {
                     _text: settings.externalIdField === 'Source' ? game.id : game.source

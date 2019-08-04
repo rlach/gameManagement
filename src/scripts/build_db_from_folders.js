@@ -62,12 +62,13 @@ async function buildDbFromFolders() {
             game.executableFile &&
             !game.forceSourceUpdate &&
             !game.forceExecutableUpdate &&
-            !game.forceAdditionalImagesUpdate
+            !game.forceAdditionalImagesUpdate &&
+            game.status !== 'invalid'
         ) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
-            if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate) {
+            if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate || game.status === 'invalid') {
                 game.forceSourceUpdate = false;
                 log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(file.name);
@@ -79,6 +80,9 @@ async function buildDbFromFolders() {
                 }
                 Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
+                if(game.status === 'invalid') {
+                    game.status = 'updated'
+                }
                 game.dateModified = moment().format();
                 await saveGame(game);
             } else if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
