@@ -2,10 +2,11 @@ const cliProgress = require('cli-progress');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
-const { db, connect } = require('../database/mongoose');
-const { findOne, saveGame } = require('../database/game');
+const {db, connect} = require('../database/mongoose');
+const {findOne, saveGame} = require('../database/game');
 const convert = require('xml-js');
 const settings = require('../settings');
+const mapper = require('../mapper');
 
 async function syncLaunchboxToDb() {
     if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`)) {
@@ -25,7 +26,7 @@ async function syncLaunchboxToDb() {
         `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`,
         'utf8'
     );
-    const convertedObject = convert.xml2js(launchboxXml, { compact: true });
+    const convertedObject = convert.xml2js(launchboxXml, {compact: true});
     log.debug('Found games', convertedObject.LaunchBox.Game.length);
 
     progressBar.start(convertedObject.LaunchBox.Game.length, 0);
@@ -34,8 +35,8 @@ async function syncLaunchboxToDb() {
         if (settings.externalIdField === 'CustomField') {
             const idAdditionalField = convertedObject.LaunchBox.CustomField
                 ? convertedObject.LaunchBox.CustomField.find(
-                      f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text
-                  )
+                    f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text
+                )
                 : undefined;
             if (!idAdditionalField) {
                 log.debug(`Additional field doesn't exist for ${launchboxGame.ID._text}`);
@@ -45,7 +46,7 @@ async function syncLaunchboxToDb() {
         } else {
             externalGameIdFieldValue = launchboxGame[settings.externalIdField]._text;
         }
-        const dbGame = await findOne({ id: externalGameIdFieldValue });
+        const dbGame = await findOne({id: externalGameIdFieldValue});
         if (!dbGame) {
             log.debug(`Game ${externalGameIdFieldValue} does not exist in db`);
         } else {
@@ -57,49 +58,9 @@ async function syncLaunchboxToDb() {
             ) {
                 log.debug('Skipping game due to outdated data in launchbox');
             } else {
-                let update;
-                /* We don't know in what language user manually added data
-                   so lets just use the preference here
-                   Also, we only allow to update fields that are currently empty
-                   With exception of genres, which we allow to edit with no issues*/
-                if (settings.preferredLanguage === 'en') {
-                    update = {
-                        nameEn: dbGame.nameEn ? dbGame.nameEn : launchboxGame.Title._text,
-                        descriptionEn: dbGame.descriptionEn ? dbGame.descriptionEn : launchboxGame.Notes._text,
-                        genresEn: launchboxGame.Genre._text ? launchboxGame.Genre._text.split(';') : dbGame.genresEn,
-                        makerEn: dbGame.makerEn ? dbGame.makerEn : launchboxGame.Developer._text
-                    };
-                } else {
-                    update = {
-                        nameJp: dbGame.nameJp ? dbGame.nameJp : launchboxGame.Title._text,
-                        descriptionJp: dbGame.descriptionJp ? dbGame.descriptionJp : launchboxGame.Notes._text,
-                        genresJp: launchboxGame.Genre._text ? launchboxGame.Genre._text.split(';') : dbGame.genresJp,
-                        makerJp: dbGame.makerJp ? dbGame.makerJp : launchboxGame.Developer._text
-                    };
-                }
+                const result = mapper.reverseMap(launchboxGame);
 
-                Object.assign(update, {
-                    completed: launchboxGame.Completed._text === 'true',
-                    dateAdded: launchboxGame.DateAdded._text,
-                    dateModified: launchboxGame.DateModified._text,
-                    releaseDate: launchboxGame.ReleaseDate._text,
-                    favorite: launchboxGame.Favorite._text === 'true',
-                    rating: launchboxGame.Rating._text ? Number.parseInt(launchboxGame.Rating._text) : undefined,
-                    stars: Number.parseFloat(launchboxGame.StarRatingFloat._text),
-                    version: launchboxGame.Version._text,
-                    series: launchboxGame.Series._text,
-                    portable: launchboxGame.Portable._text === 'true',
-                    hide: launchboxGame.Hide._text === 'true',
-                    broken: launchboxGame.Broken._text === 'true',
-                    executableFile: launchboxGame.ApplicationPath._text,
-                    directory: launchboxGame.RootFolder._text
-                });
-
-                if(settings.externalIdField !== 'Status') {
-                    update.status = launchboxGame.Status._text;
-                }
-
-                Object.assign(dbGame, update);
+                Object.assign(dbGame, result);
 
                 try {
                     await saveGame(dbGame);
