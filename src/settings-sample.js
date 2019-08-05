@@ -4,6 +4,7 @@ module.exports = {
     downloadImages: true,
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',
+    preferredImageSource: 'en',
     onlyUpdateNewer: true,
     database: 'nedb', //'nedb' or 'mongodb'
     organizeDirectories: {

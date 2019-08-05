@@ -76,7 +76,9 @@ if (settings.database === 'nedb') {
         forceSourceUpdate: Boolean,
         forceExecutableUpdate: Boolean,
         forceAdditionalImagesUpdate: Boolean,
-        engine: String
+        engine: String,
+        redownloadAdditionalImages: Boolean,
+        redownloadMainImage: Boolean
     });
     gameSchema.index({ id: 1 });
 

@@ -95,7 +95,7 @@ function getGameMetadataJp(query) {
             makerJp: query('.glance').attr('title'),
             imageUrlJp: query('.highslide img')
                 .attr('src')
-                .replace('./', 'http://getchu/'),
+                .replace('./', 'http://getchu.com/'),
             additionalImages: getAdditionalImages(query)
         };
     } catch (e) {
@@ -113,7 +113,7 @@ function getAdditionalImages(query) {
         .map((i, e) =>
             query(e)
                 .attr('src')
-                .replace('./', 'http://getchu/')
+                .replace('./', 'http://getchu.com/')
         )
         .get();
 }

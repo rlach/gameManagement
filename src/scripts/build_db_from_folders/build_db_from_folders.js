@@ -1,6 +1,5 @@
 const cliProgress = require('cli-progress');
 const parserStrategies = require('../../parsers');
-const files = require('../../files');
 const log = require('../../logger');
 const {retrieveGameFromDb, updateMany} = require('../../database/game');
 const {db, connect} = require('../../database/mongoose');
@@ -79,7 +78,15 @@ async function buildDbFromFolders() {
                     (gameData.nameJp || gameData.nameEn) &&
                     (!gameData.additionalImages || gameData.additionalImages.length === 0)
                 ) {
-                    gameData.additionalImages = await strategy.getAdditionalImages(file.name);
+                    game.forceAdditionalImagesUpdate = false;
+                    const newAdditionalImages = await strategy.getAdditionalImages(file.name);
+                    if(JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                        gameData.additionalImages = newAdditionalImages;
+                        game.redownloadAdditionalImages = true;
+                    }
+                }
+                if(game.imageUrlEn !== gameData.imageUrlEn || game.imageUrlJp !== game.imageUrlJp) {
+                    game.redownloadMainImage = true;
                 }
                 Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
@@ -88,9 +95,15 @@ async function buildDbFromFolders() {
                 }
                 game.dateModified = moment().format();
                 await saveGame(game);
-            } else if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
+            }
+
+            if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
                 game.forceAdditionalImagesUpdate = false;
-                game.additionalImages = await strategy.getAdditionalImages(file.name);
+                const newAdditionalImages = await strategy.getAdditionalImages(file.name);
+                if(JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                    game.additionalImages = newAdditionalImages;
+                    game.redownloadAdditionalImages = true;
+                }
                 await saveGame(game);
             }
 

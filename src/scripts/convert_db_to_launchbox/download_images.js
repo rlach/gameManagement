@@ -3,13 +3,19 @@ const moment = require('moment/moment');
 const fs = require('fs');
 const settings = require('../../settings');
 const log = require('../../logger');
+const files = require('../../files');
+const { saveGame } = require('../../database/game');
 
 async function downloadImages(game, launchboxId) {
+    let modified = false;
     if (!settings.downloadImages) {
         return;
     }
     const regexExtension = /\.\w{3,4}($|\?)/;
-    const imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;
+    let imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;
+    if (settings.preferredImageSource === 'jp') {
+        imageUrl = game.imageUrlJp ? game.imageUrlJp : game.imageUrlEn;
+    }
     if (!imageUrl) {
         return;
     }
@@ -27,6 +33,12 @@ async function downloadImages(game, launchboxId) {
     const targetPathMainImage = `${settings.paths.launchbox}/Images/${
         settings.launchboxPlatform
     }/Box - Front/${launchboxId}-01${imageUrl.match(regexExtension)[0]}`;
+
+    if (game.redownloadMainImage && fs.existsSync(targetPathMainImage)) {
+        fs.unlinkSync(targetPathMainImage);
+        game.redownloadMainImage = false;
+        modified = true;
+    }
 
     if (fs.existsSync(targetPathMainImage)) {
         log.debug('Image already exists, skipping', targetPathMainImage);
@@ -47,10 +59,24 @@ async function downloadImages(game, launchboxId) {
         }
     }
 
-    if (!fs.existsSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`)) {
-        fs.mkdirSync(`${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`);
+    const gameplayPath = `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`;
+    if (!fs.existsSync(gameplayPath)) {
+        fs.mkdirSync(gameplayPath);
     }
+
+    if (game.redownloadAdditionalImages) {
+        const existingImages = await files.findImages(gameplayPath, launchboxId);
+
+        for (const image of existingImages) {
+            fs.unlinkSync(image.file);
+        }
+
+        game.redownloadAdditionalImages = false;
+        modified = true;
+    }
+
     if (game.additionalImages) {
+        const invalidImageIndexes = [];
         for (const [index, additionalImage] of game.additionalImages.entries()) {
             log.debug('Processing additionalImage', additionalImage);
             const targetPathAdditionalImage = `${settings.paths.launchbox}/Images/${
@@ -76,15 +102,19 @@ async function downloadImages(game, launchboxId) {
                 } catch (e) {
                     log.debug('Error downloading image', e);
                     if (e.message.includes('404')) {
-                        log.debug('Got 404, removing image from DB');
-                        game.additionalImages.splice(index, 1);
-                        game.dateModified = new moment().format();
-                        game.save();
-                        break; //Just download rest next time
+                        invalidImageIndexes.push(index);
                     }
                 }
             }
         }
+        for (let i = invalidImageIndexes.length - 1; i >= 0; i--) {
+            game.additionalImages.splice(invalidImageIndexes[i], 1);
+            modified = true;
+        }
+    }
+    if (modified) {
+        game.dateModified = new moment().format();
+        await saveGame(game);
     }
 }
 

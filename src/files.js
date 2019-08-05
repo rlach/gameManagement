@@ -13,6 +13,13 @@ class Files {
         });
     }
 
+    async findImages(path, uuid) {
+        return asyncFind(path, {
+            file: (_, f) => f.matcher.startsWith(uuid),
+            depth: 1
+        });
+    }
+
     removeTagsAndMetadata(name) {
         let improvedName = name.replace(/\[([^\]]+)\]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
