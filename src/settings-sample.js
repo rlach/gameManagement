@@ -42,7 +42,7 @@ module.exports = {
         'conf',
         'setup',
         'setting',
-        'install',
+        'inst',
         'check',
         'update',
         'alpharomdie',
