@@ -149,7 +149,7 @@ function integerProperty(from, to) {
         from: from,
         to: to,
         reverseTransform: function (value) {
-            return value._text ? Number.parseInt(value.text) : undefined;
+            return value._text ? Number.parseInt(value._text) : undefined;
         },
         transform: integerTransform,
         default: {
