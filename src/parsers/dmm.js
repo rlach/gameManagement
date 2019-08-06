@@ -4,13 +4,13 @@ const { getVndbData } = require('../vndb');
 const moment = require('moment');
 const { removeUndefined } = require('../objects');
 const log = require('./../logger');
-const { callPage } = require('../html');
+const SiteStrategy = require('./siteStrategy');
 
 const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);
 
-class DmmStrategy {
+class DmmStrategy extends SiteStrategy {
     constructor() {
-        this.name = 'dmm';
+        super('dmm');
     }
 
     async fetchGameData(gameId) {

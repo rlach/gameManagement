@@ -4,12 +4,13 @@ const { callPage } = require('../html');
 const { parseSite } = require('../html');
 const { removeUndefined } = require('../objects');
 const { getVndbData } = require('../vndb');
+const SiteStrategy = require('./siteStrategy');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
 
-class GetchuStrategy {
+class GetchuStrategy extends SiteStrategy {
     constructor() {
-        this.name = 'getchu';
+        super('getchu');
     }
 
     async fetchGameData(gameId) {
@@ -54,14 +55,21 @@ class GetchuStrategy {
         const query = parseSite(reply);
         return query('.blueb')
             .map((i, e) => ({
-                workno: query(e)
-                    .attr('href')
-                    .match(GETCHU_ID_REGEX)[0],
+                workno:
+                    query(e).attr('href') &&
+                    query(e)
+                        .attr('href')
+                        .match(GETCHU_ID_REGEX)
+                        ? query(e)
+                              .attr('href')
+                              .match(GETCHU_ID_REGEX)[0]
+                        : undefined,
                 work_name: query(e)
                     .text()
                     .trim()
             }))
-            .get();
+            .get()
+            .filter(b => b.workno);
     }
 
     async getAdditionalImages(id) {

@@ -3,10 +3,11 @@ const log = require('./../logger');
 const moment = require('moment');
 const { parseSite } = require('../html');
 const { getVndbData } = require('../vndb');
+const SiteStrategy = require('./siteStrategy');
 
-class DlsiteStrategy {
+class DlsiteStrategy extends SiteStrategy {
     constructor() {
-        this.name = 'dlsite';
+        super('dlsite');
     }
 
     async fetchGameData(gameId) {
@@ -157,6 +158,26 @@ class DlsiteStrategy {
 
     shouldUse(gameId) {
         return gameId.startsWith('RJ') || gameId.startsWith('RE') || gameId.startsWith('VJ');
+    }
+
+    scoreCodes(codes, originalFilename) {
+        const results = super.scoreCodes(codes, originalFilename);
+        const extractedCode = codes.extractedCode;
+
+        // Points for extracted code and extracted code matching found result
+        if (extractedCode !== '') {
+            this.addToCodeScore(results, settings.advanced.scores.extractedDlsiteCode, extractedCode);
+            if (codes.foundCodes.some(fc => fc.workno === extractedCode)) {
+                this.addToCodeScore(results, settings.advanced.scores.matchForExtractedDlsiteCode, extractedCode);
+            }
+        }
+
+        return results;
+    }
+
+    addToCodeScore(bossCodes, CODE_WEIGHT, code, name) {
+        const improvedCode = code.replace('RE', 'RJ');
+        super.addToCodeScore(bossCodes, CODE_WEIGHT, improvedCode, name);
     }
 }
 
