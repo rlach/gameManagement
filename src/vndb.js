@@ -39,7 +39,13 @@ async function getVndbData(name) {
 
         let VN;
         if (foundVNs.num > 0) {
-            VN = foundVNs.items[0];
+            VN = foundVNs.items.find(vn => vn.title === improvedName);
+            if(!VN) {
+                VN = foundVNs.items.find(vn => vn.title.includes(improvedName) || improvedName.includes(vn.title));
+            }
+            if(!VN) {
+                VN = foundVNs.items[0];
+            }
         } else {
             return undefined;
         }
