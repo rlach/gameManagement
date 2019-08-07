@@ -1,8 +1,8 @@
 const request = require('request-promise');
 const log = require('./../logger');
 const moment = require('moment');
-const {parseSite} = require('../html');
-const {getVndbData} = require('../vndb');
+const { parseSite } = require('../html');
+const { getVndbData } = require('../vndb');
 const SiteStrategy = require('./siteStrategy');
 const { removeUndefined } = require('../objects');
 
@@ -11,19 +11,22 @@ class DlsiteStrategy extends SiteStrategy {
         super('dlsite');
     }
 
-    async fetchGameData(gameId) {
+    async fetchGameData(gameId, game) {
         log.debug(`Fetching game ${gameId} with strategy ${this.name}`);
         let jpn = {};
         let eng = {};
         if (gameId.startsWith('RJ')) {
-            const sites = await Promise.all([getJapaneseSite(gameId), getEnglishSite(gameId)]);
+            const sites = await Promise.all([
+                getJapaneseSite(gameId, game.sourceMissingJp),
+                getEnglishSite(gameId, game.sourceMissingEn)
+            ]);
             jpn = sites[0] ? sites[0] : {};
             eng = sites[1] ? sites[1] : {};
         } else if (gameId.startsWith('RE')) {
-            const engSite = await getEnglishSite(gameId);
+            const engSite = await getEnglishSite(gameId, game.sourceMissingEn);
             eng = engSite ? engSite : {};
         } else if (gameId.startsWith('VJ')) {
-            const jpnSite = await getProSite(gameId);
+            const jpnSite = await getProSite(gameId, game.sourceMissingJp);
             jpn = jpnSite ? jpnSite : {};
             if (jpn.nameJp) {
                 eng = await getVndbData(jpn.nameJp);
@@ -33,7 +36,7 @@ class DlsiteStrategy extends SiteStrategy {
                 log.debug('Got eng', eng);
             }
         } else {
-            log.debug('Wrong file for strategy', {name: this.name, gameId});
+            log.debug('Wrong file for strategy', { name: this.name, gameId });
             return;
         }
 
@@ -44,7 +47,7 @@ class DlsiteStrategy extends SiteStrategy {
 
         const result = {
             communityStars: productInfo ? productInfo.rate_average_2dp : undefined,
-            communityStarVotes: productInfo ? productInfo.rate_count : undefined,
+            communityStarVotes: productInfo ? productInfo.rate_count : undefined
         };
         Object.assign(result, removeUndefined(jpn));
         Object.assign(result, removeUndefined(eng));
@@ -52,7 +55,7 @@ class DlsiteStrategy extends SiteStrategy {
     }
 
     extractCode(name) {
-        log.debug('Extracting code from name', {name});
+        log.debug('Extracting code from name', { name });
         const matches = name.match(/((RE)|(RJ)|(VJ))\d+/gi);
         return matches ? matches.find(matched => matched.length === 8) : '';
     }
@@ -291,8 +294,8 @@ function getGameMetadata(query) {
     }
 }
 
-async function getEnglishSite(id) {
-    if (id.startsWith('VJ')) {
+async function getEnglishSite(id, sourceMissing) {
+    if (id.startsWith('VJ') || sourceMissing) {
         return undefined;
     }
 
@@ -311,14 +314,20 @@ async function getEnglishSite(id) {
             releaseDate: originalMetadata.releaseDate,
             makerEn: originalMetadata.maker,
             imageUrlEn: originalMetadata.image
-        }
+        };
     } catch (e) {
         log.debug(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
         });
-        return undefined;
+        if (e.statusCode === 404) {
+            return {
+                sourceMissingEn: true
+            };
+        } else {
+            return undefined;
+        }
     }
 }
 
@@ -340,7 +349,10 @@ async function getProductInfo(id) {
     }
 }
 
-async function getJapaneseSite(id) {
+async function getJapaneseSite(id, sourceMissing) {
+    if (sourceMissing) {
+        return undefined;
+    }
     try {
         let reply = await request.get(getOptions(id, 'jp'));
         const root = parseSite(reply);
@@ -354,25 +366,38 @@ async function getJapaneseSite(id) {
             releaseDate: originalMetadata.releaseDate,
             makerJp: originalMetadata.maker,
             imageUrlJp: originalMetadata.image
-        }
+        };
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
         });
-        return undefined;
+        if (e.statusCode === 404) {
+            return {
+                sourceMissingJp: true
+            };
+        } else {
+            return undefined;
+        }
     }
 }
 
-async function getProSite(id) {
+async function getProSite(id, sourceMissing) {
+    if (sourceMissing) {
+        return undefined;
+    }
     try {
         let reply;
         try {
             reply = await request.get(getOptions(id, 'pro'));
         } catch (e) {
-            log.debug('Pro does not exist, trying announce', {id});
-            reply = await request.get(getOptions(id, 'proAnnounce'));
+            if (e.statusCode === 404) {
+                log.debug('Pro does not exist, trying announce', { id });
+                reply = await request.get(getOptions(id, 'proAnnounce'));
+            } else {
+                throw e;
+            }
         }
         const root = parseSite(reply);
         const originalMetadata = getGameMetadata(root, id);
@@ -385,13 +410,19 @@ async function getProSite(id) {
             releaseDate: originalMetadata.releaseDate,
             makerJp: originalMetadata.maker,
             imageUrlJp: originalMetadata.image
-        }
+        };
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message
         });
-        return undefined;
+        if (e.statusCode === 404) {
+            return {
+                sourceMissingJp: true
+            };
+        } else {
+            return undefined;
+        }
     }
 }

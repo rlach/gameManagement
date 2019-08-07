@@ -7,7 +7,7 @@ class SiteStrategy {
         this.name = name;
     }
 
-    async fetchGameData(gameId) {
+    async fetchGameData(gameId, game) {
         log.debug(`No override for fetchGameDate on ${gameId}`);
         return;
     }

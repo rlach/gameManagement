@@ -13,21 +13,22 @@ class GetchuStrategy extends SiteStrategy {
         super('getchu');
     }
 
-    async fetchGameData(gameId) {
+    async fetchGameData(gameId, game) {
         log.debug(`Fetching game ${gameId} with strategy ${this.name}`);
 
-        const jpnResult = await getJapaneseSite(gameId);
+        const jpnResult = await getJapaneseSite(gameId, game.sourceMissingJp);
         const jpn = jpnResult ? jpnResult : {};
         let eng = {};
+        let reviews = {};
         if (jpn.name) {
             log.debug(`Getting english site for ${jpn.name}`);
             const engResult = await getVndbData(jpn.name);
             if (engResult) {
                 eng = engResult;
             }
-        }
 
-        const reviews = await getReviews(gameId);
+            reviews = await getReviews(gameId);
+        }
 
         const result = {};
         Object.assign(result, removeUndefined(jpn));
@@ -126,9 +127,18 @@ function getAdditionalImages(query) {
         .get();
 }
 
-async function getJapaneseSite(id) {
+async function getJapaneseSite(id, missingSource) {
+    if (missingSource) {
+        return undefined;
+    }
     try {
         let reply = await callPage(`http://www.getchu.com/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`);
+        if (reply.trim().length === 0) {
+            // Getchu returns 200 with empty response when id is wrong
+            return {
+                sourceMissingJp: true
+            };
+        }
         const root = parseSite(reply);
         return getGameMetadataJp(root);
     } catch (e) {

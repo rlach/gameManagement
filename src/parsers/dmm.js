@@ -13,8 +13,8 @@ class DmmStrategy extends SiteStrategy {
         super('dmm');
     }
 
-    async fetchGameData(gameId) {
-        const jpn = await getSite(gameId);
+    async fetchGameData(gameId, game) {
+        const jpn = await getSite(gameId, game.sourceMissingJp);
         let eng;
 
         if (jpn && jpn.nameJp) {
@@ -107,7 +107,10 @@ async function getProResults(name) {
         .get();
 }
 
-async function getSite(id) {
+async function getSite(id, sourceMissing) {
+    if (sourceMissing) {
+        return undefined;
+    }
     let uri;
     let method;
     if (id.match(/d_\d+/)) {
@@ -133,7 +136,13 @@ async function getSite(id) {
             statusCode: e.statusCode,
             message: e.message
         });
-        return undefined;
+        if (e.statusCode === 404) {
+            return {
+                sourceMissingJp: true
+            };
+        } else {
+            return undefined;
+        }
     }
 }
 

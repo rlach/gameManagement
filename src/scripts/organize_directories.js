@@ -68,14 +68,14 @@ async function organizeDirectories() {
                         }
                     ]);
                     if (answer.same) {
-                        bestResult.score = 999;
+                        bestResult.accepted = true;
                     } else {
                         fileCodes.noMatch = true;
                         fs.writeFileSync(foundFilesPath, JSON.stringify(fileCodes, null, 4));
                     }
                 }
 
-                if (bestResult.score >= settings.organizeDirectories.minimumScoreToAccept) {
+                if (bestResult.score >= settings.organizeDirectories.minimumScoreToAccept || bestResult.accepted) {
                     const gameFolder = `${targetFolder}/${bestResult.code}`;
                     if (!fs.existsSync(gameFolder)) {
                         fs.mkdirSync(gameFolder);

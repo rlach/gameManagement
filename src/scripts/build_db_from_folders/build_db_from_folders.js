@@ -73,7 +73,7 @@ async function buildDbFromFolders() {
             if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate || game.status === 'invalid') {
                 game.forceSourceUpdate = false;
                 log.debug('Updating source web page(s)');
-                const gameData = await strategy.fetchGameData(file.name);
+                const gameData = await strategy.fetchGameData(game.id, game);
                 if (
                     (gameData.nameJp || gameData.nameEn) &&
                     (!gameData.additionalImages || gameData.additionalImages.length === 0)
