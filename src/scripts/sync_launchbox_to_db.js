@@ -1,4 +1,4 @@
-const cliProgress = require('cli-progress');
+const progress = require('../progress');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
@@ -74,12 +74,7 @@ function isOlder(launchboxGame, dbGame) {
 }
 
 function startProgressBar(gameAmount) {
-    const progressBar = new cliProgress.Bar(
-        {
-            format: 'Syncing launchbox to database [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-        },
-        cliProgress.Presets.shades_classic
-    );
+    const progressBar = progress.getBar('Syncing launchbox to database');
     progressBar.start(gameAmount, 0);
     return progressBar;
 }

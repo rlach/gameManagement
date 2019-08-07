@@ -1,4 +1,3 @@
-const cliProgress = require('cli-progress');
 const parserStrategies = require('../../parsers');
 const log = require('../../logger');
 const {retrieveGameFromDb, updateMany} = require('../../database/game');
@@ -11,14 +10,12 @@ const {removeUndefined} = require('../../objects');
 const {saveGame} = require('../../database/game');
 const { updateExecutableAndDirectory, findExecutableFile  } = require('./find_executable');
 const recognizeGameType = require('./recognize_game_type');
+const progress = require("../../progress");
+
+const operation = 'Building database from folders';
 
 async function buildDbFromFolders() {
-    const progressBar = new cliProgress.Bar(
-        {
-            format: 'Building database from folders [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-        },
-        cliProgress.Presets.shades_classic
-    );
+    const progressBar = progress.getBar(operation);
     await connect();
     await vndb.connect();
 
@@ -38,6 +35,7 @@ async function buildDbFromFolders() {
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
+        progress.updateName(progressBar, `${operation} [${file.name}]`);
         const strategy = selectStrategy(file.name);
         if (!strategy) {
             log.debug('No strategy for file', file);
@@ -111,6 +109,7 @@ async function buildDbFromFolders() {
         }
         progressBar.update(index + 1);
     }
+    progress.updateName(progressBar, operation);
     progressBar.stop();
     db.close();
 }

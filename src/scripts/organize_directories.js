@@ -1,18 +1,15 @@
-const cliProgress = require('cli-progress');
 const fs = require('fs');
 const log = require('../logger');
 const settings = require('../settings');
 const inquirer = require('inquirer');
 const parserStrategies = require('../parsers');
+const progress = require("../progress");
 const strategies = Object.values(parserStrategies);
 
+const operation = 'Organizing directories';
+
 async function organizeDirectories() {
-    const progressBar = new cliProgress.Bar(
-        {
-            format: 'Organizing directories [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} directories'
-        },
-        cliProgress.Presets.shades_classic
-    );
+    const progressBar = progress.getBar(operation);
     log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
@@ -25,6 +22,7 @@ async function organizeDirectories() {
     let scores = {};
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
+        progress.updateName(progressBar, `${operation} [${file}]`);
         progressBar.update(index + 1);
         const foundFilesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
         if (!fs.existsSync(foundFilesPath)) {
@@ -33,7 +31,7 @@ async function organizeDirectories() {
         try {
             const fileCodes = JSON.parse(fs.readFileSync(foundFilesPath, 'utf8'));
             if (fileCodes.noMatch) {
-                log.info(`File manually set as no match, ${file}`);
+                log.debug(`File manually set as no match, ${file}`);
                 continue;
             }
 
@@ -81,6 +79,7 @@ async function organizeDirectories() {
             log.debug('Error getting proper file codes', e);
         }
     }
+    progress.updateName(progressBar, operation);
     progressBar.stop();
     log.debug(`Score summary for unsorted files`, scores);
 }
@@ -103,8 +102,6 @@ async function confirmMultipleResults(results, file) {
         }))
     ];
 
-    log.info('choices', choices);
-
     let answer = await inquirer.prompt([
         {
             type: 'list',
@@ -114,8 +111,6 @@ async function confirmMultipleResults(results, file) {
             message: `Which result matches \n* ${file}?`
         }
     ]);
-
-    log.info('Same is:', answer.same);
 
     if (answer.same === 0) {
         throw {

@@ -1,22 +1,20 @@
-const cliProgress = require('cli-progress');
 const files = require('../files');
 const fs = require('fs');
 const log = require('../logger');
 const parserStrategies = require('../parsers');
 const settings = require('../settings');
+const progress = require("../progress");
+
+const operation = 'Getting game codes';
 
 async function getPossibleCodes() {
-    const progressBar = new cliProgress.Bar(
-        {
-            format: 'Getting game codes [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-        },
-        cliProgress.Presets.shades_classic
-    );
+    const progressBar = progress.getBar(`${operation}`);
     log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
+        progress.updateName(progressBar, `${operation} [${file}]`);
         const foundCodesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
 
         if (
@@ -42,7 +40,7 @@ async function getPossibleCodes() {
             const results = await Promise.all(promises);
 
             for (const [index, strategy] of strategies.entries()) {
-                log.debug('Strategy', { strategy, file });
+                log.debug('Strategy', {strategy, file});
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
                     foundCodes: results[index]
@@ -56,6 +54,7 @@ async function getPossibleCodes() {
         }
         progressBar.update(index + 1);
     }
+    progress.updateName(progressBar, `${operation}`);
     progressBar.stop();
     log.debug('Finished parsing');
 }

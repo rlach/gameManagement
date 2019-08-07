@@ -1,4 +1,3 @@
-const cliProgress = require('cli-progress');
 const { Game } = require('../../database/game');
 const fs = require('fs');
 const log = require('../../logger');
@@ -9,16 +8,13 @@ const UUID = require('uuid');
 const mapper = require('../../mapper');
 const downloadImages = require('./download_images');
 const externalLaunchboxProperties = require('./external_launchbox_properties');
+const progress = require('../../progress');
 
 const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
+const operation = 'Converting database to launchbox';
 
 async function convertDbToLaunchbox() {
-    const progressBar = new cliProgress.Bar(
-        {
-            format: 'Converting database to launchbox [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} games'
-        },
-        cliProgress.Presets.shades_classic
-    );
+    const progressBar = progress.getBar(operation);
     await connect();
 
     let launchboxGames = [];
@@ -52,6 +48,7 @@ async function convertDbToLaunchbox() {
 
     progressBar.start(games.length, 0);
     for (const [index, game] of games.entries()) {
+        progress.updateName(progressBar, `${operation} [${game.id}]`);
         if (!game.deleted) {
             let matchingGame;
             if (settings.externalIdField === 'CustomField') {
@@ -68,7 +65,11 @@ async function convertDbToLaunchbox() {
 
             customFields.push(...originalCustomFields.filter(cf => cf.GameID._text === launchboxId));
 
-            await downloadImages(game, launchboxId);
+            if (settings.downloadImages) {
+                progress.updateName(progressBar, `${operation} [${game.id}] (downloading images)`);
+                await downloadImages(game, launchboxId);
+                progress.updateName(progressBar, `${operation} [${game.id}]`);
+            }
 
             const result = mapper.map(game);
             result.ID = {
@@ -125,6 +126,7 @@ async function convertDbToLaunchbox() {
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     db.close();
+    progress.updateName(progressBar, operation);
     progressBar.stop();
 }
 

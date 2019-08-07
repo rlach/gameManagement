@@ -31,7 +31,7 @@ if (settings.database === 'nedb') {
 
     async function connect() {
         await mongoose.connect(
-            'mongodb://localhost/test',
+            settings.mongoUri,
             { useNewUrlParser: true }
         );
     }

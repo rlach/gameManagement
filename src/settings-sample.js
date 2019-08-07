@@ -7,6 +7,7 @@ module.exports = {
     preferredImageSource: 'en',
     onlyUpdateNewer: true,
     database: 'nedb', //'nedb' or 'mongodb'
+    mongoUri: 'mongodb://localhost/test',
     organizeDirectories: {
         shouldAsk: true,
         maxResultsToSuggest: 6,

@@ -8,9 +8,6 @@ const { saveGame } = require('../../database/game');
 
 async function downloadImages(game, launchboxId) {
     let modified = false;
-    if (!settings.downloadImages) {
-        return;
-    }
     const regexExtension = /\.\w{3,4}($|\?)/;
     let imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;
     if (settings.preferredImageSource === 'jp') {
