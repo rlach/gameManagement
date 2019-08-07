@@ -5,6 +5,7 @@ const { parseSite } = require('../html');
 const { getVndbData } = require('../vndb');
 const SiteStrategy = require('./siteStrategy');
 const { removeUndefined } = require('../objects');
+const settings = require('../settings');
 
 class DlsiteStrategy extends SiteStrategy {
     constructor() {

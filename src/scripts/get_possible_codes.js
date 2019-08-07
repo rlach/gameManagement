@@ -3,7 +3,7 @@ const fs = require('fs');
 const log = require('../logger');
 const parserStrategies = require('../parsers');
 const settings = require('../settings');
-const progress = require("../progress");
+const progress = require('../progress');
 
 const operation = 'Getting game codes';
 
@@ -17,14 +17,7 @@ async function getPossibleCodes() {
         progress.updateName(progressBar, `${operation} [${file}]`);
         const foundCodesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
 
-        if (
-            file.startsWith('!') ||
-            file.startsWith('RJ') ||
-            file.startsWith('VJ') ||
-            file.startsWith('RE') ||
-            /^\d+$/.test(file) ||
-            fs.existsSync(foundCodesPath)
-        ) {
+        if (fs.existsSync(foundCodesPath)) {
             log.debug(`Skipping file ${file}`);
         } else {
             log.debug(`Processing file ${file}`);
@@ -40,7 +33,7 @@ async function getPossibleCodes() {
             const results = await Promise.all(promises);
 
             for (const [index, strategy] of strategies.entries()) {
-                log.debug('Strategy', {strategy, file});
+                log.debug('Strategy', { strategy, file });
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
                     foundCodes: results[index]

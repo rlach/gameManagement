@@ -3,7 +3,7 @@ const log = require('../logger');
 const settings = require('../settings');
 const inquirer = require('inquirer');
 const parserStrategies = require('../parsers');
-const progress = require("../progress");
+const progress = require('../progress');
 const strategies = Object.values(parserStrategies);
 
 const operation = 'Organizing directories';
@@ -42,9 +42,7 @@ async function organizeDirectories() {
             const minScore = settings.organizeDirectories.shouldAsk
                 ? settings.organizeDirectories.minimumScoreToAsk
                 : settings.organizeDirectories.minimumScoreToAccept;
-            results = results
-                .filter(r => r.score >= minScore && r.name !== undefined)
-                .sort((a, b) => b.score - a.score);
+            results = results.filter(r => r.score >= minScore).sort((a, b) => b.score - a.score);
 
             if (results.length > 0) {
                 let bestResult = results[0];
@@ -97,7 +95,9 @@ async function confirmMultipleResults(results, file) {
     const choices = [
         { name: 'None', value: 0 },
         ...bestResults.map((result, index) => ({
-            name: `${result.name} (Score ${result.score}, ${result.strategy})`,
+            name: `${result.name ? result.name : result.code + '(code extracted from filename)'} (Score ${
+                result.score
+            }, ${result.strategy})`,
             value: index + 1
         }))
     ];
@@ -131,9 +131,13 @@ async function confirmSingleResult(results, file) {
         {
             type: 'confirm',
             name: 'same',
-            message: `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${
-                bestResult.score
-            }, strategy ${bestResult.strategy})\n>`
+            message: bestResult.name
+                ? `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${
+                      bestResult.score
+                  }, strategy ${bestResult.strategy})\n>`
+                : `Is ${bestResult.code} proper for ${file}? (Code extracted from filename) (score ${
+                      bestResult.score
+                  }, strategy ${bestResult.strategy})`
         }
     ]);
     if (answer.same) {
