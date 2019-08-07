@@ -1,5 +1,5 @@
 const path = require('path');
-const {saveGame} = require('../../database/game');
+const databaseGame = require('../../database/game');
 const files = require('../../files');
 const log = require('../../logger');
 const moment = require('moment/moment');
@@ -12,7 +12,7 @@ async function updateExecutableAndDirectory(file, game, strategy) {
         game.forceExecutableUpdate = false;
         if (executableFile.deleted) {
             game.deleted = true;
-            await saveGame(game);
+            await databaseGame.saveGame(game);
         } else {
             await saveFileAndDirectory(executableFile, game);
         }
@@ -41,7 +41,7 @@ async function findExecutableFile(file) {
         }
     }
 
-    if (foundFiles.length == 0) {
+    if (foundFiles.length === 0) {
         log.debug(`There is no exe`, {file});
     } else if (foundFiles.length === 1) {
         log.debug('Found single exe file', foundFiles[0].file);
@@ -70,7 +70,7 @@ async function saveFileAndDirectory(target, game) {
         game.directory = target.directory;
         game.executableFile = target.file;
         game.dateModified = moment().format();
-        await saveGame(game);
+        await databaseGame.saveGame(game);
     } catch (e) {
         log.debug(`Could not update game`, e);
     }

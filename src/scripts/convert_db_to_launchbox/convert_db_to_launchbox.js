@@ -1,7 +1,7 @@
-const { Game } = require('../../database/game');
+const databaseGame = require('../../database/game');
 const fs = require('fs');
 const log = require('../../logger');
-const { db, connect } = require('../../database/mongoose');
+const { db, connect } = require('../../database/database');
 const settings = require('../../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
@@ -42,7 +42,7 @@ async function convertDbToLaunchbox() {
         }
     }
 
-    const games = await Game.find({});
+    const games = await databaseGame.Game.find({});
 
     const convertedGames = [];
 

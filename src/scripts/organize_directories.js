@@ -18,7 +18,6 @@ async function organizeDirectories() {
         fs.mkdirSync(targetFolder);
     }
 
-    let gamesWithDuplicates = [];
     let scores = {};
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
@@ -66,7 +65,6 @@ async function organizeDirectories() {
                         fs.mkdirSync(gameFolder);
                     } else {
                         log.debug(`There is a duplicate`, bestResult.code);
-                        gamesWithDuplicates.push(bestResult.code);
                     }
 
                     fs.renameSync(`${settings.paths.unsortedGames}/${file}`, `${gameFolder}/${file}`);

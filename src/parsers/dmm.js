@@ -283,12 +283,11 @@ function getSoftwareDetail(query) {
                 .text()
                 .replace('：', '')
                 .trim();
-            const foundValue = query(e)
+            softwareDetail[foundKey] = query(e)
                 .find('td')
                 .last()
                 .text()
                 .trim();
-            softwareDetail[foundKey] = foundValue;
         })
         .get();
     return softwareDetail;

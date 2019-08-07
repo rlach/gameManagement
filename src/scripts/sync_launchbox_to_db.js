@@ -2,8 +2,8 @@ const progress = require('../progress');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
-const { db, connect } = require('../database/mongoose');
-const { findOne, saveGame } = require('../database/game');
+const { db, connect } = require('../database/database');
+const databaseGame = require('../database/game');
 const convert = require('xml-js');
 const settings = require('../settings');
 const mapper = require('../mapper');
@@ -17,7 +17,7 @@ async function syncLaunchboxToDb() {
         for (const [index, launchboxGame] of launchboxPlatform.LaunchBox.Game.entries()) {
             const externalGameId = getExternalGameId(launchboxPlatform, launchboxGame);
             if (externalGameId) {
-                const dbGame = await findOne({ id: externalGameId });
+                const dbGame = await databaseGame.findOne({ id: externalGameId });
                 if (dbGame) {
                     await syncGame(launchboxGame, dbGame);
                 }
@@ -58,7 +58,7 @@ async function syncGame(launchboxGame, dbGame) {
         Object.assign(dbGame, result);
 
         try {
-            await saveGame(dbGame);
+            await databaseGame.saveGame(dbGame);
             log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
         } catch (e) {
             log.debug('Game failed to be saved', e);

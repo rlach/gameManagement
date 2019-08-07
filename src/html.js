@@ -8,7 +8,7 @@ const cheerio = require('cheerio');
 const JAPANESE_ENCODING = 'EUC-JP';
 
 function parseSite(rawHtml) {
-    const handler = new DomHandler(function(error, dom) {
+    const handler = new DomHandler(function(error) {
         if (error) {
             log.debug('Error parsing html', error);
         } else {

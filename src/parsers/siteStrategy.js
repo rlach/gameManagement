@@ -9,7 +9,7 @@ class SiteStrategy {
 
     async fetchGameData(gameId, game) {
         log.debug(`No override for fetchGameDate on ${gameId}`);
-        return;
+        return undefined;
     }
 
     extractCode(name) {

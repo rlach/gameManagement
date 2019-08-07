@@ -21,7 +21,7 @@ class Files {
     }
 
     removeTagsAndMetadata(name) {
-        let improvedName = name.replace(/\[([^\]]+)\]/g, ''); //remove []
+        let improvedName = name.replace(/\[([^\]]+)]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
         improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
         improvedName = improvedName.trim();

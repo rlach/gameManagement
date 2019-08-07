@@ -21,21 +21,27 @@ async function disconnect() {
     }
 }
 
+async function findVns(name) {
+    const foundVNs = JSON.parse(
+        (await vndb.write(`get vn basic,details,tags (search~"${name}")`))
+            .replace('results ', '')
+            .replace('error ', '')
+    );
+
+    if (foundVNs.id === 'throttled') {
+        throw foundVNs;
+    } else {
+        return foundVNs;
+    }
+}
+
 async function getVndbData(name) {
     let improvedName = name.replace(/\(([^)]+)\)/g, ''); //remove ()
     improvedName = improvedName.replace(/（([^)]+)）/g, ''); //remove japanese ()
     improvedName = improvedName.replace(/・/g, ''); // replace bad characters
     log.debug('Improved name', improvedName);
     try {
-        let foundVNs = JSON.parse(
-            (await vndb.write(`get vn basic,details,tags (search~"${improvedName}")`))
-                .replace('results ', '')
-                .replace('error ', '')
-        );
-
-        if (foundVNs.id === 'throttled') {
-            throw foundVNs;
-        }
+        let foundVNs = await findVns(improvedName);
 
         let VN;
         if (foundVNs.num > 0) {

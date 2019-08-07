@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const log = require('./logger');
 const scripts = require('./scripts');
-const { db } = require('./database/mongoose');
+const { db } = require('./database/database');
 const vndb = require('./vndb');
 const fs = require('fs');
 const settings = require('./settings-sample');
@@ -15,7 +15,7 @@ async function main() {
 
     let answer = {};
 
-    process.argv.forEach(function(val, index, array) {
+    process.argv.forEach(function(val) {
         const command = val.split('=');
         if (command.length === 2) {
             if (command[0] === 'script') {

@@ -1,13 +1,12 @@
 const parserStrategies = require('../../parsers');
 const log = require('../../logger');
-const {retrieveGameFromDb, updateMany} = require('../../database/game');
-const {db, connect} = require('../../database/mongoose');
+const {db, connect} = require('../../database/database');
 const settings = require('../../settings');
 const moment = require('moment/moment');
 const fs = require('fs');
 const vndb = require('../../vndb');
 const {removeUndefined} = require('../../objects');
-const {saveGame} = require('../../database/game');
+const databaseGame = require('../../database/game');
 const { updateExecutableAndDirectory, findExecutableFile  } = require('./find_executable');
 const recognizeGameType = require('./recognize_game_type');
 const progress = require("../../progress");
@@ -31,7 +30,7 @@ async function buildDbFromFolders() {
         foundFiles.push(...singlePathFiles);
     }
 
-    await updateMany({id: {$nin: foundFiles.map(f => f.name)}}, {deleted: true});
+    await databaseGame.updateMany({id: {$nin: foundFiles.map(f => f.name)}}, {deleted: true});
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
@@ -42,12 +41,12 @@ async function buildDbFromFolders() {
             continue;
         }
 
-        let game = await retrieveGameFromDb(file.name);
+        let game = await databaseGame.retrieveGameFromDb(file.name);
         if (!game.engine) {
             game.engine = await recognizeGameType(file);
             if(game.engine) {
                 game.dateModified = moment().format();
-                await saveGame(game);
+                await databaseGame.saveGame(game);
             }
         }
         if (game.deleted) {
@@ -55,7 +54,7 @@ async function buildDbFromFolders() {
             if(!executableFile.deleted) {
                 game.deleted = false;
                 game.dateModified = moment().format();
-                await saveGame(game);
+                await databaseGame.saveGame(game);
             }
         }
         if (
@@ -92,7 +91,7 @@ async function buildDbFromFolders() {
                     game.status = 'updated'
                 }
                 game.dateModified = moment().format();
-                await saveGame(game);
+                await databaseGame.saveGame(game);
             }
 
             if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
@@ -102,7 +101,7 @@ async function buildDbFromFolders() {
                     game.additionalImages = newAdditionalImages;
                     game.redownloadAdditionalImages = true;
                 }
-                await saveGame(game);
+                await databaseGame.saveGame(game);
             }
 
             await updateExecutableAndDirectory(file, game, strategy);

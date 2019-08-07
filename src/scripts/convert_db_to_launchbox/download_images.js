@@ -4,7 +4,7 @@ const fs = require('fs');
 const settings = require('../../settings');
 const log = require('../../logger');
 const files = require('../../files');
-const { saveGame } = require('../../database/game');
+const databaseGame = require('../../database/game');
 
 async function downloadImages(game, launchboxId) {
     let modified = false;
@@ -111,7 +111,7 @@ async function downloadImages(game, launchboxId) {
     }
     if (modified) {
         game.dateModified = new moment().format();
-        await saveGame(game);
+        await databaseGame.saveGame(game);
     }
 }
 
