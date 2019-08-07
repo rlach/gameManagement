@@ -44,34 +44,23 @@ async function organizeDirectories() {
             const minScore = settings.organizeDirectories.shouldAsk
                 ? settings.organizeDirectories.minimumScoreToAsk
                 : settings.organizeDirectories.minimumScoreToAccept;
-            results = results.filter(r => r.score >= minScore).sort((a, b) => b.score - a.score);
+            results = results
+                .filter(r => r.score >= minScore && r.name !== undefined)
+                .sort((a, b) => b.score - a.score);
 
             if (results.length > 0) {
                 let bestResult = results[0];
-
                 if (
                     settings.organizeDirectories.shouldAsk &&
-                    bestResult.name &&
-                    bestResult.score > 0 &&
-                    bestResult.score >= settings.organizeDirectories.minimumScoreToAsk &&
                     bestResult.score < settings.organizeDirectories.minimumScoreToAccept
                 ) {
-                    log.info(results, JSON.stringify(results, null, 4));
-
-                    let answer = await inquirer.prompt([
-                        {
-                            type: 'confirm',
-                            name: 'same',
-                            message: `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${
-                                bestResult.code
-                            }(score ${bestResult.score}, strategy ${bestResult.strategy})\n>`
+                    try {
+                        bestResult = await confirmResults(results, file);
+                    } catch (e) {
+                        if (e.code === 'RESULT_REJECTED') {
+                            fileCodes.noMatch = true;
+                            fs.writeFileSync(foundFilesPath, JSON.stringify(fileCodes, null, 4));
                         }
-                    ]);
-                    if (answer.same) {
-                        bestResult.accepted = true;
-                    } else {
-                        fileCodes.noMatch = true;
-                        fs.writeFileSync(foundFilesPath, JSON.stringify(fileCodes, null, 4));
                     }
                 }
 
@@ -94,6 +83,74 @@ async function organizeDirectories() {
     }
     progressBar.stop();
     log.debug(`Score summary for unsorted files`, scores);
+}
+
+async function confirmResults(results, file) {
+    if (results.length === 1) {
+        return await confirmSingleResult(results, file);
+    } else {
+        return await confirmMultipleResults(results, file);
+    }
+}
+
+async function confirmMultipleResults(results, file) {
+    let bestResults = results.slice(0, settings.organizeDirectories.maxResultsToSuggest);
+    const choices = [
+        { name: 'None', value: 0 },
+        ...bestResults.map((result, index) => ({
+            name: `${result.name} (Score ${result.score}, ${result.strategy})`,
+            value: index + 1
+        }))
+    ];
+
+    log.info('choices', choices);
+
+    let answer = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'same',
+            default: 0,
+            choices: choices,
+            message: `Which result matches \n* ${file}?`
+        }
+    ]);
+
+    log.info('Same is:', answer.same);
+
+    if (answer.same === 0) {
+        throw {
+            message: 'Best result not accepted',
+            code: 'RESULT_REJECTED'
+        };
+    }
+
+    const bestResult = bestResults[answer.same - 1];
+    bestResult.accepted = true;
+    return bestResult;
+}
+
+async function confirmSingleResult(results, file) {
+    let bestResult = results[0];
+
+    let answer = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'same',
+            message: `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${
+                bestResult.score
+            }, strategy ${bestResult.strategy})\n>`
+        }
+    ]);
+    if (answer.same) {
+        bestResult.accepted = true;
+    } else {
+        throw {
+            message: 'Best result not accepted',
+            code: 'RESULT_REJECTED'
+        };
+    }
+
+    return bestResult;
 }
 
 module.exports = organizeDirectories;

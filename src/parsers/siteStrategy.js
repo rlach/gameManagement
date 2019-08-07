@@ -45,24 +45,25 @@ class SiteStrategy {
             );
         }
 
-        const strippedName = files.removeTagsAndMetadata(originalFilename);
-        const noSpacesOriginal = strippedName.replace(/ /gi, '');
+        const strippedOriginal = files.removeTagsAndMetadata(originalFilename).toLowerCase();
+        const noSpacesOriginal = strippedOriginal.replace(/ /gi, '');
 
         codes.foundCodes.forEach(code => {
-            const noSpacesCode = code.work_name.replace(/ /gi, '');
+            const lowerCaseFoundName = code.work_name.toLowerCase();
+            const noSpacesFoundName = lowerCaseFoundName.replace(/ /gi, '');
 
             // Points for exact match
-            if (code.work_name === strippedName) {
+            if (lowerCaseFoundName === strippedOriginal) {
                 this.addToCodeScore(results, settings.advanced.scores.exactMatch, code.workno, code.work_name);
             }
 
             // Points for code name including original name
-            if (code.work_name.includes(strippedName)) {
+            if (lowerCaseFoundName.includes(strippedOriginal)) {
                 this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
             }
 
             // Points for original name including code name
-            if (strippedName.includes(code.work_name)) {
+            if (strippedOriginal.includes(lowerCaseFoundName)) {
                 this.addToCodeScore(
                     results,
                     settings.advanced.scores.similarMatchSecondSide,
@@ -72,17 +73,17 @@ class SiteStrategy {
             }
 
             // Points for exact match without spaces
-            if (noSpacesCode === noSpacesOriginal) {
+            if (noSpacesFoundName === noSpacesOriginal) {
                 this.addToCodeScore(results, settings.advanced.scores.noSpaceExactMatch, code.workno, code.work_name);
             }
 
             // Points for no space code name including no space original name
-            if (noSpacesCode.includes(noSpacesOriginal)) {
+            if (noSpacesFoundName.includes(noSpacesOriginal)) {
                 this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
             }
 
             // Points for no space original name including no space code name
-            if (noSpacesOriginal.includes(noSpacesCode)) {
+            if (noSpacesOriginal.includes(noSpacesFoundName)) {
                 this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
             }
         });

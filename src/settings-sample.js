@@ -9,8 +9,9 @@ module.exports = {
     database: 'nedb', //'nedb' or 'mongodb'
     organizeDirectories: {
         shouldAsk: true,
-        minimumScoreToAsk: 1,
-        minimumScoreToAccept: 4
+        maxResultsToSuggest: 6,
+        minimumScoreToAsk: 2,
+        minimumScoreToAccept: 6
     },
     exeSearchDepth: 3,
     advanced: {
