@@ -96,6 +96,11 @@ async function downloadImages(game, launchboxId) {
                         url: additionalImage,
                         dest: targetPathAdditionalImage
                     });
+
+                    if(index === game.additionalImages.length -1 && fs.existsSync(targetPathAdditionalImage)) {
+                        const targetPathBackground = targetPathAdditionalImage.replace('Screenshot - Gameplay', 'Fanart - Background');
+                        fs.copyFileSync(targetPathAdditionalImage, targetPathBackground);
+                    }
                 } catch (e) {
                     log.debug('Error downloading image', e);
                     if (e.message.includes('404')) {

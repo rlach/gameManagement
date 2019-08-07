@@ -7,11 +7,21 @@ const fs = require('fs');
 const vndb = require('../../vndb');
 const {removeUndefined} = require('../../objects');
 const databaseGame = require('../../database/game');
-const { updateExecutableAndDirectory, findExecutableFile  } = require('./find_executable');
+const {updateExecutableAndDirectory} = require('./find_executable');
 const recognizeGameType = require('./recognize_game_type');
 const progress = require("../../progress");
 
 const operation = 'Building database from folders';
+
+function gameIsDeleted(file) {
+    if (!fs.existsSync(`${file.path}/${file.name}`)) {
+        return true;
+    }
+
+    const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
+    return subFiles.length === 0 || subFiles.some(f => f === 'DELETED');
+
+}
 
 async function buildDbFromFolders() {
     const progressBar = progress.getBar(operation);
@@ -35,6 +45,7 @@ async function buildDbFromFolders() {
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
         progress.updateName(progressBar, `${operation} [${file.name}]`);
+
         const strategy = selectStrategy(file.name);
         if (!strategy) {
             log.debug('No strategy for file', file);
@@ -42,21 +53,26 @@ async function buildDbFromFolders() {
         }
 
         let game = await databaseGame.retrieveGameFromDb(file.name);
+
+        if (gameIsDeleted(file)) {
+            game.deleted = true;
+            game.dateModified = moment().format();
+            await databaseGame.saveGame(game);
+            continue;
+        } else if (game.deleted) {
+            game.deleted = false;
+            game.dateModified = moment().format();
+            await databaseGame.saveGame(game);
+        }
+
         if (!game.engine) {
             game.engine = await recognizeGameType(file);
-            if(game.engine) {
+            if (game.engine) {
                 game.dateModified = moment().format();
                 await databaseGame.saveGame(game);
             }
         }
-        if (game.deleted) {
-            const executableFile = await findExecutableFile(file);
-            if(!executableFile.deleted) {
-                game.deleted = false;
-                game.dateModified = moment().format();
-                await databaseGame.saveGame(game);
-            }
-        }
+
         if (
             game.executableFile &&
             !game.forceSourceUpdate &&
@@ -77,17 +93,17 @@ async function buildDbFromFolders() {
                 ) {
                     game.forceAdditionalImagesUpdate = false;
                     const newAdditionalImages = await strategy.getAdditionalImages(file.name);
-                    if(JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                    if (JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
                         gameData.additionalImages = newAdditionalImages;
                         game.redownloadAdditionalImages = true;
                     }
                 }
-                if(game.imageUrlEn !== gameData.imageUrlEn || game.imageUrlJp !== game.imageUrlJp) {
+                if (game.imageUrlEn !== gameData.imageUrlEn || game.imageUrlJp !== game.imageUrlJp) {
                     game.redownloadMainImage = true;
                 }
                 Object.assign(game, removeUndefined(gameData));
                 game.source = strategy.name;
-                if(game.status === 'invalid') {
+                if (game.status === 'invalid') {
                     game.status = 'updated'
                 }
                 game.dateModified = moment().format();
@@ -97,7 +113,7 @@ async function buildDbFromFolders() {
             if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
                 game.forceAdditionalImagesUpdate = false;
                 const newAdditionalImages = await strategy.getAdditionalImages(file.name);
-                if(JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                if (JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
                     game.additionalImages = newAdditionalImages;
                     game.redownloadAdditionalImages = true;
                 }

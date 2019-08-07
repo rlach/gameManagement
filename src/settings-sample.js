@@ -45,6 +45,7 @@ module.exports = {
         'setup',
         'setting',
         'inst',
+        'signup',
         'check',
         'update',
         'alpharomdie',
