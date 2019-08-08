@@ -1,24 +1,17 @@
 const fs = require('fs');
-const log = require('../logger');
-const settings = require('../settings');
-const inquirer = require('inquirer');
-const parserStrategies = require('../parsers');
-const progress = require('../progress');
-const strategies = Object.values(parserStrategies);
+const log = require('../../logger');
+const progress = require('../../progress');
+const scoreResults = require('./confirm_scoring_results');
 
 const operation = 'Organizing directories';
 
-async function organizeDirectories() {
+async function organizeDirectories(strategies, settings) {
     const progressBar = progress.getBar(operation);
     log.debug(`Reading ${settings.paths.unsortedGames}`);
     const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
 
     const targetFolder = `${settings.paths.targetSortFolder}`;
-    if (!fs.existsSync(targetFolder)) {
-        fs.mkdirSync(targetFolder);
-    }
 
-    let scores = {};
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
         progress.updateName(progressBar, `${operation} [${file}]`);
@@ -50,7 +43,7 @@ async function organizeDirectories() {
                     bestResult.score < settings.organizeDirectories.minimumScoreToAccept
                 ) {
                     try {
-                        bestResult = await confirmResults(results, file);
+                        bestResult = await scoreResults.confirmResults(results, file);
                     } catch (e) {
                         if (e.code === 'RESULT_REJECTED') {
                             fileCodes.noMatch = true;
@@ -77,77 +70,6 @@ async function organizeDirectories() {
     }
     progress.updateName(progressBar, operation);
     progressBar.stop();
-    log.debug(`Score summary for unsorted files`, scores);
-}
-
-async function confirmResults(results, file) {
-    if (results.length === 1) {
-        return await confirmSingleResult(results, file);
-    } else {
-        return await confirmMultipleResults(results, file);
-    }
-}
-
-async function confirmMultipleResults(results, file) {
-    let bestResults = results.slice(0, settings.organizeDirectories.maxResultsToSuggest);
-    const choices = [
-        { name: 'None', value: 0 },
-        ...bestResults.map((result, index) => ({
-            name: `${result.name ? result.name : result.code + '(code extracted from filename)'} (Score ${
-                result.score
-            }, ${result.strategy})`,
-            value: index + 1
-        }))
-    ];
-
-    let answer = await inquirer.prompt([
-        {
-            type: 'list',
-            name: 'same',
-            default: 0,
-            choices: choices,
-            message: `Which result matches \n* ${file}?`
-        }
-    ]);
-
-    if (answer.same === 0) {
-        throw {
-            message: 'Best result not accepted',
-            code: 'RESULT_REJECTED'
-        };
-    }
-
-    const bestResult = bestResults[answer.same - 1];
-    bestResult.accepted = true;
-    return bestResult;
-}
-
-async function confirmSingleResult(results, file) {
-    let bestResult = results[0];
-
-    let answer = await inquirer.prompt([
-        {
-            type: 'confirm',
-            name: 'same',
-            message: bestResult.name
-                ? `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${
-                      bestResult.score
-                  }, strategy ${bestResult.strategy})\n>`
-                : `Is ${bestResult.code} proper for ${file}? (Code extracted from filename) (score ${
-                      bestResult.score
-                  }, strategy ${bestResult.strategy})`
-        }
-    ]);
-    if (answer.same) {
-        bestResult.accepted = true;
-    } else {
-        throw {
-            message: 'Best result not accepted',
-            code: 'RESULT_REJECTED'
-        };
-    }
-
-    return bestResult;
 }
 
 module.exports = organizeDirectories;

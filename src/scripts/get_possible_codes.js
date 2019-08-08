@@ -5,7 +5,7 @@ const progress = require('../progress');
 
 const operation = 'Getting game codes';
 
-async function getPossibleCodes(parserStrategies, unsortedGamesPath) {
+async function getPossibleCodes(strategies, unsortedGamesPath) {
     const progressBar = progress.getBar();
     progress.updateName(`${operation}`);
     log.debug(`Reading ${unsortedGamesPath}`);
@@ -20,7 +20,6 @@ async function getPossibleCodes(parserStrategies, unsortedGamesPath) {
             log.debug(`Skipping file ${file}`);
         } else {
             log.debug(`Processing file ${file}`);
-            let strategies = Object.values(parserStrategies);
             const fileResults = {
                 file
             };

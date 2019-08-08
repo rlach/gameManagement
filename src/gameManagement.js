@@ -3,6 +3,7 @@ const log = require('./logger');
 const scripts = require('./scripts');
 const fs = require('fs');
 const parserStrategies = require('./parsers');
+const strategies = Object.values(parserStrategies);
 const settings = require('./settings-sample');
 
 async function gameManagement(operation) {
@@ -45,10 +46,16 @@ async function gameManagement(operation) {
 
     switch (answer.operation) {
         case 'getCodes':
-            await scripts.getPossibleCodes(parserStrategies, settings.paths.unsortedGames);
+            await scripts.getPossibleCodes(strategies, settings.paths.unsortedGames);
             break;
         case 'organizeDirectories':
-            await scripts.organizeDirectories();
+            await scripts.organizeDirectories(strategies, {
+                paths: {
+                    targetSortFolder: settings.paths.targetSortFolder,
+                    unsortedGames: settings.paths.unsortedGames
+                },
+                organizeDirectories: settings.organizeDirectories
+            });
             break;
         case 'launchboxToDb':
             await scripts.syncLaunchboxToDb();
@@ -67,8 +74,14 @@ async function gameManagement(operation) {
             break;
         case 'syncAll':
         default:
-            await scripts.getPossibleCodes(parserStrategies, settings.paths.unsortedGames);
-            await scripts.organizeDirectories();
+            await scripts.getPossibleCodes(strategies, settings.paths.unsortedGames);
+            await scripts.organizeDirectories(strategies, {
+                paths: {
+                    targetSortFolder: settings.paths.targetSortFolder,
+                    unsortedGames: settings.paths.unsortedGames
+                },
+                organizeDirectories: settings.organizeDirectories
+            });
             await scripts.syncLaunchboxToDb();
             await scripts.buildDbFromFolders();
             await scripts.convertDbToLaunchbox();
