@@ -1,21 +1,20 @@
 const files = require('../files');
 const fs = require('fs');
 const log = require('../logger');
-const parserStrategies = require('../parsers');
-const settings = require('../settings');
 const progress = require('../progress');
 
 const operation = 'Getting game codes';
 
-async function getPossibleCodes() {
-    const progressBar = progress.getBar(`${operation}`);
-    log.debug(`Reading ${settings.paths.unsortedGames}`);
-    const foundFiles = fs.readdirSync(settings.paths.unsortedGames);
+async function getPossibleCodes(parserStrategies, unsortedGamesPath) {
+    const progressBar = progress.getBar();
+    progress.updateName(`${operation}`);
+    log.debug(`Reading ${unsortedGamesPath}`);
+    const foundFiles = fs.readdirSync(unsortedGamesPath);
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
         progress.updateName(progressBar, `${operation} [${file}]`);
-        const foundCodesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
+        const foundCodesPath = `${unsortedGamesPath}/${file}/!foundCodes.txt`;
 
         if (fs.existsSync(foundCodesPath)) {
             log.debug(`Skipping file ${file}`);
@@ -33,7 +32,6 @@ async function getPossibleCodes() {
             const results = await Promise.all(promises);
 
             for (const [index, strategy] of strategies.entries()) {
-                log.debug('Strategy', { strategy, file });
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
                     foundCodes: results[index]

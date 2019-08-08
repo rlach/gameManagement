@@ -7,3 +7,6 @@ games.db
 duplicates.txt
 *.xml.*
 sample/*
+coverage/*
+.nyc_output/*
+package-lock.json

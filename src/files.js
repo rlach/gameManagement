@@ -24,6 +24,7 @@ class Files {
         let improvedName = name.replace(/\[([^\]]+)]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
         improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
+        improvedName = improvedName.replace(/\s+/g, ' ')
         improvedName = improvedName.trim();
 
         return improvedName;
