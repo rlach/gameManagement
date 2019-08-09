@@ -5,7 +5,7 @@ const log = require('../../logger');
 const moment = require('moment/moment');
 const fs = require('fs');
 
-async function updateExecutableAndDirectory(file, game, strategy) {
+async function updateExecutableAndDirectory(file, game, strategy, database) {
     if (!game.executableFile || game.forceExecutableUpdate) {
         log.debug('Updating executable path', game.id);
         const executableFile = await findExecutableFile(file, strategy);
@@ -14,7 +14,7 @@ async function updateExecutableAndDirectory(file, game, strategy) {
             game.deleted = true;
             await databaseGame.saveGame(game);
         } else {
-            await saveFileAndDirectory(executableFile, game);
+            await saveFileAndDirectory(executableFile, game, database);
         }
     }
 }
@@ -25,52 +25,62 @@ async function findExecutableFile(file) {
     const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
-        log.debug('Game was deleted', {file});
+        log.debug('Game was deleted', { file });
         return {
-            deleted: true
+            deleted: true,
         };
     } else {
         if (subFiles > 0) {
             executableFile = {
-                directory: path.resolve(`${file.path}/${file.name}/${subFiles[0]}`)
+                directory: path.resolve(
+                    `${file.path}/${file.name}/${subFiles[0]}`
+                ),
             };
         } else {
             executableFile = {
-                directory: path.resolve(`${file.path}/${file.name}`)
+                directory: path.resolve(`${file.path}/${file.name}`),
             };
         }
     }
 
     if (foundFiles.length === 0) {
-        log.debug(`There is no exe`, {file});
+        log.debug(`There is no exe`, { file });
     } else if (foundFiles.length === 1) {
         log.debug('Found single exe file', foundFiles[0].file);
-        executableFile.file = path.resolve(`${foundFiles[0].base}/${foundFiles[0].relative}`);
+        executableFile.file = path.resolve(
+            `${foundFiles[0].base}/${foundFiles[0].relative}`
+        );
     } else {
         log.debug('Found multiple exe files', foundFiles.map(f => f.file));
-        let gameExe = foundFiles.find(t => t.name.toLowerCase().startsWith('game'));
+        let gameExe = foundFiles.find(t =>
+            t.name.toLowerCase().startsWith('game')
+        );
         if (!gameExe) {
-            gameExe = foundFiles.find(t => t.name.toLowerCase().endsWith('exe'));
+            gameExe = foundFiles.find(t =>
+                t.name.toLowerCase().endsWith('exe')
+            );
         }
         if (!gameExe) {
             gameExe = foundFiles[0];
         }
 
         log.debug('game exe selected', gameExe);
-        executableFile.file = path.resolve(`${gameExe.base}/${gameExe.relative}`);
+        executableFile.file = path.resolve(
+            `${gameExe.base}/${gameExe.relative}`
+        );
     }
 
     return executableFile;
 }
 
-async function saveFileAndDirectory(target, game) {
+async function saveFileAndDirectory(target, game, database) {
     try {
         log.debug(`saving link to executable`, target);
         game.deleted = false;
         game.directory = target.directory;
         game.executableFile = target.file;
         game.dateModified = moment().format();
-        await databaseGame.saveGame(game);
+        await database.game.saveGame(game);
     } catch (e) {
         log.debug(`Could not update game`, e);
     }

@@ -67,7 +67,7 @@ class GetchuStrategy extends SiteStrategy {
                         : undefined,
                 work_name: query(e)
                     .text()
-                    .trim()
+                    .trim(),
             }))
             .get()
             .filter(b => b.workno);
@@ -97,15 +97,17 @@ function getGameMetadataJp(query) {
                 .end()
                 .text()
                 .trim(),
-            releaseDate: releaseDayText ? moment(releaseDayText, 'YYYY/MM/DD').format() : undefined,
+            releaseDate: releaseDayText
+                ? moment(releaseDayText, 'YYYY/MM/DD').format()
+                : undefined,
             descriptionJp: query('.tablebody')
                 .text()
                 .trim(),
-            makerJp: query('.glance').attr('title'),
+            makerJp: query('.glance').text(),
             imageUrlJp: query('.highslide img')
                 .attr('src')
                 .replace('./', 'http://getchu.com/'),
-            additionalImages: getAdditionalImages(query)
+            additionalImages: getAdditionalImages(query),
         };
     } catch (e) {
         log.debug('Metadata parsing failure', e);
@@ -132,11 +134,15 @@ async function getJapaneseSite(id, missingSource) {
         return undefined;
     }
     try {
-        let reply = await callPage(`http://www.getchu.com/soft.phtml?id=${encodeURIComponent(id)}&gc=gc`);
+        let reply = await callPage(
+            `http://www.getchu.com/soft.phtml?id=${encodeURIComponent(
+                id
+            )}&gc=gc`
+        );
         if (reply.trim().length === 0) {
             // Getchu returns 200 with empty response when id is wrong
             return {
-                sourceMissingJp: true
+                sourceMissingJp: true,
             };
         }
         const root = parseSite(reply);
@@ -150,7 +156,9 @@ async function getJapaneseSite(id, missingSource) {
 async function getReviews(id) {
     try {
         let reply = await callPage(
-            `http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(id)}`
+            `http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(
+                id
+            )}`
         );
         const query = parseSite(reply);
 
@@ -159,10 +167,14 @@ async function getReviews(id) {
         averageRatingText = averageRatingText ? averageRatingText : '0.00';
 
         return {
-            communityStars: Number.parseFloat(averageRatingText.match(/\d\.\d\d/)[0])
+            communityStars: Number.parseFloat(
+                averageRatingText.match(/\d\.\d\d/)[0]
+            ),
         };
     } catch (e) {
-        log.debug(`Error getting reviews for ${id} from ${getchuStrategy.name}`);
+        log.debug(
+            `Error getting reviews for ${id} from ${getchuStrategy.name}`
+        );
         return undefined;
     }
 }

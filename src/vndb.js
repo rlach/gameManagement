@@ -8,7 +8,9 @@ let vndb;
 async function connect() {
     if (!vndb) {
         vndb = await VNDB.start();
-        await vndb.write('login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}');
+        await vndb.write(
+            'login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}'
+        );
     }
 
     return vndb;
@@ -17,7 +19,6 @@ async function connect() {
 async function disconnect() {
     if (vndb) {
         await vndb.end();
-        delete vndb;
     }
 }
 
@@ -45,11 +46,17 @@ async function getVndbData(name) {
 
         let VN;
         if (foundVNs.num > 0) {
-            VN = foundVNs.items.find(vn => vn.title === improvedName || vn.original === improvedName);
-            if(!VN) {
-                VN = foundVNs.items.find(vn => vn.title.includes(improvedName) || improvedName.includes(vn.title));
+            VN = foundVNs.items.find(
+                vn => vn.title === improvedName || vn.original === improvedName
+            );
+            if (!VN) {
+                VN = foundVNs.items.find(
+                    vn =>
+                        vn.title.includes(improvedName) ||
+                        improvedName.includes(vn.title)
+                );
             }
-            if(!VN) {
+            if (!VN) {
                 VN = foundVNs.items[0];
             }
         } else {
@@ -71,12 +78,14 @@ async function getVndbData(name) {
             descriptionEn: VN.description,
             genresEn: tags.filter(t => t.cat === 'ero').map(t => t.name),
             tagsEn: tags.filter(t => t.cat === 'tech').map(t => t.name),
-            imageUrlEn: VN.image
+            imageUrlEn: VN.image,
         };
     } catch (e) {
         if (e.id === 'throttled') {
             let timeout = e.fullwait ? e.fullwait * 1000 : 30000;
-            log.debug(`reached max vndb api usage, waiting ${timeout / 1000} seconds`);
+            log.debug(
+                `reached max vndb api usage, waiting ${timeout / 1000} seconds`
+            );
             await sleep(timeout);
             return await getVndbData(name);
         }

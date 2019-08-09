@@ -18,13 +18,16 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
         const singlePathFiles = fs.readdirSync(path).map(name => {
             return {
                 name,
-                path
+                path,
             };
         });
         foundFiles.push(...singlePathFiles);
     }
 
-    await database.game.updateMany({ id: { $nin: foundFiles.map(f => f.name) } }, { deleted: true });
+    await database.game.updateMany(
+        { id: { $nin: foundFiles.map(f => f.name) } },
+        { deleted: true }
+    );
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
@@ -68,22 +71,35 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
             log.debug(`Skipping ${file.name}`);
         } else {
             log.debug(`Processing ${file.name}`);
-            if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate || game.status === 'invalid') {
+            if (
+                (!game.nameEn && !game.nameJp) ||
+                game.forceSourceUpdate ||
+                game.status === 'invalid'
+            ) {
                 game.forceSourceUpdate = false;
                 log.debug('Updating source web page(s)');
                 const gameData = await strategy.fetchGameData(game.id, game);
                 if (
                     (gameData.nameJp || gameData.nameEn) &&
-                    (!gameData.additionalImages || gameData.additionalImages.length === 0)
+                    (!gameData.additionalImages ||
+                        gameData.additionalImages.length === 0)
                 ) {
                     game.forceAdditionalImagesUpdate = false;
-                    const newAdditionalImages = await strategy.getAdditionalImages(file.name);
-                    if (JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                    const newAdditionalImages = await strategy.getAdditionalImages(
+                        file.name
+                    );
+                    if (
+                        JSON.stringify(newAdditionalImages) !==
+                        JSON.stringify(game.additionalImages)
+                    ) {
                         gameData.additionalImages = newAdditionalImages;
                         game.redownloadAdditionalImages = true;
                     }
                 }
-                if (game.imageUrlEn !== gameData.imageUrlEn || game.imageUrlJp !== game.imageUrlJp) {
+                if (
+                    game.imageUrlEn !== gameData.imageUrlEn ||
+                    game.imageUrlJp !== game.imageUrlJp
+                ) {
                     game.redownloadMainImage = true;
                 }
                 Object.assign(game, removeUndefined(gameData));
@@ -94,17 +110,30 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
                 await database.game.saveGame(game);
             }
 
-            if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
+            if (
+                (game.nameEn || game.nameJp) &&
+                game.forceAdditionalImagesUpdate
+            ) {
                 game.forceAdditionalImagesUpdate = false;
-                const newAdditionalImages = await strategy.getAdditionalImages(file.name);
-                if (JSON.stringify(newAdditionalImages) !== JSON.stringify(game.additionalImages)) {
+                const newAdditionalImages = await strategy.getAdditionalImages(
+                    file.name
+                );
+                if (
+                    JSON.stringify(newAdditionalImages) !==
+                    JSON.stringify(game.additionalImages)
+                ) {
                     game.additionalImages = newAdditionalImages;
                     game.redownloadAdditionalImages = true;
                 }
                 await database.game.saveGame(game);
             }
 
-            await executables.updateExecutableAndDirectory(file, game, strategy);
+            await executables.updateExecutableAndDirectory(
+                file,
+                game,
+                strategy,
+                database
+            );
         }
         progressBar.update(index + 1);
     }

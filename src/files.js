@@ -1,4 +1,4 @@
-const {promisify} = require('util');
+const { promisify } = require('util');
 
 const find = require('fs-find');
 const asyncFind = promisify(find);
@@ -9,14 +9,14 @@ class Files {
         return asyncFind(path, {
             file: f => hasProperExtension(f) && !isBanned(f),
             depth: settings.exeSearchDepth,
-            followLinks: true
+            followLinks: true,
         });
     }
 
     async findImages(path, uuid) {
         return asyncFind(path, {
             file: (_, f) => f.matcher.startsWith(uuid),
-            depth: 1
+            depth: 1,
         });
     }
 
@@ -24,7 +24,7 @@ class Files {
         let improvedName = name.replace(/\[([^\]]+)]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
         improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
-        improvedName = improvedName.replace(/\s+/g, ' ')
+        improvedName = improvedName.replace(/\s+/g, ' ');
         improvedName = improvedName.trim();
 
         return improvedName;
@@ -35,9 +35,17 @@ let files = new Files();
 module.exports = files;
 
 function hasProperExtension(fileName) {
-    return settings.executableExtensions.findIndex(extension => fileName.toLowerCase().endsWith(extension)) > -1;
+    return (
+        settings.executableExtensions.findIndex(extension =>
+            fileName.toLowerCase().endsWith(extension)
+        ) > -1
+    );
 }
 
 function isBanned(fileName) {
-    return settings.bannedFilenames.findIndex(bannedName => fileName.toLowerCase().includes(bannedName)) > -1;
+    return (
+        settings.bannedFilenames.findIndex(bannedName =>
+            fileName.toLowerCase().includes(bannedName)
+        ) > -1
+    );
 }
