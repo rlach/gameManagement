@@ -14,14 +14,13 @@ describe('organizeDirectories', function() {
     let settings;
     let database;
     let strategies;
-    before(async () => {
+
+    beforeEach(async () => {
         database = await initDatabase({
             database: 'nedb',
             nedbFilename: ''
         });
-    });
 
-    beforeEach(async () => {
         strategies = [];
         settings = {
             paths: {
@@ -101,13 +100,106 @@ describe('organizeDirectories', function() {
 
             const game = await database.game.findOne({});
             expect(game).to.include({
-                deleted: false,
                 engine: undefined,
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy'
             });
             sinon.assert.calledOnce(fetchGameData);
+            sinon.assert.calledOnce(recognizeGameType);
+            sinon.assert.calledOnce(updateExecutableAndDirectory);
+        });
+
+        it('If game data was fetched fills the game with results', async () => {
+            const gameDetails = {
+                nameEn: 'nameEn',
+                genresEn: 'genresEn',
+                imageUrlEn: 'imageUrlEn',
+                descriptionEn: 'descriptionEn',
+                tagsEn: ['tagEn1', 'tagEn2'],
+                makerEn: 'makerEn',
+                nameJp: 'nameJp',
+                genresJp: 'genresJp',
+                imageUrlJp: 'imageUrlJp',
+                additionalImages: ['1'],
+                descriptionJp: 'descriptionJp',
+                releaseDate: 'releaseDate',
+                series: 'series',
+                tagsJp: ['tagJp1', 'tagJp2'],
+                makerJp: 'makerJp',
+                video: 'video',
+                communityStars: 4,
+                communityStarVotes: 9128
+            };
+
+            sinon.stub(fs, 'existsSync').returns(true);
+            const recognizeGameType = sinon.stub(typeRecognizer, 'recognizeGameType');
+            const updateExecutableAndDirectory = sinon.stub(executables, 'updateExecutableAndDirectory');
+            let strategy = {
+                name: 'dummy',
+                shouldUse: () => true,
+                fetchGameData: async () => {
+                    return gameDetails;
+                }
+            };
+            const fetchGameData = sinon.spy(strategy, 'fetchGameData');
+
+            await buildDbFromFolders([strategy], database, [mainPaths]);
+
+            const game = await database.game.findOne({});
+
+            const expectedGame = {
+                engine: undefined,
+                forceSourceUpdate: false,
+                id: 'dir',
+                source: 'dummy',
+                redownloadMainImage: true
+            };
+            Object.assign(expectedGame, gameDetails);
+
+            expect(game).to.deep.include(expectedGame);
+            sinon.assert.calledOnce(fetchGameData);
+            sinon.assert.calledOnce(recognizeGameType);
+            sinon.assert.calledOnce(updateExecutableAndDirectory);
+        });
+
+        it('If game data was fetched without additional images fetches additional images separately', async () => {
+            const gameDetails = {
+                nameEn: 'nameEn'
+            };
+
+            sinon.stub(fs, 'existsSync').returns(true);
+            const recognizeGameType = sinon.stub(typeRecognizer, 'recognizeGameType');
+            const updateExecutableAndDirectory = sinon.stub(executables, 'updateExecutableAndDirectory');
+            let strategy = {
+                name: 'dummy',
+                shouldUse: () => true,
+                fetchGameData: async () => {
+                    return gameDetails;
+                },
+                getAdditionalImages: async () => {
+                    return ['additionalIm1'];
+                }
+            };
+            const fetchGameData = sinon.spy(strategy, 'fetchGameData');
+            const getAdditionalImages = sinon.spy(strategy, 'getAdditionalImages');
+
+            await buildDbFromFolders([strategy], database, [mainPaths]);
+
+            const game = await database.game.findOne({});
+
+            const expectedGame = {
+                engine: undefined,
+                forceSourceUpdate: false,
+                id: 'dir',
+                source: 'dummy',
+                additionalImages: ['additionalIm1']
+            };
+            Object.assign(expectedGame, gameDetails);
+
+            expect(game).to.deep.include(expectedGame);
+            sinon.assert.calledOnce(fetchGameData);
+            sinon.assert.calledOnce(getAdditionalImages);
             sinon.assert.calledOnce(recognizeGameType);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
