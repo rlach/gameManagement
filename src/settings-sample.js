@@ -15,29 +15,29 @@ module.exports = {
         shouldAsk: true,
         maxResultsToSuggest: 6,
         minimumScoreToAsk: 2,
-        minimumScoreToAccept: 6
+        minimumScoreToAccept: 6,
     },
     exeSearchDepth: 3,
     advanced: {
-      scores: {
-          resultExists: 1,
-          onlyOneResultExists: 1,
-          extractedDlsiteCode: 3,
-          matchForExtractedDlsiteCode: 3,
-          exactMatch: 3,
-          noSpaceExactMatch: 3,
-          noSpaceSimilarMatch: 2,
-          noSpaceSimilarMatchSecondSide: 2,
-          similarMatch: 2,
-          similarMatchSecondSide: 2
-      }
+        scores: {
+            resultExists: 1,
+            onlyOneResultExists: 1,
+            extractedDlsiteCode: 3,
+            matchForExtractedDlsiteCode: 3,
+            exactMatch: 3,
+            noSpaceExactMatch: 3,
+            noSpaceSimilarMatch: 2,
+            noSpaceSimilarMatchSecondSide: 2,
+            similarMatch: 2,
+            similarMatchSecondSide: 2,
+        },
     },
     paths: {
         backup: './sample/launchbox',
         targetSortFolder: './sample/games/dlsite',
         launchbox: './sample/launchbox',
         unsortedGames: './sample/games/unsorted',
-        main: ['./sample/games/dlsite', './sample/games/getchu']
+        main: ['./sample/games/dlsite', './sample/games/getchu'],
     },
     executableExtensions: ['.exe', '.swf'],
     bannedFilenames: [
@@ -60,6 +60,7 @@ module.exports = {
         '結合ナビ',
         'acmp.exe',
         'courier.exe',
-        'courier_i.exe'
-    ]
+        'courier_i.exe',
+        'opensave',
+    ],
 };

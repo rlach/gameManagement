@@ -2,7 +2,6 @@ const inquirer = require('inquirer');
 const log = require('../logger');
 
 async function setForceUpdate(database) {
-    await connect();
     let answers = {};
     Object.assign(
         answers,
@@ -13,8 +12,8 @@ async function setForceUpdate(database) {
             choices: [
                 { name: 'source pages', value: 'source' },
                 { name: 'executable files', value: 'executable' },
-                { name: 'additional images', value: 'additionalImages' }
-            ]
+                { name: 'additional images', value: 'additionalImages' },
+            ],
         })
     );
 
@@ -36,16 +35,20 @@ async function setForceUpdate(database) {
                 { name: 'dmm', value: 'dmm' },
                 new inquirer.Separator('= By game ID ='),
                 { name: 'starting with VJ', value: 'VJ' },
-                { name: 'starting with RJ', value: 'RJ' }
-            ]
+                { name: 'starting with RJ', value: 'RJ' },
+            ],
         })
     );
 
     log.debug('answers', answers);
 
     let searchQuery = {};
-    const sources = answers.filters.filter(element => ['dlsite', 'getchu', 'dmm'].includes(element));
-    const idFilters = answers.filters.filter(element => ['VJ', 'RJ'].includes(element));
+    const sources = answers.filters.filter(element =>
+        ['dlsite', 'getchu', 'dmm'].includes(element)
+    );
+    const idFilters = answers.filters.filter(element =>
+        ['VJ', 'RJ'].includes(element)
+    );
     if (idFilters.length > 0 || sources.length > 0) {
         searchQuery['$or'] = [];
     }
@@ -65,10 +68,14 @@ async function setForceUpdate(database) {
     const updateQuery = {
         forceSourceUpdate: answers.fields.includes('source'),
         forceExecutableUpdate: answers.fields.includes('executable'),
-        forceAdditionalImagesUpdate: answers.fields.includes('additionalImages')
+        forceAdditionalImagesUpdate: answers.fields.includes(
+            'additionalImages'
+        ),
     };
 
-    const result = await database.game.updateMany(searchQuery, { $set: updateQuery });
+    const result = await database.game.updateMany(searchQuery, {
+        $set: updateQuery,
+    });
     log.info('Result: ', result);
 }
 

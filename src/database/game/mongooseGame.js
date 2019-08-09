@@ -23,6 +23,7 @@ function getGame(mongoose) {
         dateModified: String,
         releaseDate: String,
         lastPlayedDate: String,
+        playCount: Number,
         favorite: Boolean,
         rating: Number,
         stars: Number,
@@ -45,7 +46,7 @@ function getGame(mongoose) {
         redownloadAdditionalImages: Boolean,
         redownloadMainImage: Boolean,
         sourceMissingEn: Boolean,
-        sourceMissingJp: Boolean
+        sourceMissingJp: Boolean,
     });
     gameSchema.index({ id: 1 });
 
@@ -61,7 +62,7 @@ function getGame(mongoose) {
             let game = await this.findOne({ id });
             if (!game) {
                 game = await this.createGame({
-                    id
+                    id,
                 });
             }
             return game;

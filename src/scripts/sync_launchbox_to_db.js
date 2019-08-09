@@ -9,12 +9,22 @@ const mapper = require('../mapper');
 async function syncLaunchboxToDb(database) {
     const launchboxPlatform = readLaunchboxPlatformFile();
     if (launchboxPlatform) {
-        const progressBar = startProgressBar(launchboxPlatform.LaunchBox.Game.length);
+        const progressBar = startProgressBar(
+            launchboxPlatform.LaunchBox.Game.length
+        );
 
-        for (const [index, launchboxGame] of launchboxPlatform.LaunchBox.Game.entries()) {
-            const externalGameId = getExternalGameId(launchboxPlatform, launchboxGame);
+        for (const [
+            index,
+            launchboxGame,
+        ] of launchboxPlatform.LaunchBox.Game.entries()) {
+            const externalGameId = getExternalGameId(
+                launchboxPlatform,
+                launchboxGame
+            );
             if (externalGameId) {
-                const dbGame = await database.game.findOne({ id: externalGameId });
+                const dbGame = await database.game.findOne({
+                    id: externalGameId,
+                });
                 if (dbGame) {
                     await syncGame(launchboxGame, dbGame, database);
                 }
@@ -30,22 +40,31 @@ function getExternalGameId(launchboxPlatform, launchboxGame) {
     if (settings.externalIdField === 'CustomField') {
         const idAdditionalField = launchboxPlatform.LaunchBox.CustomField
             ? launchboxPlatform.LaunchBox.CustomField.find(
-                  f => f.Name._text === 'externalId' && f.GameID._text === launchboxGame.ID._text
+                  f =>
+                      f.Name._text === 'externalId' &&
+                      f.GameID._text === launchboxGame.ID._text
               )
             : undefined;
         if (!idAdditionalField) {
-            log.debug(`Additional field doesn't exist for ${launchboxGame.ID._text}`);
+            log.debug(
+                `Additional field doesn't exist for ${launchboxGame.ID._text}`
+            );
         }
         externalGameIdFieldValue = idAdditionalField.Value._text;
     } else {
-        externalGameIdFieldValue = launchboxGame[settings.externalIdField]._text;
+        externalGameIdFieldValue =
+            launchboxGame[settings.externalIdField]._text;
     }
     return externalGameIdFieldValue;
 }
 
 async function syncGame(launchboxGame, dbGame, database) {
     log.debug(`Syncing game ${dbGame.id}`);
-    if (settings.onlyUpdateNewer && isOlder(launchboxGame, dbGame)) {
+    if (
+        settings.onlyUpdateNewer &&
+        isOlder(launchboxGame.DateModified, dbGame.dateModified) &&
+        isOlder(launchboxGame.LastPlayedDate, dbGame.lastPlayedDate)
+    ) {
         log.debug('Skipping game due to outdated data in launchbox');
     } else {
         const result = mapper.reverseMap(launchboxGame);
@@ -62,9 +81,9 @@ async function syncGame(launchboxGame, dbGame, database) {
     }
 }
 
-function isOlder(launchboxGame, dbGame) {
-    return dbGame.dateModified
-        ? moment(launchboxGame.DateModified._text).isSameOrBefore(moment(dbGame.dateModified))
+function isOlder(launchboxDate, dbGameDate) {
+    return dbGameDate
+        ? moment(launchboxDate._text).isSameOrBefore(moment(dbGameDate))
         : false;
 }
 
