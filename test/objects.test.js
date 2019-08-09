@@ -1,6 +1,6 @@
 const objects = require('../src/objects');
 
-const expect = require('expect.js')
+const { expect } = require('chai');
 
 describe('objects.js', function() {
     describe('removeUndefined', function() {
@@ -28,10 +28,12 @@ describe('objects.js', function() {
                 d: false,
                 e: 0
             };
-            expect(objects.removeUndefined({
-                ...fullyDefinedObject,
-                g: undefined
-            })).to.eql(fullyDefinedObject);
+            expect(
+                objects.removeUndefined({
+                    ...fullyDefinedObject,
+                    g: undefined
+                })
+            ).to.eql(fullyDefinedObject);
         });
     });
 });

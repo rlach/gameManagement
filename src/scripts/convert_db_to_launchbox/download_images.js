@@ -4,9 +4,8 @@ const fs = require('fs');
 const settings = require('../../settings');
 const log = require('../../logger');
 const files = require('../../files');
-const databaseGame = require('../../database/game');
 
-async function downloadImages(game, launchboxId) {
+async function downloadImages(game, launchboxId, databaseGame) {
     let modified = false;
     const regexExtension = /\.\w{3,4}($|\?)/;
     let imageUrl = game.imageUrlEn ? game.imageUrlEn : game.imageUrlJp;

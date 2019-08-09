@@ -8,6 +8,18 @@ const fs = require('fs');
 
 describe('gameManagement', function() {
     let sandbox;
+    let settings;
+    before(async () => {
+        settings = {};
+        Object.assign(settings, settingsSample);
+        Object.assign(settings, {
+            database: {
+                database: 'nedb',
+                nedbFilename: ''
+            }
+        });
+    });
+
     beforeEach(async () => {
         sandbox = sinon.createSandbox();
     });
@@ -19,7 +31,7 @@ describe('gameManagement', function() {
     it('creates settings.json based on sample when it does NOT exist and returns', async () => {
         const existsSync = sandbox.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sandbox.stub(fs, 'writeFileSync');
-        await gameManagement();
+        await gameManagement(settings);
         sinon.assert.calledOnce(existsSync);
         sinon.assert.calledWith(writeFileSync, './settings.json', JSON.stringify(settingsSample, null, 4));
     });
@@ -31,44 +43,43 @@ describe('gameManagement', function() {
 
         it('calls getPossibleCodes when getCodes', async () => {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
-            await gameManagement('getCodes');
+            await gameManagement(settings, 'getCodes');
             sinon.assert.calledOnce(getPossibleCodes);
         });
 
         it('calls organizeDirectories when organizeDirectories', async () => {
             const organizeDirectories = sandbox.stub(scripts, 'organizeDirectories');
-            await gameManagement('organizeDirectories');
+            await gameManagement(settings, 'organizeDirectories');
             sinon.assert.calledOnce(organizeDirectories);
         });
 
-
         it('calls syncLaunchboxToDb when launchboxToDb', async () => {
             const syncLaunchboxToDb = sandbox.stub(scripts, 'syncLaunchboxToDb');
-            await gameManagement('launchboxToDb');
+            await gameManagement(settings, 'launchboxToDb');
             sinon.assert.calledOnce(syncLaunchboxToDb);
         });
 
         it('calls buildDbFromFolders when buildDb', async () => {
             const buildDbFromFolders = sandbox.stub(scripts, 'buildDbFromFolders');
-            await gameManagement('buildDb');
+            await gameManagement(settings, 'buildDb');
             sinon.assert.calledOnce(buildDbFromFolders);
         });
 
         it('calls convertDbToLaunchbox when dbToLaunchbox', async () => {
             const convertDbToLaunchbox = sandbox.stub(scripts, 'convertDbToLaunchbox');
-            await gameManagement('dbToLaunchbox');
+            await gameManagement(settings, 'dbToLaunchbox');
             sinon.assert.calledOnce(convertDbToLaunchbox);
         });
 
         it('calls findPossibleDuplicates when findDuplicates', async () => {
             const findPossibleDuplicates = sandbox.stub(scripts, 'findPossibleDuplicates');
-            await gameManagement('findDuplicates');
+            await gameManagement(settings, 'findDuplicates');
             sinon.assert.calledOnce(findPossibleDuplicates);
         });
 
         it('calls setForceUpdate when setForceUpdate', async () => {
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
-            await gameManagement('setForceUpdate');
+            await gameManagement(settings, 'setForceUpdate');
             sinon.assert.calledOnce(setForceUpdate);
         });
 
@@ -81,7 +92,7 @@ describe('gameManagement', function() {
 
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
 
-            await gameManagement('syncAll');
+            await gameManagement(settings, 'syncAll');
             sinon.assert.calledOnce(getPossibleCodes);
             sinon.assert.calledOnce(organizeDirectories);
             sinon.assert.calledOnce(syncLaunchboxToDb);
@@ -104,10 +115,10 @@ describe('gameManagement', function() {
             sandbox.stub(inquirer, 'prompt').resolves({
                 operation: 'getCodes'
             });
-            await gameManagement();
+            await gameManagement(settings);
 
             sinon.assert.calledOnce(getPossibleCodes);
             sinon.assert.notCalled(organizeDirectories);
         });
-    })
+    });
 });

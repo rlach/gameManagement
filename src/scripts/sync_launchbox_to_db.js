@@ -2,22 +2,19 @@ const progress = require('../progress');
 const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
-const { db, connect } = require('../database/database');
-const databaseGame = require('../database/game');
 const convert = require('xml-js');
 const settings = require('../settings');
 const mapper = require('../mapper');
 
-async function syncLaunchboxToDb() {
+async function syncLaunchboxToDb(database) {
     const launchboxPlatform = readLaunchboxPlatformFile();
     if (launchboxPlatform) {
         const progressBar = startProgressBar(launchboxPlatform.LaunchBox.Game.length);
-        await connect();
 
         for (const [index, launchboxGame] of launchboxPlatform.LaunchBox.Game.entries()) {
             const externalGameId = getExternalGameId(launchboxPlatform, launchboxGame);
             if (externalGameId) {
-                const dbGame = await databaseGame.findOne({ id: externalGameId });
+                const dbGame = await database.game.findOne({ id: externalGameId });
                 if (dbGame) {
                     await syncGame(launchboxGame, dbGame);
                 }
@@ -25,8 +22,6 @@ async function syncLaunchboxToDb() {
             progressBar.update(index + 1);
         }
         progressBar.stop();
-
-        await db.close();
     }
 }
 
@@ -58,7 +53,7 @@ async function syncGame(launchboxGame, dbGame) {
         Object.assign(dbGame, result);
 
         try {
-            await databaseGame.saveGame(dbGame);
+            await database.game.saveGame(dbGame);
             log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
         } catch (e) {
             log.debug('Game failed to be saved', e);

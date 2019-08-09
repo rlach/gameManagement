@@ -1,4 +1,3 @@
-const settings = require('../settings');
 const log = require('../logger');
 const mongoose = require('mongoose');
 const db = mongoose.connection;
@@ -9,9 +8,9 @@ db.once('open', function() {
 });
 mongoose.set('useCreateIndex', true);
 
-async function connect() {
+async function connect(mongoUri) {
     await mongoose.connect(
-        settings.mongoUri,
+        mongoUri,
         { useNewUrlParser: true }
     );
 }

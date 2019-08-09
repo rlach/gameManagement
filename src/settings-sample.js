@@ -6,8 +6,11 @@ module.exports = {
     preferredLanguage: 'en',
     preferredImageSource: 'en',
     onlyUpdateNewer: true,
-    database: 'nedb', //'nedb' or 'mongodb'
-    mongoUri: 'mongodb://localhost/test',
+    database: {
+        database: 'nedb', //'nedb' or 'mongodb'
+        nedbFilename: 'games.db',
+        mongoUri: 'mongodb://localhost/test',
+    },
     organizeDirectories: {
         shouldAsk: true,
         maxResultsToSuggest: 6,

@@ -1,6 +1,8 @@
 const gameManagement = require('./gameManagement');
 const { db } = require('./database/database');
 const vndb = require('./vndb');
+const settings = require('./settings');
+const log = require('./logger');
 
 async function main() {
     let operation;
@@ -13,7 +15,7 @@ async function main() {
         }
     });
 
-    await gameManagement(operation);
+    await gameManagement(settings, operation);
 }
 
 main()
@@ -21,6 +23,5 @@ main()
         log.error(`Failure in main process`, e);
     })
     .finally(async () => {
-        db.close();
         await vndb.disconnect();
     });

@@ -1,9 +1,7 @@
 const inquirer = require('inquirer');
 const log = require('../logger');
-const { connect } = require('../database/database');
-const databaseGame = require('../database/game');
 
-async function setForceUpdate() {
+async function setForceUpdate(database) {
     await connect();
     let answers = {};
     Object.assign(
@@ -45,8 +43,7 @@ async function setForceUpdate() {
 
     log.debug('answers', answers);
 
-    let searchQuery = {
-    };
+    let searchQuery = {};
     const sources = answers.filters.filter(element => ['dlsite', 'getchu', 'dmm'].includes(element));
     const idFilters = answers.filters.filter(element => ['VJ', 'RJ'].includes(element));
     if (idFilters.length > 0 || sources.length > 0) {
@@ -71,7 +68,7 @@ async function setForceUpdate() {
         forceAdditionalImagesUpdate: answers.fields.includes('additionalImages')
     };
 
-    const result = await databaseGame.updateMany(searchQuery, { $set: updateQuery });
+    const result = await database.game.updateMany(searchQuery, { $set: updateQuery });
     log.info('Result: ', result);
 }
 

@@ -79,4 +79,4 @@ function fulfillsAnyRule(rules, matcher) {
     }
 }
 
-module.exports = recognizeGameType;
+module.exports = { recognizeGameType };

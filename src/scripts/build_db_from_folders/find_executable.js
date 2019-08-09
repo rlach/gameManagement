@@ -1,5 +1,5 @@
 const path = require('path');
-const databaseGame = require('../../database/game');
+const databaseGame = require('../../database/database').game;
 const files = require('../../files');
 const log = require('../../logger');
 const moment = require('moment/moment');
@@ -76,4 +76,4 @@ async function saveFileAndDirectory(target, game) {
     }
 }
 
-module.exports = { updateExecutableAndDirectory, findExecutableFile };
+module.exports = { updateExecutableAndDirectory };

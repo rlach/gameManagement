@@ -1,7 +1,5 @@
-const databaseGame = require('../../database/game');
 const fs = require('fs');
 const log = require('../../logger');
-const { db, connect } = require('../../database/database');
 const settings = require('../../settings');
 const convert = require('xml-js');
 const UUID = require('uuid');
@@ -13,9 +11,8 @@ const progress = require('../../progress');
 const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 const operation = 'Converting database to launchbox';
 
-async function convertDbToLaunchbox() {
+async function convertDbToLaunchbox(database) {
     const progressBar = progress.getBar(operation);
-    await connect();
 
     let launchboxGames = [];
     let customFields = [];
@@ -42,7 +39,7 @@ async function convertDbToLaunchbox() {
         }
     }
 
-    const games = await databaseGame.Game.find({});
+    const games = await database.game.Game.find({});
 
     const convertedGames = [];
 
@@ -67,7 +64,7 @@ async function convertDbToLaunchbox() {
 
             if (settings.downloadImages) {
                 progress.updateName(progressBar, `${operation} [${game.id}] (downloading images)`);
-                await downloadImages(game, launchboxId);
+                await downloadImages(game, launchboxId, database.game);
                 progress.updateName(progressBar, `${operation} [${game.id}]`);
             }
 
@@ -125,7 +122,6 @@ async function convertDbToLaunchbox() {
     }
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
-    db.close();
     progress.updateName(progressBar, operation);
     progressBar.stop();
 }
