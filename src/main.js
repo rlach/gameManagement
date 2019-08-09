@@ -5,6 +5,8 @@ const settings = require('./settings');
 const log = require('./logger');
 
 async function main() {
+    await vndb.connect();
+
     let operation;
     process.argv.forEach(function(val) {
         const command = val.split('=');

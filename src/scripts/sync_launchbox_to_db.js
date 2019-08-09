@@ -16,7 +16,7 @@ async function syncLaunchboxToDb(database) {
             if (externalGameId) {
                 const dbGame = await database.game.findOne({ id: externalGameId });
                 if (dbGame) {
-                    await syncGame(launchboxGame, dbGame);
+                    await syncGame(launchboxGame, dbGame, database);
                 }
             }
             progressBar.update(index + 1);
@@ -43,7 +43,7 @@ function getExternalGameId(launchboxPlatform, launchboxGame) {
     return externalGameIdFieldValue;
 }
 
-async function syncGame(launchboxGame, dbGame) {
+async function syncGame(launchboxGame, dbGame, database) {
     log.debug(`Syncing game ${dbGame.id}`);
     if (settings.onlyUpdateNewer && isOlder(launchboxGame, dbGame)) {
         log.debug('Skipping game due to outdated data in launchbox');
