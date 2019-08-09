@@ -46,7 +46,7 @@ async function getFilesRelatedToEngine(versionPath) {
             const matcher = f.matcher.toLowerCase();
             return fulfillsAnyRule(allRules, matcher);
         },
-        depth: Math.max(settings.exeSearchDepth, 1)
+        depth: Math.max(settings.exeSearchDepth, 1),
     });
 }
 

@@ -15,9 +15,11 @@ describe('objects.js', function() {
                 c: true,
                 d: false,
                 e: 0,
-                f: null
+                f: null,
             };
-            expect(objects.removeUndefined(fullyDefinedObject)).to.eql(fullyDefinedObject);
+            expect(objects.removeUndefined(fullyDefinedObject)).to.eql(
+                fullyDefinedObject
+            );
         });
 
         it('should return only defined fields when object has also undefined ones', function() {
@@ -26,12 +28,12 @@ describe('objects.js', function() {
                 b: '1',
                 c: true,
                 d: false,
-                e: 0
+                e: 0,
             };
             expect(
                 objects.removeUndefined({
                     ...fullyDefinedObject,
-                    g: undefined
+                    g: undefined,
                 })
             ).to.eql(fullyDefinedObject);
         });

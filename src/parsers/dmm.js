@@ -35,7 +35,10 @@ class DmmStrategy extends SiteStrategy {
     }
 
     async findGame(name) {
-        const results = await Promise.all([getDoujinResults(name), getProResults(name)]);
+        const results = await Promise.all([
+            getDoujinResults(name),
+            getProResults(name),
+        ]);
 
         return [...results[0], ...results[1]];
     }
@@ -61,7 +64,7 @@ async function getDoujinResults(name) {
 
     const reply = await request.get({
         method: 'GET',
-        uri: uri
+        uri: uri,
     });
 
     const query = parseSite(reply);
@@ -72,7 +75,7 @@ async function getDoujinResults(name) {
                 .match(DMM_ID_REGEX)[0],
             work_name: query(e)
                 .text()
-                .trim()
+                .trim(),
         }))
         .get();
 }
@@ -85,7 +88,7 @@ async function getProResults(name) {
 
     const reply = await request.get({
         method: 'GET',
-        uri: uri
+        uri: uri,
     });
 
     const query = parseSite(reply);
@@ -102,7 +105,7 @@ async function getProResults(name) {
             work_name: query(e)
                 .find('img')
                 .attr('alt')
-                .trim()
+                .trim(),
         }))
         .get();
 }
@@ -127,18 +130,18 @@ async function getSite(id, sourceMissing) {
     try {
         let reply = await request.get({
             method: 'GET',
-            uri: uri
+            uri: uri,
         });
         return method(parseSite(reply));
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
-            message: e.message
+            message: e.message,
         });
         if (e.statusCode === 404) {
             return {
-                sourceMissingJp: true
+                sourceMissingJp: true,
             };
         } else {
             return undefined;
@@ -164,12 +167,17 @@ function getGameMetadata(query) {
         releaseDate: informationList['配信開始日']
             ? moment(informationList['配信開始日'], 'YYYY-MM-DD HH:mm').format()
             : undefined,
-        series: informationList['シリーズ'] === '----' ? undefined : informationList['シリーズ'],
-        tagsJp: informationList['ゲームジャンル'] ? [informationList['ゲームジャンル']] : undefined,
+        series:
+            informationList['シリーズ'] === '----'
+                ? undefined
+                : informationList['シリーズ'],
+        tagsJp: informationList['ゲームジャンル']
+            ? [informationList['ゲームジャンル']]
+            : undefined,
         makerJp: getMaker(query),
         video: getVideo(query),
         communityStars: getCommunityStars(query),
-        communityStarVotes: getCommunityVotes(query)
+        communityStarVotes: getCommunityVotes(query),
     };
 }
 
@@ -197,7 +205,9 @@ function getMonoGameMetadata(query) {
         descriptionJp: query('div.mg-b20.lh4 p.mg-b20')
             .text()
             .trim(),
-        releaseDate: releaseDateText ? moment(releaseDateText, 'YYYY-MM-DD').format() : undefined,
+        releaseDate: releaseDateText
+            ? moment(releaseDateText, 'YYYY-MM-DD').format()
+            : undefined,
         series: seriesText === '----' ? undefined : seriesText,
         tagsJp: query('.side-menu')
             .filter((i, e) =>
@@ -219,7 +229,7 @@ function getMonoGameMetadata(query) {
             .text()
             .trim(),
         communityStars: getCommunityStars(query),
-        communityStarVotes: getCommunityVotes(query)
+        communityStarVotes: getCommunityVotes(query),
     };
 }
 
@@ -255,8 +265,13 @@ function getProGameMetadata(query) {
         releaseDate: softwareDetail['配信開始日']
             ? moment(softwareDetail['配信開始日'], 'YYYY-MM-DD').format()
             : undefined,
-        series: softwareDetail['シリーズ'] === '----' ? undefined : softwareDetail['シリーズ'],
-        tagsJp: softwareDetail['ゲームジャンル'] ? [softwareDetail['ゲームジャンル']] : undefined,
+        series:
+            softwareDetail['シリーズ'] === '----'
+                ? undefined
+                : softwareDetail['シリーズ'],
+        tagsJp: softwareDetail['ゲームジャンル']
+            ? [softwareDetail['ゲームジャンル']]
+            : undefined,
         makerJp: query('.area-bskt a')
             .filter((i, e) =>
                 query(e)
@@ -266,7 +281,7 @@ function getProGameMetadata(query) {
             .text()
             .trim(),
         communityStars: getCommunityStars(query),
-        communityStarVotes: getCommunityVotes(query)
+        communityStarVotes: getCommunityVotes(query),
     };
 }
 

@@ -13,20 +13,20 @@ describe('organizeDirectories', function() {
         settings = {
             paths: {
                 targetSortFolder: './target',
-                unsortedGames: './mess'
+                unsortedGames: './mess',
             },
             organizeDirectories: {
                 shouldAsk: true,
                 minimumScoreToAccept: 1,
-                minimumScoreToAsk: 0
-            }
+                minimumScoreToAsk: 0,
+            },
         };
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
             start: sinon.spy(),
             update: progressBarUpdate,
-            stop: sinon.spy()
+            stop: sinon.spy(),
         });
     });
 
@@ -52,13 +52,13 @@ describe('organizeDirectories', function() {
     it('Skips directories where foundFiles.txt was marked with noMatch = true', async function() {
         const strategy = {
             name: 'strategyName',
-            scoreCodes: sinon.stub()
+            scoreCodes: sinon.stub(),
         };
 
         sinon.stub(fs, 'readdirSync').returns(['dir']);
         const readFileSync = sinon.stub(fs, 'readFileSync').returns(
             JSON.stringify({
-                noMatch: true
+                noMatch: true,
             })
         );
         sinon.stub(fs, 'existsSync').returns(true);
@@ -71,11 +71,13 @@ describe('organizeDirectories', function() {
     it('Skips directories where foundFiles.txt was not a valid json', async function() {
         const strategy = {
             name: 'strategyName',
-            scoreCodes: sinon.stub()
+            scoreCodes: sinon.stub(),
         };
 
         sinon.stub(fs, 'readdirSync').returns(['dir']);
-        const readFileSync = sinon.stub(fs, 'readFileSync').returns('{noMatch: true}');
+        const readFileSync = sinon
+            .stub(fs, 'readFileSync')
+            .returns('{noMatch: true}');
         sinon.stub(fs, 'existsSync').returns(true);
         await organizeDirectories([strategy], settings);
         sinon.assert.calledOnce(progressBarUpdate);
@@ -86,11 +88,13 @@ describe('organizeDirectories', function() {
     it('Runs scoring strategy on directories where foundFiles.txt exists and is not marked as noMatch', async function() {
         const strategy = {
             name: 'strategyName',
-            scoreCodes: sinon.stub().returns([])
+            scoreCodes: sinon.stub().returns([]),
         };
 
         sinon.stub(fs, 'readdirSync').returns(['dir']);
-        const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+        const readFileSync = sinon
+            .stub(fs, 'readFileSync')
+            .returns(JSON.stringify({}));
         sinon.stub(fs, 'existsSync').returns(true);
         const confirmResultsStub = sinon.stub(results, 'confirmResults');
 
@@ -109,17 +113,21 @@ describe('organizeDirectories', function() {
                 scoreCodes: sinon.stub().returns([
                     {
                         code: 'code',
-                        score: 1
-                    }
-                ])
+                        score: 1,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').throws({
-                code: 'RESULT_REJECTED'
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .throws({
+                    code: 'RESULT_REJECTED',
+                });
             const renameSync = sinon.stub(fs, 'renameSync');
 
             await organizeDirectories([strategy], settings);
@@ -128,7 +136,11 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
-            sinon.assert.calledWith(renameSync, './mess/dir', './target/code/dir');
+            sinon.assert.calledWith(
+                renameSync,
+                './mess/dir',
+                './target/code/dir'
+            );
         });
 
         it('moves directory to new one based on result code and creates new directory if needed', async function() {
@@ -137,22 +149,26 @@ describe('organizeDirectories', function() {
                 scoreCodes: sinon.stub().returns([
                     {
                         code: 'code',
-                        score: 1
-                    }
-                ])
+                        score: 1,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon
                 .stub(fs, 'existsSync')
                 .onFirstCall()
                 .returns(true)
                 .onSecondCall()
                 .returns(false);
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').throws({
-                code: 'RESULT_REJECTED'
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .throws({
+                    code: 'RESULT_REJECTED',
+                });
             const renameSync = sinon.stub(fs, 'renameSync');
             const mkdirSync = sinon.stub(fs, 'mkdirSync');
 
@@ -163,7 +179,11 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
             sinon.assert.calledWith(mkdirSync, './target/code');
-            sinon.assert.calledWith(renameSync, './mess/dir', './target/code/dir');
+            sinon.assert.calledWith(
+                renameSync,
+                './mess/dir',
+                './target/code/dir'
+            );
         });
 
         it('takes best result from results array', async function() {
@@ -172,29 +192,33 @@ describe('organizeDirectories', function() {
                 scoreCodes: sinon.stub().returns([
                     {
                         code: 'almostWorst',
-                        score: 2
+                        score: 2,
                     },
                     {
                         code: 'almostBest',
-                        score: 3
+                        score: 3,
                     },
                     {
                         code: 'best',
-                        score: 4
+                        score: 4,
                     },
                     {
                         code: 'worst',
-                        score: 1
-                    }
-                ])
+                        score: 1,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').throws({
-                code: 'RESULT_REJECTED'
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .throws({
+                    code: 'RESULT_REJECTED',
+                });
             const renameSync = sinon.stub(fs, 'renameSync');
 
             await organizeDirectories([strategy], settings);
@@ -203,7 +227,11 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
-            sinon.assert.calledWith(renameSync, './mess/dir', './target/best/dir');
+            sinon.assert.calledWith(
+                renameSync,
+                './mess/dir',
+                './target/best/dir'
+            );
         });
     });
 
@@ -214,13 +242,15 @@ describe('organizeDirectories', function() {
                 name: 'strategyName',
                 scoreCodes: sinon.stub().returns([
                     {
-                        score: 0
-                    }
-                ])
+                        score: 0,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
             const confirmResultsStub = sinon.stub(results, 'confirmResults');
             const renameSync = sinon.stub(fs, 'renameSync');
@@ -239,17 +269,21 @@ describe('organizeDirectories', function() {
                 name: 'strategyName',
                 scoreCodes: sinon.stub().returns([
                     {
-                        score: 0
-                    }
-                ])
+                        score: 0,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').throws({
-                code: 'RESULT_REJECTED'
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .throws({
+                    code: 'RESULT_REJECTED',
+                });
             const writeFileSync = sinon.stub(fs, 'writeFileSync');
 
             await organizeDirectories([strategy], settings);
@@ -271,29 +305,33 @@ describe('organizeDirectories', function() {
                 scoreCodes: sinon.stub().returns([
                     {
                         code: 'a',
-                        score: 0
+                        score: 0,
                     },
                     {
                         code: 'b',
-                        score: 0
+                        score: 0,
                     },
                     {
                         code: 'c',
-                        score: -1
+                        score: -1,
                     },
                     {
                         code: 'd',
-                        score: -2
-                    }
-                ])
+                        score: -2,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').throws({
-                code: 'RESULT_REJECTED'
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .throws({
+                    code: 'RESULT_REJECTED',
+                });
             const writeFileSync = sinon.stub(fs, 'writeFileSync');
 
             await organizeDirectories([strategy], settings);
@@ -301,7 +339,10 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
-            sinon.assert.calledWith(confirmResultsStub, [{ code: 'a', score: 0 }, { code: 'b', score: 0 }]);
+            sinon.assert.calledWith(confirmResultsStub, [
+                { code: 'a', score: 0 },
+                { code: 'b', score: 0 },
+            ]);
             sinon.assert.calledWith(
                 writeFileSync,
                 './mess/dir/!foundCodes.txt',
@@ -314,27 +355,35 @@ describe('organizeDirectories', function() {
                 name: 'strategyName',
                 scoreCodes: sinon.stub().returns([
                     {
-                        score: 0
-                    }
-                ])
+                        score: 0,
+                    },
+                ]),
             };
 
             sinon.stub(fs, 'readdirSync').returns(['dir']);
-            const readFileSync = sinon.stub(fs, 'readFileSync').returns(JSON.stringify({}));
+            const readFileSync = sinon
+                .stub(fs, 'readFileSync')
+                .returns(JSON.stringify({}));
             sinon.stub(fs, 'existsSync').returns(true);
             const renameSync = sinon.stub(fs, 'renameSync');
-            const confirmResultsStub = sinon.stub(results, 'confirmResults').resolves({
-                score: 1,
-                code: 'code',
-                accepted: true
-            });
+            const confirmResultsStub = sinon
+                .stub(results, 'confirmResults')
+                .resolves({
+                    score: 1,
+                    code: 'code',
+                    accepted: true,
+                });
             await organizeDirectories([strategy], settings);
 
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.calledOnce(confirmResultsStub);
-            sinon.assert.calledWith(renameSync, './mess/dir', './target/code/dir');
+            sinon.assert.calledWith(
+                renameSync,
+                './mess/dir',
+                './target/code/dir'
+            );
         });
     });
 });

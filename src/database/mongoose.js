@@ -9,14 +9,11 @@ db.once('open', function() {
 mongoose.set('useCreateIndex', true);
 
 async function connect(mongoUri) {
-    await mongoose.connect(
-        mongoUri,
-        { useNewUrlParser: true }
-    );
+    await mongoose.connect(mongoUri, { useNewUrlParser: true });
 }
 
 module.exports = {
     mongoose: mongoose,
     connect,
-    db: db
+    db: db,
 };

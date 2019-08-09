@@ -11,7 +11,11 @@ class Recognizer {
 function isBruns(gameRelatedFiles) {
     return (
         gameRelatedFiles.some(f => f.name.toLowerCase() === 'ams.cfg') &&
-        gameRelatedFiles.some(f => f.name.toLowerCase().endsWith('.bso') || f.name.toLowerCase().startsWith('bruns'))
+        gameRelatedFiles.some(
+            f =>
+                f.name.toLowerCase().endsWith('.bso') ||
+                f.name.toLowerCase().startsWith('bruns')
+        )
     );
 }
 
@@ -19,7 +23,9 @@ function isRPGVXAce(gameRelatedFiles) {
     if (gameRelatedFiles.find(f => f.name.toLowerCase().endsWith('rgss3a'))) {
         return true;
     }
-    const gameIni = gameRelatedFiles.find(f => f.name.toLowerCase() === 'game.ini');
+    const gameIni = gameRelatedFiles.find(
+        f => f.name.toLowerCase() === 'game.ini'
+    );
     if (gameIni) {
         const gameIniText = fs
             .readFileSync(gameIni.file)
@@ -40,13 +46,18 @@ function isRPGVxOrXp(gameRelatedFiles) {
                 f.name.toLowerCase().endsWith('rgss2a')
         )
     ) {
-        const gameIni = gameRelatedFiles.find(f => f.name.toLowerCase().endsWith('game.ini'));
+        const gameIni = gameRelatedFiles.find(f =>
+            f.name.toLowerCase().endsWith('game.ini')
+        );
         if (gameIni) {
             const gameIniText = fs
                 .readFileSync(gameIni.file)
                 .toString()
                 .toLowerCase();
-            if (gameIniText.includes('rpgvx') || gameIniText.includes('rvdata')) {
+            if (
+                gameIniText.includes('rpgvx') ||
+                gameIniText.includes('rvdata')
+            ) {
                 return 'rpgMakerVX';
             } else if (gameIniText.includes('rxdata')) {
                 return 'rpgMakerXP';
@@ -64,143 +75,154 @@ function isRPGXp(gameRelatedFiles) {
 }
 
 function isRPGMV(gameRelatedFiles) {
-    const packageJson = gameRelatedFiles.find(f => f.name.toLowerCase() === 'package.json');
+    const packageJson = gameRelatedFiles.find(
+        f => f.name.toLowerCase() === 'package.json'
+    );
     if (packageJson) {
         const file = fs.readFileSync(packageJson.file);
         if (file.includes('RPGMV')) {
             return true;
         } else if (
-            gameRelatedFiles.find(f => f.name.toLowerCase() === 'resources.pak') ||
+            gameRelatedFiles.find(
+                f => f.name.toLowerCase() === 'resources.pak'
+            ) ||
             gameRelatedFiles.find(f => f.name.toLowerCase() === 'game.exe')
         ) {
             return true;
         }
-    } else if (gameRelatedFiles.find(f => f.name.toLowerCase() === 'game_boxed.exe')) {
+    } else if (
+        gameRelatedFiles.find(f => f.name.toLowerCase() === 'game_boxed.exe')
+    ) {
         return true;
     }
 }
 
 const recognizers = [
     new Recognizer('YaneAkabeiSoft2Try', {
-        equals: ['yanesdk.dll']
+        equals: ['yanesdk.dll'],
     }),
     new Recognizer('Anex86', {
-        equals: ['anex86.exe']
+        equals: ['anex86.exe'],
     }),
     new Recognizer('AOS', {
-        endsWith: ['.aos']
+        endsWith: ['.aos'],
     }),
     new Recognizer('Apricot', {
-        startsWith: ['arc.a']
+        startsWith: ['arc.a'],
     }),
     new Recognizer('ArtemisEngine', {
-        endsWith: ['.pfs']
+        endsWith: ['.pfs'],
     }),
     new Recognizer('AtelierKaguya', {
-        equals: ['message.dat']
+        equals: ['message.dat'],
     }),
     new Recognizer('BGI', {
-        startsWith: ['bgi.']
+        startsWith: ['bgi.'],
     }),
     new Recognizer(
         'bruns',
         {
             startsWith: ['bruns'],
             equals: ['ams.cfg'],
-            endsWith: ['.bso']
+            endsWith: ['.bso'],
         },
         isBruns
     ),
     new Recognizer('C4', {
-        equals: ['c4.exe', 'xex.exe']
+        equals: ['c4.exe', 'xex.exe'],
     }),
     new Recognizer('Caramel', {
-        endsWith: ['.bin']
+        endsWith: ['.bin'],
     }),
     new Recognizer('SystemC@CandySoft', {
-        endsWith: ['.fpk']
+        endsWith: ['.fpk'],
     }),
     new Recognizer('CatSystem2', {
-        endsWith: ['.int']
+        endsWith: ['.int'],
     }),
     new Recognizer('CMVS', {
         equals: ['cmvs32.exe', 'cmvs64.exe'],
-        endsWith: ['.cpz']
+        endsWith: ['.cpz'],
     }),
     new Recognizer('Cotopha', {
-        endsWith: ['.noa']
+        endsWith: ['.noa'],
     }),
     new Recognizer('Debonosu', {
-        equals: ['bmp.bak', 'dsetup.dll']
+        equals: ['bmp.bak', 'dsetup.dll'],
     }),
     new Recognizer('EAGLS', {
-        equals: ['eagles.dll']
+        equals: ['eagles.dll'],
     }),
     new Recognizer('EmonEngine', {
-        equals: ['emecfg.ecf']
+        equals: ['emecfg.ecf'],
     }),
     new Recognizer('Eushully', {
-        equals: ['agerc.dll']
+        equals: ['agerc.dll'],
     }),
     new Recognizer('Gsen18', {
-        endsWith: ['.szs']
+        endsWith: ['.szs'],
     }),
     new Recognizer('GXP', {
-        endsWith: ['.gxp']
+        endsWith: ['.gxp'],
     }),
     new Recognizer('KiriKiri', {
-        equals: ['data.xp3']
+        equals: ['data.xp3'],
     }),
     new Recognizer('Live', {
-        equals: ['live.dll']
+        equals: ['live.dll'],
     }),
     new Recognizer('Malie@light', {
-        equals: ['malie.ini']
+        equals: ['malie.ini'],
     }),
     new Recognizer('MarineHeart', {
-        equals: ['saisys.exe']
+        equals: ['saisys.exe'],
     }),
     new Recognizer('MBL', {
-        endsWith: ['.mbl']
+        endsWith: ['.mbl'],
     }),
     new Recognizer('MED', {
-        endsWith: ['.med']
+        endsWith: ['.med'],
     }),
     new Recognizer('NeXAS', {
-        equals: ['thumbnail.pac']
+        equals: ['thumbnail.pac'],
     }),
     new Recognizer('NEXTON', {
-        equals: ['ainfo.db']
+        equals: ['ainfo.db'],
     }),
     new Recognizer('NitroPlus', {
-        endsWith: ['.npa']
+        endsWith: ['.npa'],
     }),
     new Recognizer('NSCR2', {
-        endsWith: ['.ns2']
+        endsWith: ['.ns2'],
     }),
     new Recognizer('Pensil', {
-        equals: ['psetup.exe']
+        equals: ['psetup.exe'],
     }),
     new Recognizer('Rai7puk', {
-        equals: ['rai7.exe']
+        equals: ['rai7.exe'],
     }),
     new Recognizer('Rejet', {
-        equals: ['gd.dat', 'pf.dat', 'sd.dat']
+        equals: ['gd.dat', 'pf.dat', 'sd.dat'],
     }),
     new Recognizer('Retouch', {
-        equals: ['resident.dll']
+        equals: ['resident.dll'],
     }),
     new Recognizer(
         'rpgMakerMv',
         {
-            equals: ['package.json', 'game_boxed.exe', 'game.exe', 'resources.pak']
+            equals: [
+                'package.json',
+                'game_boxed.exe',
+                'game.exe',
+                'resources.pak',
+            ],
         },
         isRPGMV
     ),
     new Recognizer(
         'rpgMakerAceVX',
         {
-            endsWith: ['rgss3a']
+            endsWith: ['rgss3a'],
         },
         isRPGVXAce
     ),
@@ -208,7 +230,7 @@ const recognizers = [
         'rpgMakerVX',
         {
             endsWith: ['rgssad', 'rgss2a'],
-            equals: ['game.ini']
+            equals: ['game.ini'],
         },
         isRPGVx
     ),
@@ -216,89 +238,89 @@ const recognizers = [
         'rpgMakerXP',
         {
             endsWith: ['rgssad', 'rgss2a'],
-            equals: ['game.ini']
+            equals: ['game.ini'],
         },
         isRPGXp
     ),
     new Recognizer('rUGP', {
-        equals: ['rugp.exe']
+        equals: ['rugp.exe'],
     }),
     new Recognizer('RunrunEngine', {
-        equals: ['rrecfg.rcf']
+        equals: ['rrecfg.rcf'],
     }),
     new Recognizer('ShinaRio', {
-        equals: ['rio.ini']
+        equals: ['rio.ini'],
     }),
     new Recognizer('sigulus', {
         startsWith: ['sigulus'],
-        equals: ['gameexe.dat', 'scene.pck']
+        equals: ['gameexe.dat', 'scene.pck'],
     }),
     new Recognizer('sol-fa-soft', {
-        endsWith: ['.iar', '.sec5']
+        endsWith: ['.iar', '.sec5'],
     }),
     new Recognizer('elf', {
-        equals: ['silky.exe']
+        equals: ['silky.exe'],
     }),
     new Recognizer('System43@AliceSoft', {
-        equals: ['alicestart.ini']
+        equals: ['alicestart.ini'],
     }),
     new Recognizer('Tanuki', {
-        endsWith: ['.tak']
+        endsWith: ['.tak'],
     }),
     new Recognizer('Taskforce2', {
-        equals: ['taskforce2.exe']
+        equals: ['taskforce2.exe'],
     }),
     new Recognizer('Tenco', {
-        equals: ['check.mdx']
+        equals: ['check.mdx'],
     }),
     new Recognizer('Triangle', {
-        equals: ['execle.exe']
+        equals: ['execle.exe'],
     }),
     new Recognizer('unity', {
-        equals: ['mono.dll']
+        equals: ['mono.dll'],
     }),
     new Recognizer('YukaSystem2', {
-        endsWith: ['.ykc']
+        endsWith: ['.ykc'],
     }),
     new Recognizer('YU-RIS', {
-        endsWith: ['.ypf']
+        endsWith: ['.ypf'],
     }),
     new Recognizer('WillPlus', {
-        equals: ['rio.arc']
+        equals: ['rio.arc'],
     }),
     new Recognizer('wolf', {
-        startsWith: ['guruguru']
+        startsWith: ['guruguru'],
     }),
     new Recognizer('IroneGameSystem', {
-        equals: ['igs_sample.exe']
+        equals: ['igs_sample.exe'],
     }),
     new Recognizer('Lucifen@Navel', {
-        endsWith: ['.lpk']
+        endsWith: ['.lpk'],
     }),
     new Recognizer('Ryokucha', {
-        equals: ['_checksum.exe']
+        equals: ['_checksum.exe'],
     }),
     new Recognizer('RealLive', {
-        startsWith: ['reallive']
+        startsWith: ['reallive'],
     }),
     new Recognizer('SoftHouse', {
-        endsWith: ['.vfs']
+        endsWith: ['.vfs'],
     }),
     new Recognizer('Stuff', {
-        endsWith: ['.mpk']
+        endsWith: ['.mpk'],
     }),
     new Recognizer('TinkerBell', {
-        equals: ['arc00.dat']
+        equals: ['arc00.dat'],
     }),
     new Recognizer('WAFFLE', {
-        equals: ['cg.pak']
-    })
+        equals: ['cg.pak'],
+    }),
 ];
 
 const allRules = {
     startsWith: [],
     equals: [],
-    endsWith: []
+    endsWith: [],
 };
 recognizers.forEach(r => {
     if (r.rules.startsWith) {

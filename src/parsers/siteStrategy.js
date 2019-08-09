@@ -32,7 +32,12 @@ class SiteStrategy {
 
         // Points for existing
         codes.foundCodes.forEach(code => {
-            this.addToCodeScore(results, settings.advanced.scores.resultExists, code.workno, code.work_name);
+            this.addToCodeScore(
+                results,
+                settings.advanced.scores.resultExists,
+                code.workno,
+                code.work_name
+            );
         });
 
         // Points for being the only result
@@ -45,7 +50,9 @@ class SiteStrategy {
             );
         }
 
-        const strippedOriginal = files.removeTagsAndMetadata(originalFilename).toLowerCase();
+        const strippedOriginal = files
+            .removeTagsAndMetadata(originalFilename)
+            .toLowerCase();
         const noSpacesOriginal = strippedOriginal.replace(/ /gi, '');
 
         codes.foundCodes.forEach(code => {
@@ -54,12 +61,22 @@ class SiteStrategy {
 
             // Points for exact match
             if (lowerCaseFoundName === strippedOriginal) {
-                this.addToCodeScore(results, settings.advanced.scores.exactMatch, code.workno, code.work_name);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.exactMatch,
+                    code.workno,
+                    code.work_name
+                );
             }
 
             // Points for code name including original name
             if (lowerCaseFoundName.includes(strippedOriginal)) {
-                this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.similarMatch,
+                    code.workno,
+                    code.work_name
+                );
             }
 
             // Points for original name including code name
@@ -74,17 +91,32 @@ class SiteStrategy {
 
             // Points for exact match without spaces
             if (noSpacesFoundName === noSpacesOriginal) {
-                this.addToCodeScore(results, settings.advanced.scores.noSpaceExactMatch, code.workno, code.work_name);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.noSpaceExactMatch,
+                    code.workno,
+                    code.work_name
+                );
             }
 
             // Points for no space code name including no space original name
             if (noSpacesFoundName.includes(noSpacesOriginal)) {
-                this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.similarMatch,
+                    code.workno,
+                    code.work_name
+                );
             }
 
             // Points for no space original name including no space code name
             if (noSpacesOriginal.includes(noSpacesFoundName)) {
-                this.addToCodeScore(results, settings.advanced.scores.similarMatch, code.workno, code.work_name);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.similarMatch,
+                    code.workno,
+                    code.work_name
+                );
             }
         });
 
@@ -108,7 +140,7 @@ class SiteStrategy {
                 code,
                 score,
                 name,
-                strategy: this.name
+                strategy: this.name,
             });
         }
     }

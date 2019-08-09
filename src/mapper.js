@@ -8,13 +8,17 @@ mapper
     .addPropertyMapping(dateProperty('dateAdded', 'DateAdded'))
     .addPropertyMapping(dateProperty('dateModified', 'DateModified'))
     .addPropertyMapping(dateProperty('releaseDate', 'ReleaseDate'))
-    .addPropertyMapping(dateProperty('lastPlayedDate', 'LastPlayedDate', '1800-01-01'))
+    .addPropertyMapping(
+        dateProperty('lastPlayedDate', 'LastPlayedDate', '1800-01-01')
+    )
     .addPropertyMapping(booleanProperty('favorite', 'Favorite'))
     .addPropertyMapping(integerProperty('rating', 'Rating'))
     .addPropertyMapping(integerProperty('playCount', 'PlayCount'))
     .addPropertyMapping(floatProperty('stars', 'StarRatingFloat'))
     .addPropertyMapping(floatProperty('communityStars', 'CommunityStarRating'))
-    .addPropertyMapping(integerProperty('communityStarVotes', 'CommunityStarRatingTotalVotes'))
+    .addPropertyMapping(
+        integerProperty('communityStarVotes', 'CommunityStarRatingTotalVotes')
+    )
     .addPropertyMapping(simpleProperty('version', 'Version'))
     .addPropertyMapping(simpleProperty('series', 'Series'))
     .addPropertyMapping(booleanProperty('portable', 'Portable'))
@@ -62,10 +66,14 @@ switch (settings.externalIdField) {
 }
 
 function languageDependentSimpleProperty(mapper, from, to) {
-    const baseFrom = settings.preferredLanguage === 'en' ? `${from}En` : `${from}Jp`;
-    const backupFrom = settings.preferredLanguage === 'en' ? `${from}Jp` : `${from}En`;
+    const baseFrom =
+        settings.preferredLanguage === 'en' ? `${from}En` : `${from}Jp`;
+    const backupFrom =
+        settings.preferredLanguage === 'en' ? `${from}Jp` : `${from}En`;
     mapper.addMapping(function(source, target) {
-        const sourceValue = source[baseFrom] ? source[baseFrom] : source[backupFrom];
+        const sourceValue = source[baseFrom]
+            ? source[baseFrom]
+            : source[backupFrom];
         target[to] = simpleTransform(sourceValue);
         return target;
     });
@@ -76,10 +84,14 @@ function languageDependentSimpleProperty(mapper, from, to) {
 }
 
 function languageDependentArrayProperty(mapper, from, to, split = ';') {
-    const baseFrom = settings.preferredLanguage === 'en' ? `${from}En` : `${from}Jp`;
-    const backupFrom = settings.preferredLanguage === 'en' ? `${from}Jp` : `${from}En`;
+    const baseFrom =
+        settings.preferredLanguage === 'en' ? `${from}En` : `${from}Jp`;
+    const backupFrom =
+        settings.preferredLanguage === 'en' ? `${from}Jp` : `${from}En`;
     mapper.addMapping(function(source, target) {
-        const sourceValue = source[baseFrom] ? source[baseFrom] : source[backupFrom];
+        const sourceValue = source[baseFrom]
+            ? source[baseFrom]
+            : source[backupFrom];
         target[to] = arrayTransform(sourceValue, split);
         return target;
     });
@@ -95,7 +107,7 @@ function arrayReverseTransform(value, split) {
 
 function arrayTransform(value, split) {
     return {
-        _text: value ? value.join(split) : ''
+        _text: value ? value.join(split) : '',
     };
 }
 
@@ -107,13 +119,13 @@ function simpleProperty(from, to) {
             return value._text;
         },
         transform: simpleTransform,
-        default: {}
+        default: {},
     };
 }
 
 function simpleTransform(value) {
     return {
-        _text: value ? value.replace(invalidChars, '') : ''
+        _text: value ? value.replace(invalidChars, '') : '',
     };
 }
 
@@ -126,12 +138,12 @@ function floatProperty(from, to) {
         },
         transform: function(value) {
             return {
-                _text: value
+                _text: value,
             };
         },
         default: {
-            _text: 0
-        }
+            _text: 0,
+        },
     };
 }
 
@@ -144,14 +156,14 @@ function integerProperty(from, to) {
         },
         transform: integerTransform,
         default: {
-            _text: 0
-        }
+            _text: 0,
+        },
     };
 }
 
 function integerTransform(value) {
     return {
-        _text: value ? Math.floor(value) : 0
+        _text: value ? Math.floor(value) : 0,
     };
 }
 
@@ -164,12 +176,14 @@ function dateProperty(from, to, defaultDate) {
         },
         transform: function(value) {
             return {
-                _text: value ? value : moment().format()
+                _text: value ? value : moment().format(),
             };
         },
         default: {
-            _text: defaultDate ? moment(defaultDate, 'YYYY-MM-DD').format() : moment().format()
-        }
+            _text: defaultDate
+                ? moment(defaultDate, 'YYYY-MM-DD').format()
+                : moment().format(),
+        },
     };
 }
 
@@ -182,12 +196,12 @@ function booleanProperty(from, to) {
         },
         transform: function(value) {
             return {
-                _text: value ? value : 'false'
+                _text: value ? value : 'false',
             };
         },
         default: {
-            _text: 'false'
-        }
+            _text: 'false',
+        },
     };
 }
 

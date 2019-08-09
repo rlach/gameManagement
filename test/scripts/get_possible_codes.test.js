@@ -11,7 +11,7 @@ describe('getPossibleCodes', function() {
         sinon.stub(progress, 'getBar').returns({
             start: sinon.spy(),
             update: sinon.spy(),
-            stop: sinon.spy()
+            stop: sinon.spy(),
         });
     });
 
@@ -61,7 +61,7 @@ describe('getPossibleCodes', function() {
         const strategy = {
             name: 'strategyName',
             findGame: sinon.stub().returns([]),
-            extractCode: sinon.stub().returns('')
+            extractCode: sinon.stub().returns(''),
         };
 
         const readdir = sinon.stub(fs, 'readdirSync').returns(['dir']);
@@ -82,8 +82,8 @@ describe('getPossibleCodes', function() {
                     file: 'dir',
                     strategyName: {
                         extractedCode: '',
-                        foundCodes: []
-                    }
+                        foundCodes: [],
+                    },
                 },
                 null,
                 4
@@ -97,10 +97,10 @@ describe('getPossibleCodes', function() {
             findGame: sinon.stub().returns([
                 {
                     workno: '12345',
-                    work_name: 'abc'
-                }
+                    work_name: 'abc',
+                },
             ]),
-            extractCode: sinon.stub().returns('dir')
+            extractCode: sinon.stub().returns('dir'),
         };
 
         const strategy2 = {
@@ -108,10 +108,10 @@ describe('getPossibleCodes', function() {
             findGame: sinon.stub().returns([
                 {
                     workno: '12345',
-                    work_name: 'abc'
-                }
+                    work_name: 'abc',
+                },
             ]),
-            extractCode: sinon.stub().returns('dir')
+            extractCode: sinon.stub().returns('dir'),
         };
 
         const readdir = sinon.stub(fs, 'readdirSync').returns(['dir']);
@@ -135,19 +135,19 @@ describe('getPossibleCodes', function() {
                         foundCodes: [
                             {
                                 workno: '12345',
-                                work_name: 'abc'
-                            }
-                        ]
+                                work_name: 'abc',
+                            },
+                        ],
                     },
                     strategyName2: {
                         extractedCode: 'dir',
                         foundCodes: [
                             {
                                 workno: '12345',
-                                work_name: 'abc'
-                            }
-                        ]
-                    }
+                                work_name: 'abc',
+                            },
+                        ],
+                    },
                 },
                 null,
                 4

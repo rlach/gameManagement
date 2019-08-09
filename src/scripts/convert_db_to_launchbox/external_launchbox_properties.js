@@ -10,71 +10,71 @@ const externalLaunchboxProperties = {
     MusicPath: {},
     Publisher: {},
     ScummVMAspectCorrection: {
-        _text: 'false'
+        _text: 'false',
     },
     ScummVMFullscreen: {
-        _text: 'false'
+        _text: 'false',
     },
     ScummVMGameDataFolderPath: {},
     ScummVMGameType: {},
     UseDosBox: {
-        _text: 'false'
+        _text: 'false',
     },
     UseScummVM: {
-        _text: 'false'
+        _text: 'false',
     },
     PlayMode: {},
     Region: {},
     VideoPath: {},
     MissingVideo: {
-        _text: 'true'
+        _text: 'true',
     },
     MissingBoxFrontImage: {
-        _text: 'false'
+        _text: 'false',
     },
     MissingScreenshotImage: {
-        _text: 'false'
+        _text: 'false',
     },
     MissingClearLogoImage: {
-        _text: 'false'
+        _text: 'false',
     },
     MissingBackgroundImage: {
-        _text: 'false'
+        _text: 'false',
     },
     UseStartupScreen: {
-        _text: 'false'
+        _text: 'false',
     },
     HideAllNonExclusiveFullscreenWindows: {
-        _text: 'false'
+        _text: 'false',
     },
     StartupLoadDelay: {
-        _text: '0'
+        _text: '0',
     },
     HideMouseCursorInGame: {
-        _text: 'false'
+        _text: 'false',
     },
     DisableShutdownScreen: {
-        _text: 'false'
+        _text: 'false',
     },
     AggressiveWindowHiding: {
-        _text: 'false'
+        _text: 'false',
     },
     OverrideDefaultStartupScreenSettings: {
-        _text: 'false'
+        _text: 'false',
     },
     UsePauseScreen: {
-        _text: 'false'
+        _text: 'false',
     },
     OverrideDefaultPauseScreenSettings: {
-        _text: 'false'
+        _text: 'false',
     },
     SuspendProcessOnPause: {
-        _text: 'false'
+        _text: 'false',
     },
     ForcefulPauseScreenActivation: {
-        _text: 'false'
+        _text: 'false',
     },
-    CustomDosBoxVersionPath: {}
+    CustomDosBoxVersionPath: {},
 };
 
 module.exports = externalLaunchboxProperties;

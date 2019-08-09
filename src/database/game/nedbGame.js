@@ -15,7 +15,7 @@ function getGame(db) {
                 game = await db.insert({
                     id,
                     dateAdded: moment().format(),
-                    dateModified: moment().format()
+                    dateModified: moment().format(),
                 });
             }
             return game;

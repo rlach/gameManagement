@@ -19,7 +19,7 @@ class DlsiteStrategy extends SiteStrategy {
         if (gameId.startsWith('RJ')) {
             const sites = await Promise.all([
                 getJapaneseSite(gameId, game.sourceMissingJp),
-                getEnglishSite(gameId, game.sourceMissingEn)
+                getEnglishSite(gameId, game.sourceMissingEn),
             ]);
             jpn = sites[0] ? sites[0] : {};
             eng = sites[1] ? sites[1] : {};
@@ -47,8 +47,12 @@ class DlsiteStrategy extends SiteStrategy {
         }
 
         const result = {
-            communityStars: productInfo ? productInfo.rate_average_2dp : undefined,
-            communityStarVotes: productInfo ? productInfo.rate_count : undefined
+            communityStars: productInfo
+                ? productInfo.rate_average_2dp
+                : undefined,
+            communityStarVotes: productInfo
+                ? productInfo.rate_count
+                : undefined,
         };
         Object.assign(result, removeUndefined(jpn));
         Object.assign(result, removeUndefined(eng));
@@ -62,7 +66,11 @@ class DlsiteStrategy extends SiteStrategy {
     }
 
     async findGame(name) {
-        const replies = await Promise.all([search(name, 'adult-jp'), search(name, 'adult-en'), search(name, 'pro')]);
+        const replies = await Promise.all([
+            search(name, 'adult-jp'),
+            search(name, 'adult-en'),
+            search(name, 'pro'),
+        ]);
         let replyEn = replies[1];
         let replyJp = replies[0];
         let replyPro = replies[2];
@@ -70,21 +78,30 @@ class DlsiteStrategy extends SiteStrategy {
         const works = [];
 
         if (replyEn.work.length === 0) {
-            const replyEn2 = await search(name.substring(0, name.length / 2), 'adult-en');
+            const replyEn2 = await search(
+                name.substring(0, name.length / 2),
+                'adult-en'
+            );
             works.push(...replyEn2.work);
         } else {
             works.push(...replyEn.work);
         }
 
         if (replyJp.work.length === 0) {
-            const replyJp2 = await search(name.substring(0, name.length / 2), 'adult-jp');
+            const replyJp2 = await search(
+                name.substring(0, name.length / 2),
+                'adult-jp'
+            );
             works.push(...replyJp2.work);
         } else {
             works.push(...replyJp.work);
         }
 
         if (replyPro.work.length === 0) {
-            const replyPro2 = await search(name.substring(0, name.length / 2), 'pro');
+            const replyPro2 = await search(
+                name.substring(0, name.length / 2),
+                'pro'
+            );
             works.push(...replyPro2.work);
         } else {
             works.push(...replyPro.work);
@@ -104,7 +121,7 @@ class DlsiteStrategy extends SiteStrategy {
             }
             let reply = await request.get({
                 method: 'GET',
-                uri: url
+                uri: url,
             });
 
             const query = parseSite(reply);
@@ -130,28 +147,37 @@ class DlsiteStrategy extends SiteStrategy {
                 log.debug(`Samples found`, {
                     samplesCount,
                     id,
-                    firstImage
+                    firstImage,
                 });
 
                 const additionalImages = [];
                 for (let i = 1; i <= samplesCount; i++) {
-                    additionalImages.push(firstImage.replace('smp1', `smp${i}`));
+                    additionalImages.push(
+                        firstImage.replace('smp1', `smp${i}`)
+                    );
                 }
 
                 return additionalImages;
             }
         } catch (e) {
-            log.debug(`Error getting additional images for ${id} from ${this.name}`, {
-                name: e.name,
-                statusCode: e.statusCode,
-                message: e.message
-            });
+            log.debug(
+                `Error getting additional images for ${id} from ${this.name}`,
+                {
+                    name: e.name,
+                    statusCode: e.statusCode,
+                    message: e.message,
+                }
+            );
             return undefined;
         }
     }
 
     shouldUse(gameId) {
-        return gameId.startsWith('RJ') || gameId.startsWith('RE') || gameId.startsWith('VJ');
+        return (
+            gameId.startsWith('RJ') ||
+            gameId.startsWith('RE') ||
+            gameId.startsWith('VJ')
+        );
     }
 
     scoreCodes(codes, originalFilename) {
@@ -160,9 +186,17 @@ class DlsiteStrategy extends SiteStrategy {
 
         // Points for extracted code and extracted code matching found result
         if (extractedCode !== '') {
-            this.addToCodeScore(results, settings.advanced.scores.extractedDlsiteCode, extractedCode);
+            this.addToCodeScore(
+                results,
+                settings.advanced.scores.extractedDlsiteCode,
+                extractedCode
+            );
             if (codes.foundCodes.some(fc => fc.workno === extractedCode)) {
-                this.addToCodeScore(results, settings.advanced.scores.matchForExtractedDlsiteCode, extractedCode);
+                this.addToCodeScore(
+                    results,
+                    settings.advanced.scores.matchForExtractedDlsiteCode,
+                    extractedCode
+                );
             }
         }
 
@@ -183,7 +217,7 @@ async function search(name, site) {
         await request.get({
             uri: `https://www.dlsite.com/suggest/?site=${site}&time=${new Date().getTime()}&term=${encodeURIComponent(
                 name
-            )}`
+            )}`,
         })
     );
 }
@@ -207,7 +241,9 @@ function getOptions(id, type) {
 
     return {
         method: 'GET',
-        uri: `https://www.dlsite.com${dlsiteDomain}=/product_id/${encodeURIComponent(id)}.html`
+        uri: `https://www.dlsite.com${dlsiteDomain}=/product_id/${encodeURIComponent(
+            id
+        )}.html`,
     };
 }
 
@@ -288,7 +324,7 @@ function getGameMetadata(query) {
             tags: tags,
             releaseDate: releaseDate,
             maker: maker,
-            image: imageSrc
+            image: imageSrc,
         };
     } catch (e) {
         log.debug('Metadata parsing failure', e);
@@ -314,17 +350,17 @@ async function getEnglishSite(id, sourceMissing) {
             tagsEn: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,
             makerEn: originalMetadata.maker,
-            imageUrlEn: originalMetadata.image
+            imageUrlEn: originalMetadata.image,
         };
     } catch (e) {
         log.debug(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
             name: e.name,
             statusCode: e.statusCode,
-            message: e.message
+            message: e.message,
         });
         if (e.statusCode === 404) {
             return {
-                sourceMissingEn: true
+                sourceMissingEn: true,
             };
         } else {
             return undefined;
@@ -337,14 +373,14 @@ async function getProductInfo(id) {
         return JSON.parse(
             await request.get({
                 method: 'GET',
-                uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`
+                uri: `https://www.dlsite.com/maniax/product/info/ajax?product_id=${id}`,
             })
         )[id];
     } catch (e) {
         log.debug(`Error getting productInfo for ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
-            message: e.message
+            message: e.message,
         });
         return undefined;
     }
@@ -366,17 +402,17 @@ async function getJapaneseSite(id, sourceMissing) {
             tagsJp: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,
             makerJp: originalMetadata.maker,
-            imageUrlJp: originalMetadata.image
+            imageUrlJp: originalMetadata.image,
         };
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
-            message: e.message
+            message: e.message,
         });
         if (e.statusCode === 404) {
             return {
-                sourceMissingJp: true
+                sourceMissingJp: true,
             };
         } else {
             return undefined;
@@ -410,17 +446,17 @@ async function getProSite(id, sourceMissing) {
             tagsJp: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,
             makerJp: originalMetadata.maker,
-            imageUrlJp: originalMetadata.image
+            imageUrlJp: originalMetadata.image,
         };
     } catch (e) {
         log.debug(`Error getting ${id} from ${this.name}`, {
             name: e.name,
             statusCode: e.statusCode,
-            message: e.message
+            message: e.message,
         });
         if (e.statusCode === 404) {
             return {
-                sourceMissingJp: true
+                sourceMissingJp: true,
             };
         } else {
             return undefined;

@@ -21,23 +21,28 @@ async function getPossibleCodes(strategies, unsortedGamesPath) {
         } else {
             log.debug(`Processing file ${file}`);
             const fileResults = {
-                file
+                file,
             };
 
             const promises = [];
             for (const strategy of strategies) {
-                promises.push(strategy.findGame(files.removeTagsAndMetadata(file)));
+                promises.push(
+                    strategy.findGame(files.removeTagsAndMetadata(file))
+                );
             }
             const results = await Promise.all(promises);
 
             for (const [index, strategy] of strategies.entries()) {
                 fileResults[strategy.name] = {
                     extractedCode: strategy.extractCode(file),
-                    foundCodes: results[index]
+                    foundCodes: results[index],
                 };
             }
             try {
-                fs.writeFileSync(foundCodesPath, JSON.stringify(fileResults, null, 4));
+                fs.writeFileSync(
+                    foundCodesPath,
+                    JSON.stringify(fileResults, null, 4)
+                );
             } catch (e) {
                 log.debug('Error writing codes', e);
             }

@@ -9,15 +9,20 @@ async function confirmResults(results, file) {
 }
 
 async function confirmMultipleResults(results, file) {
-    let bestResults = results.slice(0, settings.organizeDirectories.maxResultsToSuggest);
+    let bestResults = results.slice(
+        0,
+        settings.organizeDirectories.maxResultsToSuggest
+    );
     const choices = [
         { name: 'None', value: 0 },
         ...bestResults.map((result, index) => ({
-            name: `${result.name ? result.name : result.code + '(code extracted from filename)'} (Score ${
-                result.score
-                }, ${result.strategy})`,
-            value: index + 1
-        }))
+            name: `${
+                result.name
+                    ? result.name
+                    : result.code + '(code extracted from filename)'
+            } (Score ${result.score}, ${result.strategy})`,
+            value: index + 1,
+        })),
     ];
 
     let answer = await inquirer.prompt([
@@ -26,14 +31,14 @@ async function confirmMultipleResults(results, file) {
             name: 'same',
             default: 0,
             choices: choices,
-            message: `Which result matches \n* ${file}?`
-        }
+            message: `Which result matches \n* ${file}?`,
+        },
     ]);
 
     if (answer.same === 0) {
         throw {
             message: 'Best result not accepted',
-            code: 'RESULT_REJECTED'
+            code: 'RESULT_REJECTED',
         };
     }
 
@@ -50,20 +55,16 @@ async function confirmSingleResult(results, file) {
             type: 'confirm',
             name: 'same',
             message: bestResult.name
-                ? `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${
-                    bestResult.score
-                    }, strategy ${bestResult.strategy})\n>`
-                : `Is ${bestResult.code} proper for ${file}? (Code extracted from filename) (score ${
-                    bestResult.score
-                    }, strategy ${bestResult.strategy})`
-        }
+                ? `Are \n* ${bestResult.name} \n* ${file} \nthe same? \nCode ${bestResult.code}(score ${bestResult.score}, strategy ${bestResult.strategy})\n>`
+                : `Is ${bestResult.code} proper for ${file}? (Code extracted from filename) (score ${bestResult.score}, strategy ${bestResult.strategy})`,
+        },
     ]);
     if (answer.same) {
         bestResult.accepted = true;
     } else {
         throw {
             message: 'Best result not accepted',
-            code: 'RESULT_REJECTED'
+            code: 'RESULT_REJECTED',
         };
     }
 

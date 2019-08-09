@@ -32,7 +32,7 @@ async function callPage(uri) {
             .get({
                 method: 'GET',
                 uri: uri,
-                encoding: null
+                encoding: null,
             })
             .pipe(iconv.decodeStream(JAPANESE_ENCODING))
             .collect(function(err, decodedBody) {

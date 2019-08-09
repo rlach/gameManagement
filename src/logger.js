@@ -4,9 +4,13 @@ const bunyan = require('bunyan'),
 
 const settings = require('./settings');
 
-const log = bunyan.createLogger({ name: 'app', stream: formatOut, level: settings.logLevel });
+const log = bunyan.createLogger({
+    name: 'app',
+    stream: formatOut,
+    level: settings.logLevel,
+});
 
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === 'test') {
     log.level(bunyan.FATAL + 1);
 }
 

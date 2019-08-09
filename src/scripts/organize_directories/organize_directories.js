@@ -21,7 +21,9 @@ async function organizeDirectories(strategies, settings) {
             continue;
         }
         try {
-            const fileCodes = JSON.parse(fs.readFileSync(foundFilesPath, 'utf8'));
+            const fileCodes = JSON.parse(
+                fs.readFileSync(foundFilesPath, 'utf8')
+            );
             if (fileCodes.noMatch) {
                 log.debug(`File manually set as no match, ${file}`);
                 continue;
@@ -29,30 +31,45 @@ async function organizeDirectories(strategies, settings) {
 
             let results = [];
             for (const strategy of strategies) {
-                results.push(...strategy.scoreCodes(fileCodes[strategy.name], file));
+                results.push(
+                    ...strategy.scoreCodes(fileCodes[strategy.name], file)
+                );
             }
             const minScore = settings.organizeDirectories.shouldAsk
                 ? settings.organizeDirectories.minimumScoreToAsk
                 : settings.organizeDirectories.minimumScoreToAccept;
-            results = results.filter(r => r.score >= minScore).sort((a, b) => b.score - a.score);
+            results = results
+                .filter(r => r.score >= minScore)
+                .sort((a, b) => b.score - a.score);
 
             if (results.length > 0) {
                 let bestResult = results[0];
                 if (
                     settings.organizeDirectories.shouldAsk &&
-                    bestResult.score < settings.organizeDirectories.minimumScoreToAccept
+                    bestResult.score <
+                        settings.organizeDirectories.minimumScoreToAccept
                 ) {
                     try {
-                        bestResult = await scoreResults.confirmResults(results, file);
+                        bestResult = await scoreResults.confirmResults(
+                            results,
+                            file
+                        );
                     } catch (e) {
                         if (e.code === 'RESULT_REJECTED') {
                             fileCodes.noMatch = true;
-                            fs.writeFileSync(foundFilesPath, JSON.stringify(fileCodes, null, 4));
+                            fs.writeFileSync(
+                                foundFilesPath,
+                                JSON.stringify(fileCodes, null, 4)
+                            );
                         }
                     }
                 }
 
-                if (bestResult.score >= settings.organizeDirectories.minimumScoreToAccept || bestResult.accepted) {
+                if (
+                    bestResult.score >=
+                        settings.organizeDirectories.minimumScoreToAccept ||
+                    bestResult.accepted
+                ) {
                     const gameFolder = `${targetFolder}/${bestResult.code}`;
                     if (!fs.existsSync(gameFolder)) {
                         fs.mkdirSync(gameFolder);
@@ -60,8 +77,13 @@ async function organizeDirectories(strategies, settings) {
                         log.debug(`There is a duplicate`, bestResult.code);
                     }
 
-                    fs.renameSync(`${settings.paths.unsortedGames}/${file}`, `${gameFolder}/${file}`);
-                    log.debug(`Moved ${settings.paths.unsortedGames}/${file} to ${gameFolder}/${file}`);
+                    fs.renameSync(
+                        `${settings.paths.unsortedGames}/${file}`,
+                        `${gameFolder}/${file}`
+                    );
+                    log.debug(
+                        `Moved ${settings.paths.unsortedGames}/${file} to ${gameFolder}/${file}`
+                    );
                 }
             }
         } catch (e) {

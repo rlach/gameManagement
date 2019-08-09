@@ -22,7 +22,10 @@ async function convertDbToLaunchbox(database) {
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.debug('Platform file already exists, backing up');
 
-        fs.copyFileSync(LAUNCHBOX_PLATFORM_XML, `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`);
+        fs.copyFileSync(
+            LAUNCHBOX_PLATFORM_XML,
+            `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`
+        );
 
         log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
@@ -32,7 +35,10 @@ async function convertDbToLaunchbox(database) {
         } else if (originalObject.LaunchBox.Game) {
             launchboxGames.push(originalObject.LaunchBox.Game);
         }
-        if (originalObject.LaunchBox.CustomField && originalObject.LaunchBox.CustomField.length > 0) {
+        if (
+            originalObject.LaunchBox.CustomField &&
+            originalObject.LaunchBox.CustomField.length > 0
+        ) {
             originalCustomFields = originalObject.LaunchBox.CustomField;
         } else if (originalObject.LaunchBox.CustomField) {
             originalCustomFields = [originalObject.LaunchBox.CustomField];
@@ -50,31 +56,49 @@ async function convertDbToLaunchbox(database) {
             let matchingGame;
             if (settings.externalIdField === 'CustomField') {
                 const idAdditionalField = originalCustomFields.find(
-                    f => f.Name._text === 'externalId' && f.Value._text === game.id
+                    f =>
+                        f.Name._text === 'externalId' &&
+                        f.Value._text === game.id
                 );
                 if (idAdditionalField) {
-                    matchingGame = launchboxGames.find(g => g.ID._text === idAdditionalField.GameID._text);
+                    matchingGame = launchboxGames.find(
+                        g => g.ID._text === idAdditionalField.GameID._text
+                    );
                 }
             } else {
-                matchingGame = launchboxGames.find(g => g[settings.externalIdField]._text === game.id);
+                matchingGame = launchboxGames.find(
+                    g => g[settings.externalIdField]._text === game.id
+                );
             }
             const launchboxId = getUUID(game.id, matchingGame);
 
-            customFields.push(...originalCustomFields.filter(cf => cf.GameID._text === launchboxId));
+            customFields.push(
+                ...originalCustomFields.filter(
+                    cf => cf.GameID._text === launchboxId
+                )
+            );
 
             if (settings.downloadImages) {
-                progress.updateName(progressBar, `${operation} [${game.id}] (downloading images)`);
+                progress.updateName(
+                    progressBar,
+                    `${operation} [${game.id}] (downloading images)`
+                );
                 await downloadImages(game, launchboxId, database.game);
                 progress.updateName(progressBar, `${operation} [${game.id}]`);
             }
 
             const result = mapper.map(game);
             result.ID = {
-                _text: launchboxId
+                _text: launchboxId,
             };
 
             if (game.engine) {
-                addOrUpdateAdditionalField(customFields, launchboxId, 'engine', game.engine);
+                addOrUpdateAdditionalField(
+                    customFields,
+                    launchboxId,
+                    'engine',
+                    game.engine
+                );
             }
 
             if (matchingGame) {
@@ -83,10 +107,15 @@ async function convertDbToLaunchbox(database) {
             } else {
                 convertedGames.push({
                     ...result,
-                    ...externalLaunchboxProperties
+                    ...externalLaunchboxProperties,
                 });
                 if (settings.externalIdField === 'CustomField') {
-                    addOrUpdateAdditionalField(customFields, launchboxId, 'externalId', game.id);
+                    addOrUpdateAdditionalField(
+                        customFields,
+                        launchboxId,
+                        'externalId',
+                        game.id
+                    );
                 }
             }
         }
@@ -103,13 +132,13 @@ async function convertDbToLaunchbox(database) {
             _declaration: {
                 _attributes: {
                     version: '1.0',
-                    standalone: 'yes'
-                }
+                    standalone: 'yes',
+                },
             },
             LaunchBox: {
                 Game: convertedGames,
-                CustomField: customFields
-            }
+                CustomField: customFields,
+            },
         };
     }
 
@@ -135,20 +164,22 @@ function getUUID(gameId, matchingGame) {
 }
 
 function addOrUpdateAdditionalField(customFields, launchboxId, name, value) {
-    const additionalField = customFields.find(f => f.Name._text === name && f.GameID._text === launchboxId);
+    const additionalField = customFields.find(
+        f => f.Name._text === name && f.GameID._text === launchboxId
+    );
     if (additionalField) {
         additionalField.Value._text = value;
     } else {
         customFields.push({
             GameID: {
-                _text: launchboxId
+                _text: launchboxId,
             },
             Name: {
-                _text: name
+                _text: name,
             },
             Value: {
-                _text: value
-            }
+                _text: value,
+            },
         });
     }
 }

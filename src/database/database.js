@@ -4,7 +4,7 @@ async function initDatabase(settings) {
 
         const database = datastore({
             filename: settings.nedbFilename,
-            autoload: true
+            autoload: true,
         });
 
         database.close = () => {};
@@ -13,8 +13,8 @@ async function initDatabase(settings) {
 
         return {
             game: getGame(database),
-            database
-        }
+            database,
+        };
     } else {
         const mongoose = require('./mongoose');
         await mongoose.connect(settings.mongoUri);
@@ -23,8 +23,8 @@ async function initDatabase(settings) {
 
         return {
             game: getGame(mongoose.mongoose),
-            database
-        }
+            database,
+        };
     }
 }
 
