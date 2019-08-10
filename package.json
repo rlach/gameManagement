@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "test": "NODE_ENV=test nyc mocha",
-        "test-cont": "nodemon --exec NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
+        "test": "nyc mocha",
+        "test-cont": "nodemon --exec nyc --reporter=lcov --reporter=text mocha",
         "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
     },
     "name": "gameManager",

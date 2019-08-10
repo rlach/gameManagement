@@ -10,8 +10,4 @@ const log = bunyan.createLogger({
     level: settings.logLevel,
 });
 
-if (process.env.NODE_ENV === 'test') {
-    log.level(bunyan.FATAL + 1);
-}
-
 module.exports = log;
