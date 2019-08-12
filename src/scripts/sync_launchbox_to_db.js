@@ -97,7 +97,21 @@ function readLaunchboxPlatformFile() {
     const launchboxXmlPath = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
     if (fs.existsSync(launchboxXmlPath)) {
         const launchboxXml = fs.readFileSync(launchboxXmlPath, 'utf8');
-        return convert.xml2js(launchboxXml, { compact: true });
+        const convertedObject = convert.xml2js(launchboxXml, { compact: true });
+
+        if(!convertedObject.LaunchBox.Game) {
+            convertedObject.LaunchBox.Game = [];
+        } else if(!Array.isArray(convertedObject.LaunchBox.Game)) {
+            convertedObject.LaunchBox.Game = [convertedObject.LaunchBox.Game];
+        }
+
+        if(!convertedObject.LaunchBox.CustomField) {
+            convertedObject.LaunchBox.CustomField = [];
+        } else if(!Array.isArray(convertedObject.LaunchBox.CustomField)) {
+            convertedObject.LaunchBox.CustomField = [convertedObject.LaunchBox.CustomField];
+        }
+
+        return convertedObject;
     }
 }
 

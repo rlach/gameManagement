@@ -1,5 +1,6 @@
 {
     "scripts": {
+        "start":"node src/main.js",
         "test": "nyc mocha",
         "test-cont": "nodemon --exec nyc --reporter=lcov --reporter=text mocha",
         "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"

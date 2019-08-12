@@ -5,6 +5,10 @@ const settings = require('../../settings');
 const log = require('../../logger');
 const files = require('../../files');
 
+const boxFrontPath = 'Box - Front - Reconstructed'; // Use reconstructed so when user uploads his own box front to 'Box - Front' it will be used instead
+const backgroundPath = 'Clear Logo'; // So user can use 'Fanart - Background' which has higher priority
+const screenshotPath = 'Screenshot - Gameplay';
+
 async function downloadImages(game, launchboxId, databaseGame) {
     let modified = false;
     const regexExtension = /\.\w{3,4}($|\?)/;
@@ -15,32 +19,33 @@ async function downloadImages(game, launchboxId, databaseGame) {
     if (!imageUrl) {
         return;
     }
+    const imagesPath = `${settings.paths.launchbox}/Images`;
 
-    if (!fs.existsSync(`${settings.paths.launchbox}/Images`)) {
-        fs.mkdirSync(`${settings.paths.launchbox}/Images`);
+    if (!fs.existsSync(imagesPath)) {
+        fs.mkdirSync(imagesPath);
     }
     if (
         !fs.existsSync(
-            `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`
+            `${imagesPath}/${settings.launchboxPlatform}`
         )
     ) {
         fs.mkdirSync(
-            `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}`
+            `${imagesPath}/${settings.launchboxPlatform}`
         );
     }
     if (
         !fs.existsSync(
-            `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`
+            `${imagesPath}/${settings.launchboxPlatform}/${boxFrontPath}`
         )
     ) {
         fs.mkdirSync(
-            `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Box - Front`
+            `${imagesPath}/${settings.launchboxPlatform}/${boxFrontPath}`
         );
     }
 
-    const targetPathMainImage = `${settings.paths.launchbox}/Images/${
+    const targetPathMainImage = `${imagesPath}/${
         settings.launchboxPlatform
-    }/Box - Front/${launchboxId}-01${imageUrl.match(regexExtension)[0]}`;
+    }/${boxFrontPath}/${launchboxId}-01${imageUrl.match(regexExtension)[0]}`;
 
     if (game.redownloadMainImage && fs.existsSync(targetPathMainImage)) {
         fs.unlinkSync(targetPathMainImage);
@@ -67,7 +72,7 @@ async function downloadImages(game, launchboxId, databaseGame) {
         }
     }
 
-    const gameplayPath = `${settings.paths.launchbox}/Images/${settings.launchboxPlatform}/Screenshot - Gameplay`;
+    const gameplayPath = `${imagesPath}/${settings.launchboxPlatform}/${screenshotPath}`;
     if (!fs.existsSync(gameplayPath)) {
         fs.mkdirSync(gameplayPath);
     }
@@ -97,7 +102,7 @@ async function downloadImages(game, launchboxId, databaseGame) {
                 settings.paths.launchbox
             }/Images/${
                 settings.launchboxPlatform
-            }/Screenshot - Gameplay/${launchboxId}-${String(index + 1).padStart(
+            }/${screenshotPath}/${launchboxId}-${String(index + 1).padStart(
                 2,
                 '0'
             )}${additionalImage.match(regexExtension)[0]}`;
@@ -120,14 +125,16 @@ async function downloadImages(game, launchboxId, databaseGame) {
                         dest: targetPathAdditionalImage,
                     });
 
+                    log.info('addimg', index, targetPathAdditionalImage, game.additionalImages.length)
                     if (
                         index === game.additionalImages.length - 1 &&
                         fs.existsSync(targetPathAdditionalImage)
                     ) {
                         const targetPathBackground = targetPathAdditionalImage.replace(
-                            'Screenshot - Gameplay',
-                            'Fanart - Background'
+                            screenshotPath,
+                            backgroundPath
                         );
+                        log.info('target path background', targetPathBackground)
                         fs.copyFileSync(
                             targetPathAdditionalImage,
                             targetPathBackground
