@@ -3,7 +3,7 @@
 node_modules
 yarn-error.log
 settings.json
-games.db
+*.db
 duplicates.txt
 *.xml.*
 sample/*

@@ -7,23 +7,31 @@ async function initDatabase(settings) {
             autoload: true,
         });
 
+        const databaseImages = datastore({
+            filename: 'images.db',
+            autoload: true,
+        });
+
         database.close = () => {};
+        databaseImages.close = () => {};
 
         const { getGame } = require('./game/nedbGame');
+        const { getImage } = require('./image/nedbImage');
 
         return {
             game: getGame(database),
-            database,
+            image: getImage(databaseImages),
+            close: () => {}
         };
     } else {
         const mongoose = require('./mongoose');
         await mongoose.connect(settings.mongoUri);
-        const database = mongoose.db;
         const { getGame } = require('./game/mongooseGame');
 
         return {
             game: getGame(mongoose.mongoose),
-            database,
+            //TODO: return image collection for mongoose
+            close: mongoose.db.close
         };
     }
 }

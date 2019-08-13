@@ -2,9 +2,7 @@ const fs = require('fs');
 const log = require('../../logger');
 const settings = require('../../settings');
 const convert = require('xml-js');
-const UUID = require('uuid');
 const mapper = require('../../mapper');
-const downloadImages = require('./download_images');
 const externalLaunchboxProperties = require('./external_launchbox_properties');
 const progress = require('../../progress');
 
@@ -53,24 +51,10 @@ async function convertDbToLaunchbox(database) {
     for (const [index, game] of games.entries()) {
         progress.updateName(progressBar, `${operation} [${game.id}]`);
         if (!game.deleted) {
-            let matchingGame;
-            if (settings.externalIdField === 'CustomField') {
-                const idAdditionalField = originalCustomFields.find(
-                    f =>
-                        f.Name._text === 'externalId' &&
-                        f.Value._text === game.id
-                );
-                if (idAdditionalField) {
-                    matchingGame = launchboxGames.find(
-                        g => g.ID._text === idAdditionalField.GameID._text
-                    );
-                }
-            } else {
-                matchingGame = launchboxGames.find(
-                    g => g[settings.externalIdField]._text === game.id
-                );
-            }
-            const launchboxId = getUUID(game.id, matchingGame);
+            let matchingGame = launchboxGames.find(
+                g => g.ID._text === game.launchboxId
+            );
+            const launchboxId = game.launchboxId;
 
             customFields.push(
                 ...originalCustomFields.filter(
@@ -78,19 +62,7 @@ async function convertDbToLaunchbox(database) {
                 )
             );
 
-            if (settings.downloadImages) {
-                progress.updateName(
-                    progressBar,
-                    `${operation} [${game.id}] (downloading images)`
-                );
-                await downloadImages(game, launchboxId, database.game);
-                progress.updateName(progressBar, `${operation} [${game.id}]`);
-            }
-
             const result = mapper.map(game);
-            result.ID = {
-                _text: launchboxId,
-            };
 
             if (game.engine) {
                 addOrUpdateAdditionalField(
@@ -153,14 +125,6 @@ async function convertDbToLaunchbox(database) {
 
     progress.updateName(progressBar, operation);
     progressBar.stop();
-}
-
-function getUUID(gameId, matchingGame) {
-    if (matchingGame && matchingGame.ID && matchingGame.ID._text) {
-        return matchingGame.ID._text;
-    } else {
-        return UUID.v4();
-    }
 }
 
 function addOrUpdateAdditionalField(customFields, launchboxId, name, value) {

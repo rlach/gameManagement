@@ -17,45 +17,16 @@ async function syncLaunchboxToDb(database) {
             index,
             launchboxGame,
         ] of launchboxPlatform.LaunchBox.Game.entries()) {
-            const externalGameId = getExternalGameId(
-                launchboxPlatform,
-                launchboxGame
-            );
-            if (externalGameId) {
-                const dbGame = await database.game.findOne({
-                    id: externalGameId,
-                });
-                if (dbGame) {
-                    await syncGame(launchboxGame, dbGame, database);
-                }
+            const dbGame = await database.game.findOne({
+                launchboxId: launchboxGame.ID._text,
+            });
+            if (dbGame) {
+                await syncGame(launchboxGame, dbGame, database);
             }
             progressBar.update(index + 1);
         }
         progressBar.stop();
     }
-}
-
-function getExternalGameId(launchboxPlatform, launchboxGame) {
-    let externalGameIdFieldValue;
-    if (settings.externalIdField === 'CustomField') {
-        const idAdditionalField = launchboxPlatform.LaunchBox.CustomField
-            ? launchboxPlatform.LaunchBox.CustomField.find(
-                  f =>
-                      f.Name._text === 'externalId' &&
-                      f.GameID._text === launchboxGame.ID._text
-              )
-            : undefined;
-        if (!idAdditionalField) {
-            log.debug(
-                `Additional field doesn't exist for ${launchboxGame.ID._text}`
-            );
-        }
-        externalGameIdFieldValue = idAdditionalField.Value._text;
-    } else {
-        externalGameIdFieldValue =
-            launchboxGame[settings.externalIdField]._text;
-    }
-    return externalGameIdFieldValue;
 }
 
 async function syncGame(launchboxGame, dbGame, database) {
@@ -72,7 +43,7 @@ async function syncGame(launchboxGame, dbGame, database) {
         Object.assign(dbGame, result);
 
         try {
-            await database.game.saveGame(dbGame);
+            await database.game.save(dbGame);
             log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
         } catch (e) {
             log.debug('Game failed to be saved', e);
@@ -99,16 +70,18 @@ function readLaunchboxPlatformFile() {
         const launchboxXml = fs.readFileSync(launchboxXmlPath, 'utf8');
         const convertedObject = convert.xml2js(launchboxXml, { compact: true });
 
-        if(!convertedObject.LaunchBox.Game) {
+        if (!convertedObject.LaunchBox.Game) {
             convertedObject.LaunchBox.Game = [];
-        } else if(!Array.isArray(convertedObject.LaunchBox.Game)) {
+        } else if (!Array.isArray(convertedObject.LaunchBox.Game)) {
             convertedObject.LaunchBox.Game = [convertedObject.LaunchBox.Game];
         }
 
-        if(!convertedObject.LaunchBox.CustomField) {
+        if (!convertedObject.LaunchBox.CustomField) {
             convertedObject.LaunchBox.CustomField = [];
-        } else if(!Array.isArray(convertedObject.LaunchBox.CustomField)) {
-            convertedObject.LaunchBox.CustomField = [convertedObject.LaunchBox.CustomField];
+        } else if (!Array.isArray(convertedObject.LaunchBox.CustomField)) {
+            convertedObject.LaunchBox.CustomField = [
+                convertedObject.LaunchBox.CustomField,
+            ];
         }
 
         return convertedObject;

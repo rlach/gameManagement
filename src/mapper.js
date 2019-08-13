@@ -21,6 +21,7 @@ mapper
     )
     .addPropertyMapping(simpleProperty('version', 'Version'))
     .addPropertyMapping(simpleProperty('series', 'Series'))
+    .addPropertyMapping(simpleProperty('launchboxId', 'ID'))
     .addPropertyMapping(booleanProperty('portable', 'Portable'))
     .addPropertyMapping(booleanProperty('hide', 'Hide'))
     .addPropertyMapping(booleanProperty('broken', 'Broken'))

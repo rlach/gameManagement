@@ -5,6 +5,7 @@ const { removeUndefined } = require('../../objects');
 const executables = require('./find_executable');
 const typeRecognizer = require('./recognize_game_type');
 const progress = require('../../progress');
+const eachLimit = require('async/eachLimit');
 
 const operation = 'Building database from folders';
 
@@ -30,89 +31,69 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
     );
 
     progressBar.start(foundFiles.length, 0);
-    for (const [index, file] of foundFiles.entries()) {
-        progress.updateName(progressBar, `${operation} [${file.name}]`);
+    await eachLimit(foundFiles, 5, async (file) => {
+        return buildDbFromFolder(file, strategies, database, progressBar);
+    });
 
-        const strategy = selectStrategy(file.name, strategies);
-        if (!strategy) {
-            log.debug('No strategy for file', file);
-            continue;
-        }
+    progress.updateName(progressBar, operation);
+    progressBar.stop();
+}
 
-        let game = await database.game.retrieveGameFromDb(file.name);
-        game.source = strategy.name;
+async function buildDbFromFolder(file, strategies, database, progressBar) {
+    const strategy = selectStrategy(file.name, strategies);
+    if (!strategy) {
+        log.debug('No strategy for file', file);
+        return;
+    }
 
-        if (gameIsDeleted(file)) {
-            game.deleted = true;
+    let game = await database.game.retrieveFromDb(file.name);
+    game.source = strategy.name;
+
+    if (gameIsDeleted(file)) {
+        game.deleted = true;
+        game.dateModified = moment().format();
+        await database.game.save(game);
+        return;
+    } else if (game.deleted) {
+        game.deleted = false;
+        game.dateModified = moment().format();
+        await database.game.save(game);
+    }
+
+    if (!game.engine) {
+        game.engine = await typeRecognizer.recognizeGameType(file);
+        if (game.engine) {
             game.dateModified = moment().format();
-            await database.game.saveGame(game);
-            continue;
-        } else if (game.deleted) {
-            game.deleted = false;
-            game.dateModified = moment().format();
-            await database.game.saveGame(game);
+            await database.game.save(game);
         }
+    }
 
-        if (!game.engine) {
-            game.engine = await typeRecognizer.recognizeGameType(file);
-            if (game.engine) {
-                game.dateModified = moment().format();
-                await database.game.saveGame(game);
-            }
-        }
-
+    if (
+        game.executableFile &&
+        !game.forceSourceUpdate &&
+        !game.forceExecutableUpdate &&
+        !game.forceAdditionalImagesUpdate &&
+        game.status !== 'invalid'
+    ) {
+        log.debug(`Skipping ${file.name}`);
+    } else {
+        log.debug(`Processing ${file.name}`);
         if (
-            game.executableFile &&
-            !game.forceSourceUpdate &&
-            !game.forceExecutableUpdate &&
-            !game.forceAdditionalImagesUpdate &&
-            game.status !== 'invalid'
+            (!game.nameEn && !game.nameJp) ||
+            game.forceSourceUpdate ||
+            game.status === 'invalid'
         ) {
-            log.debug(`Skipping ${file.name}`);
-        } else {
-            log.debug(`Processing ${file.name}`);
-            if (
-                (!game.nameEn && !game.nameJp) ||
-                game.forceSourceUpdate ||
-                game.status === 'invalid'
-            ) {
-                game.forceSourceUpdate = false;
-                log.debug('Updating source web page(s)');
-                const gameData = await strategy.fetchGameData(game.id, game);
-                if (
-                    (gameData.nameJp || gameData.nameEn) &&
-                    (!gameData.additionalImages ||
-                        gameData.additionalImages.length === 0)
-                ) {
-                    game.forceAdditionalImagesUpdate = false;
-                    const newAdditionalImages = await strategy.getAdditionalImages(
-                        file.name
-                    );
-                    if (
-                        JSON.stringify(newAdditionalImages) !==
-                        JSON.stringify(game.additionalImages)
-                    ) {
-                        gameData.additionalImages = newAdditionalImages;
-                        game.redownloadAdditionalImages = true;
-                    }
-                }
-                if (
-                    game.imageUrlEn !== gameData.imageUrlEn ||
-                    game.imageUrlJp !== game.imageUrlJp
-                ) {
-                    game.redownloadMainImage = true;
-                }
-                Object.assign(game, removeUndefined(gameData));
-                if (game.status === 'invalid') {
-                    game.status = 'updated';
-                }
-                game.dateModified = moment().format();
-                await database.game.saveGame(game);
+            game.forceSourceUpdate = false;
+            log.debug('Updating source web page(s)');
+            const gameData = await strategy.fetchGameData(game.id, game);
+            const mainImageUrl = gameData.imageUrlJp ? gameData.imageUrlJp : gameData.imageUrlEn;
+            if(mainImageUrl) {
+                await addImageToDb(game, mainImageUrl, 'box', database);
             }
-
             if (
-                (game.nameEn || game.nameJp) &&
-                game.forceAdditionalImagesUpdate
+                (gameData.nameJp || gameData.nameEn) &&
+                (!gameData.additionalImages ||
+                    gameData.additionalImages.length === 0)
             ) {
                 game.forceAdditionalImagesUpdate = false;
                 const newAdditionalImages = await strategy.getAdditionalImages(
@@ -122,23 +103,67 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
                     JSON.stringify(newAdditionalImages) !==
                     JSON.stringify(game.additionalImages)
                 ) {
-                    game.additionalImages = newAdditionalImages;
+                    gameData.additionalImages = newAdditionalImages;
                     game.redownloadAdditionalImages = true;
                 }
-                await database.game.saveGame(game);
             }
+            if (
+                game.imageUrlEn !== gameData.imageUrlEn ||
+                game.imageUrlJp !== game.imageUrlJp
+            ) {
+                game.redownloadMainImage = true;
+            }
+            Object.assign(game, removeUndefined(gameData));
+            if (game.status === 'invalid') {
+                game.status = 'updated';
+            }
+            game.dateModified = moment().format();
+            await database.game.save(game);
 
-            await executables.updateExecutableAndDirectory(
-                file,
-                game,
-                strategy,
-                database
-            );
+            if (game.additionalImages) {
+                for (const imageUri of game.additionalImages) {
+                    let imageEntry = await database.image.findOne({
+                        gameId: game.id,
+                        uri: imageUri,
+                    });
+                    if (!imageEntry) {
+                        await addImageToDb(game, imageUri, 'screenshot', database);
+                    }
+                }
+
+                if(game.additionalImages.length > 0) {
+                    const imageUri = game.additionalImages[game.additionalImages.length - 1];
+                    await addImageToDb(game, imageUri, 'background', database);
+                }
+            }
         }
-        progressBar.update(index + 1);
+
+        if (
+            (game.nameEn || game.nameJp) &&
+            game.forceAdditionalImagesUpdate
+        ) {
+            game.forceAdditionalImagesUpdate = false;
+            const newAdditionalImages = await strategy.getAdditionalImages(
+                file.name
+            );
+            if (
+                JSON.stringify(newAdditionalImages) !==
+                JSON.stringify(game.additionalImages)
+            ) {
+                game.additionalImages = newAdditionalImages;
+                game.redownloadAdditionalImages = true;
+            }
+            await database.game.save(game);
+        }
+
+        await executables.updateExecutableAndDirectory(
+            file,
+            game,
+            strategy,
+            database
+        );
     }
-    progress.updateName(progressBar, operation);
-    progressBar.stop();
+    progressBar.increment();
 }
 
 function selectStrategy(gameId, strategies) {
@@ -157,5 +182,16 @@ function gameIsDeleted(file) {
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     return subFiles.length === 0 || subFiles.some(f => f === 'DELETED');
 }
+
+async function addImageToDb(game, imageUri, type, database) {
+    await database.image.save({
+        gameId: game.id,
+        launchboxId: game.launchboxId,
+        uri: imageUri,
+        status: 'toDownload',
+        type: type,
+        filename: `${game.launchboxId}.${imageUri.substring(imageUri.lastIndexOf('/') + 1)}`,
+    });
+};
 
 module.exports = buildDbFromFolders;
