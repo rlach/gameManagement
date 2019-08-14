@@ -57,6 +57,10 @@ async function gameManagement(settings, operation) {
                                 name: ' 5) convert database to launchbox xml',
                                 value: 'dbToLaunchbox',
                             },
+                            {
+                                name: ' 6) download images',
+                                value: 'downloadImages',
+                            },
                             new inquirer.Separator('= Helper tools ='),
                             {
                                 name:
@@ -106,6 +110,15 @@ async function gameManagement(settings, operation) {
             case 'dbToLaunchbox':
                 await scripts.convertDbToLaunchbox(database);
                 break;
+            case 'downloadImages':
+                await scripts.downloadImages(
+                    {
+                        launchboxPath: settings.paths.launchbox,
+                        launchboxPlatform: settings.launchboxPlatform,
+                    },
+                    database
+                );
+                break;
             case 'findDuplicates':
                 await scripts.findPossibleDuplicates();
                 break;
@@ -132,10 +145,17 @@ async function gameManagement(settings, operation) {
                     settings.paths.main
                 );
                 await scripts.convertDbToLaunchbox(database);
+                await scripts.downloadImages(
+                    {
+                        launchboxPath: settings.paths.launchbox,
+                        launchboxPlatform: settings.launchboxPlatform,
+                    },
+                    database
+                );
         }
     } finally {
         if (database) {
-            database.database.close();
+            await database.close();
         }
     }
 }

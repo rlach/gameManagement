@@ -1,19 +1,21 @@
 const moment = require('moment');
-const DatabaseGame = require('./databaseGame');
+const DatabaseEntity = require('../databaseEntity');
+const UUID = require('uuid');
 
 function getGame(db) {
-    class NedbGame extends DatabaseGame {
+    class NedbGame extends DatabaseEntity {
         constructor() {
             super();
 
             this.Game = db;
         }
 
-        async retrieveGameFromDb(id) {
+        async retrieveFromDb(id) {
             let game = await db.findOne({ id });
             if (!game) {
                 game = await db.insert({
                     id,
+                    launchboxId: UUID.v4(),
                     dateAdded: moment().format(),
                     dateModified: moment().format(),
                 });
@@ -25,7 +27,7 @@ function getGame(db) {
             return db.findOne(searchQuery);
         }
 
-        async saveGame(game) {
+        async save(game) {
             await db.update({ id: game.id }, game);
         }
 

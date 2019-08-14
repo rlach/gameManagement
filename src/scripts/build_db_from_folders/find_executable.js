@@ -12,7 +12,7 @@ async function updateExecutableAndDirectory(file, game, strategy, database) {
         game.forceExecutableUpdate = false;
         if (executableFile.deleted) {
             game.deleted = true;
-            await databaseGame.saveGame(game);
+            await databaseGame.save(game);
         } else {
             await saveFileAndDirectory(executableFile, game, database);
         }
@@ -80,7 +80,7 @@ async function saveFileAndDirectory(target, game, database) {
         game.directory = target.directory;
         game.executableFile = target.file;
         game.dateModified = moment().format();
-        await database.game.saveGame(game);
+        await database.game.save(game);
     } catch (e) {
         log.debug(`Could not update game`, e);
     }

@@ -11,7 +11,10 @@ const bar = new cliProgress.Bar(
     cliProgress.Presets.shades_classic
 );
 
-function getBar() {
+function getBar(operation) {
+    if (operation) {
+        updateName(bar, operation);
+    }
     return bar;
 }
 

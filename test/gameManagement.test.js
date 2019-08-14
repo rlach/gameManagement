@@ -15,8 +15,8 @@ describe('gameManagement', function() {
         Object.assign(settings, {
             database: {
                 database: 'nedb',
-                nedbFilename: ''
-            }
+                nedbExtension: '',
+            },
         });
     });
 
@@ -33,7 +33,11 @@ describe('gameManagement', function() {
         const writeFileSync = sandbox.stub(fs, 'writeFileSync');
         await gameManagement(settings);
         sinon.assert.calledOnce(existsSync);
-        sinon.assert.calledWith(writeFileSync, './settings.json', JSON.stringify(settingsSample, null, 4));
+        sinon.assert.calledWith(
+            writeFileSync,
+            './settings.json',
+            JSON.stringify(settingsSample, null, 4)
+        );
     });
 
     describe('with operation given', () => {
@@ -48,31 +52,46 @@ describe('gameManagement', function() {
         });
 
         it('calls organizeDirectories when organizeDirectories', async () => {
-            const organizeDirectories = sandbox.stub(scripts, 'organizeDirectories');
+            const organizeDirectories = sandbox.stub(
+                scripts,
+                'organizeDirectories'
+            );
             await gameManagement(settings, 'organizeDirectories');
             sinon.assert.calledOnce(organizeDirectories);
         });
 
         it('calls syncLaunchboxToDb when launchboxToDb', async () => {
-            const syncLaunchboxToDb = sandbox.stub(scripts, 'syncLaunchboxToDb');
+            const syncLaunchboxToDb = sandbox.stub(
+                scripts,
+                'syncLaunchboxToDb'
+            );
             await gameManagement(settings, 'launchboxToDb');
             sinon.assert.calledOnce(syncLaunchboxToDb);
         });
 
         it('calls buildDbFromFolders when buildDb', async () => {
-            const buildDbFromFolders = sandbox.stub(scripts, 'buildDbFromFolders');
+            const buildDbFromFolders = sandbox.stub(
+                scripts,
+                'buildDbFromFolders'
+            );
             await gameManagement(settings, 'buildDb');
             sinon.assert.calledOnce(buildDbFromFolders);
         });
 
         it('calls convertDbToLaunchbox when dbToLaunchbox', async () => {
-            const convertDbToLaunchbox = sandbox.stub(scripts, 'convertDbToLaunchbox');
+            const convertDbToLaunchbox = sandbox.stub(
+                scripts,
+                'convertDbToLaunchbox'
+            );
             await gameManagement(settings, 'dbToLaunchbox');
             sinon.assert.calledOnce(convertDbToLaunchbox);
         });
 
         it('calls findPossibleDuplicates when findDuplicates', async () => {
-            const findPossibleDuplicates = sandbox.stub(scripts, 'findPossibleDuplicates');
+            const findPossibleDuplicates = sandbox.stub(
+                scripts,
+                'findPossibleDuplicates'
+            );
             await gameManagement(settings, 'findDuplicates');
             sinon.assert.calledOnce(findPossibleDuplicates);
         });
@@ -85,10 +104,22 @@ describe('gameManagement', function() {
 
         it('calls all syncing phases when syncAll', async () => {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
-            const organizeDirectories = sandbox.stub(scripts, 'organizeDirectories');
-            const syncLaunchboxToDb = sandbox.stub(scripts, 'syncLaunchboxToDb');
-            const buildDbFromFolders = sandbox.stub(scripts, 'buildDbFromFolders');
-            const convertDbToLaunchbox = sandbox.stub(scripts, 'convertDbToLaunchbox');
+            const organizeDirectories = sandbox.stub(
+                scripts,
+                'organizeDirectories'
+            );
+            const syncLaunchboxToDb = sandbox.stub(
+                scripts,
+                'syncLaunchboxToDb'
+            );
+            const buildDbFromFolders = sandbox.stub(
+                scripts,
+                'buildDbFromFolders'
+            );
+            const convertDbToLaunchbox = sandbox.stub(
+                scripts,
+                'convertDbToLaunchbox'
+            );
 
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
 
@@ -110,10 +141,13 @@ describe('gameManagement', function() {
 
         it('asks which scripts to use and runs it', async () => {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
-            const organizeDirectories = sandbox.stub(scripts, 'organizeDirectories');
+            const organizeDirectories = sandbox.stub(
+                scripts,
+                'organizeDirectories'
+            );
 
             sandbox.stub(inquirer, 'prompt').resolves({
-                operation: 'getCodes'
+                operation: 'getCodes',
             });
             await gameManagement(settings);
 

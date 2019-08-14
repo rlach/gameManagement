@@ -1,5 +1,6 @@
 const moment = require('moment');
-const DatabaseGame = require('./databaseGame');
+const DatabaseEntity = require('../databaseEntity');
+const UUID = require('uuid');
 
 function getGame(mongoose) {
     const gameSchema = new mongoose.Schema({
@@ -32,6 +33,7 @@ function getGame(mongoose) {
         communityStarVotes: Number,
         version: String,
         series: String,
+        launchboxId: String,
         portable: Boolean,
         hide: Boolean,
         broken: Boolean,
@@ -43,14 +45,12 @@ function getGame(mongoose) {
         forceExecutableUpdate: Boolean,
         forceAdditionalImagesUpdate: Boolean,
         engine: String,
-        redownloadAdditionalImages: Boolean,
-        redownloadMainImage: Boolean,
         sourceMissingEn: Boolean,
         sourceMissingJp: Boolean,
     });
     gameSchema.index({ id: 1 });
 
-    class MongooseGame extends DatabaseGame {
+    class MongooseGame extends DatabaseEntity {
         constructor() {
             super();
 
@@ -58,11 +58,12 @@ function getGame(mongoose) {
             this.Game = mongoose.model('Game', gameSchema);
         }
 
-        async retrieveGameFromDb(id) {
+        async retrieveFromDb(id) {
             let game = await this.findOne({ id });
             if (!game) {
                 game = await this.createGame({
                     id,
+                    launchboxId: UUID.v4(),
                 });
             }
             return game;
@@ -72,7 +73,7 @@ function getGame(mongoose) {
             return this.Game.findOne(searchQuery);
         }
 
-        async saveGame(game) {
+        async save(game) {
             return game.save();
         }
 
@@ -84,7 +85,7 @@ function getGame(mongoose) {
             const game = new this.Game(gameData);
             game.dateAdded = moment().format();
             game.dateModified = moment().format();
-            return this.saveGame(game);
+            return this.save(game);
         }
     }
 
