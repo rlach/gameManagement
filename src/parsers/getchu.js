@@ -115,16 +115,22 @@ function getGameMetadataJp(query) {
 }
 
 function getAdditionalImages(query) {
-    return query('.soft')
+    return query('a.highslide')
         .filter((i, e) =>
             query(e)
-                .attr('alt')
-                .startsWith('SAMPLE')
+                .attr('href')
+                .includes('sample')
         )
         .map((i, e) =>
             query(e)
-                .attr('src')
-                .replace('./', 'http://getchu.com/')
+                .attr('href')
+                .startsWith('./')
+                ? query(e)
+                      .attr('href')
+                      .replace('./', 'http://getchu.com/')
+                : query(e)
+                      .attr('href')
+                      .replace('/', 'http://getchu.com/')
         )
         .get();
 }
