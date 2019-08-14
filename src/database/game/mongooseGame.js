@@ -45,8 +45,6 @@ function getGame(mongoose) {
         forceExecutableUpdate: Boolean,
         forceAdditionalImagesUpdate: Boolean,
         engine: String,
-        redownloadAdditionalImages: Boolean, //TODO: re-implement redownload additional images to work with new images collection
-        redownloadMainImage: Boolean,
         sourceMissingEn: Boolean,
         sourceMissingJp: Boolean,
     });
@@ -65,7 +63,7 @@ function getGame(mongoose) {
             if (!game) {
                 game = await this.createGame({
                     id,
-                    launchboxId: UUID.v4()
+                    launchboxId: UUID.v4(),
                 });
             }
             return game;

@@ -8,7 +8,7 @@ module.exports = {
     onlyUpdateNewer: true,
     database: {
         database: 'nedb', //'nedb' or 'mongodb'
-        nedbFilename: 'games.db',
+        nedbExtension: '.db',
         mongoUri: 'mongodb://localhost/test',
     },
     organizeDirectories: {

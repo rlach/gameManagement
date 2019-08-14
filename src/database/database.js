@@ -3,12 +3,18 @@ async function initDatabase(settings) {
         const { datastore } = require('nedb-promise');
 
         const database = datastore({
-            filename: settings.nedbFilename,
+            filename:
+                settings.nedbExtension === ''
+                    ? ''
+                    : `games${settings.nedbExtension}`,
             autoload: true,
         });
 
         const databaseImages = datastore({
-            filename: 'images.db',
+            filename:
+                settings.nedbExtension === ''
+                    ? ''
+                    : `images${settings.nedbExtension}`,
             autoload: true,
         });
 
@@ -21,17 +27,18 @@ async function initDatabase(settings) {
         return {
             game: getGame(database),
             image: getImage(databaseImages),
-            close: () => {}
+            close: () => {},
         };
     } else {
         const mongoose = require('./mongoose');
         await mongoose.connect(settings.mongoUri);
         const { getGame } = require('./game/mongooseGame');
+        const { getImage } = require('./image/mongooseImage');
 
         return {
             game: getGame(mongoose.mongoose),
-            //TODO: return image collection for mongoose
-            close: mongoose.db.close
+            image: getImage(mongoose.mongoose),
+            close: mongoose.db.close.bind(mongoose.db),
         };
     }
 }

@@ -111,10 +111,13 @@ async function gameManagement(settings, operation) {
                 await scripts.convertDbToLaunchbox(database);
                 break;
             case 'downloadImages':
-                await scripts.downloadImages({
-                    launchboxPath: settings.paths.launchbox,
-                    launchboxPlatform: settings.launchboxPlatform
-                }, database);
+                await scripts.downloadImages(
+                    {
+                        launchboxPath: settings.paths.launchbox,
+                        launchboxPlatform: settings.launchboxPlatform,
+                    },
+                    database
+                );
                 break;
             case 'findDuplicates':
                 await scripts.findPossibleDuplicates();
@@ -142,14 +145,17 @@ async function gameManagement(settings, operation) {
                     settings.paths.main
                 );
                 await scripts.convertDbToLaunchbox(database);
-                await scripts.downloadImages({
-                    launchboxPath: settings.paths.launchbox,
-                    launchboxPlatform: settings.launchboxPlatform
-                }, database);
+                await scripts.downloadImages(
+                    {
+                        launchboxPath: settings.paths.launchbox,
+                        launchboxPlatform: settings.launchboxPlatform,
+                    },
+                    database
+                );
         }
     } finally {
         if (database) {
-            database.close();
+            await database.close();
         }
     }
 }

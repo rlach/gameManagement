@@ -1,6 +1,5 @@
 const download = require('image-downloader');
 const fs = require('fs');
-const settings = require('../../../settings');
 
 const boxFrontPath = 'Box - Front - Reconstructed'; // Use reconstructed so when user uploads his own box front to 'Box - Front' it will be used instead
 const backgroundPath = 'Clear Logo'; // So user can use 'Fanart - Background' which has higher priority
@@ -23,7 +22,7 @@ async function downloadImage(launchboxPath, platformName, image) {
 
     const targetPath = `${launchboxPath}/Images/${platformName}/${imageTypePath}/${image.filename}`;
 
-    if(!fs.existsSync(targetPath)) {
+    if (!fs.existsSync(targetPath)) {
         await download.image({
             url: image.uri,
             dest: targetPath,
@@ -32,7 +31,7 @@ async function downloadImage(launchboxPath, platformName, image) {
 }
 
 function createMissingDirectories(launchboxPath, platformName) {
-    const imagesPath = `${settings.paths.launchbox}/Images`;
+    const imagesPath = `${launchboxPath}/Images`;
 
     createMissingDirectory(imagesPath);
     createMissingDirectory(`${imagesPath}/${platformName}`);

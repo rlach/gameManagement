@@ -8,7 +8,7 @@ const executables = require('../../src/scripts/build_db_from_folders/find_execut
 
 const buildDbFromFolders = require('../../src/scripts/build_db_from_folders/build_db_from_folders');
 
-describe('organizeDirectories', function() {
+describe('buildDbFromFolders', function() {
     const mainPaths = ['main'];
     let progressBarUpdate;
     let settings;
@@ -18,27 +18,27 @@ describe('organizeDirectories', function() {
     beforeEach(async () => {
         database = await initDatabase({
             database: 'nedb',
-            nedbFilename: ''
+            nedbExtension: '',
         });
 
         strategies = [];
         settings = {
             paths: {
                 targetSortFolder: './target',
-                unsortedGames: './mess'
+                unsortedGames: './mess',
             },
             organizeDirectories: {
                 shouldAsk: true,
                 minimumScoreToAccept: 1,
-                minimumScoreToAsk: 0
-            }
+                minimumScoreToAsk: 0,
+            },
         };
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
             start: sinon.spy(),
-            update: progressBarUpdate,
-            stop: sinon.spy()
+            increment: progressBarUpdate,
+            stop: sinon.spy(),
         });
     });
 
@@ -70,7 +70,7 @@ describe('organizeDirectories', function() {
         it('Creates new game with id equal to directory and marked as deleted', async () => {
             let strategy = {
                 name: 'dummy',
-                shouldUse: () => true
+                shouldUse: () => true,
             };
 
             await buildDbFromFolders([strategy], database, [mainPaths]);
@@ -79,20 +79,26 @@ describe('organizeDirectories', function() {
             expect(game).to.include({
                 deleted: true,
                 id: 'dir',
-                source: 'dummy'
+                source: 'dummy',
             });
         });
 
         it('If game is not deleted tries to find engine, recognize game type and fetch sources', async () => {
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(typeRecognizer, 'recognizeGameType');
-            const updateExecutableAndDirectory = sinon.stub(executables, 'updateExecutableAndDirectory');
+            const recognizeGameType = sinon.stub(
+                typeRecognizer,
+                'recognizeGameType'
+            );
+            const updateExecutableAndDirectory = sinon.stub(
+                executables,
+                'updateExecutableAndDirectory'
+            );
             let strategy = {
                 name: 'dummy',
                 shouldUse: () => true,
                 fetchGameData: async () => {
                     return {};
-                }
+                },
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
 
@@ -103,7 +109,7 @@ describe('organizeDirectories', function() {
                 engine: undefined,
                 forceSourceUpdate: false,
                 id: 'dir',
-                source: 'dummy'
+                source: 'dummy',
             });
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(recognizeGameType);
@@ -129,18 +135,24 @@ describe('organizeDirectories', function() {
                 makerJp: 'makerJp',
                 video: 'video',
                 communityStars: 4,
-                communityStarVotes: 9128
+                communityStarVotes: 9128,
             };
 
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(typeRecognizer, 'recognizeGameType');
-            const updateExecutableAndDirectory = sinon.stub(executables, 'updateExecutableAndDirectory');
+            const recognizeGameType = sinon.stub(
+                typeRecognizer,
+                'recognizeGameType'
+            );
+            const updateExecutableAndDirectory = sinon.stub(
+                executables,
+                'updateExecutableAndDirectory'
+            );
             let strategy = {
                 name: 'dummy',
                 shouldUse: () => true,
                 fetchGameData: async () => {
                     return gameDetails;
-                }
+                },
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
 
@@ -153,7 +165,6 @@ describe('organizeDirectories', function() {
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy',
-                redownloadMainImage: true
             };
             Object.assign(expectedGame, gameDetails);
 
@@ -165,12 +176,18 @@ describe('organizeDirectories', function() {
 
         it('If game data was fetched without additional images fetches additional images separately', async () => {
             const gameDetails = {
-                nameEn: 'nameEn'
+                nameEn: 'nameEn',
             };
 
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(typeRecognizer, 'recognizeGameType');
-            const updateExecutableAndDirectory = sinon.stub(executables, 'updateExecutableAndDirectory');
+            const recognizeGameType = sinon.stub(
+                typeRecognizer,
+                'recognizeGameType'
+            );
+            const updateExecutableAndDirectory = sinon.stub(
+                executables,
+                'updateExecutableAndDirectory'
+            );
             let strategy = {
                 name: 'dummy',
                 shouldUse: () => true,
@@ -179,10 +196,13 @@ describe('organizeDirectories', function() {
                 },
                 getAdditionalImages: async () => {
                     return ['additionalIm1'];
-                }
+                },
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
-            const getAdditionalImages = sinon.spy(strategy, 'getAdditionalImages');
+            const getAdditionalImages = sinon.spy(
+                strategy,
+                'getAdditionalImages'
+            );
 
             await buildDbFromFolders([strategy], database, [mainPaths]);
 
@@ -193,7 +213,7 @@ describe('organizeDirectories', function() {
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy',
-                additionalImages: ['additionalIm1']
+                additionalImages: ['additionalIm1'],
             };
             Object.assign(expectedGame, gameDetails);
 

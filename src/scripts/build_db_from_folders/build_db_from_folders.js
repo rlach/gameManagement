@@ -31,7 +31,7 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
     );
 
     progressBar.start(foundFiles.length, 0);
-    await eachLimit(foundFiles, 5, async (file) => {
+    await eachLimit(foundFiles, 5, async file => {
         return buildDbFromFolder(file, strategies, database, progressBar);
     });
 
@@ -86,8 +86,10 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
             game.forceSourceUpdate = false;
             log.debug('Updating source web page(s)');
             const gameData = await strategy.fetchGameData(game.id, game);
-            const mainImageUrl = gameData.imageUrlJp ? gameData.imageUrlJp : gameData.imageUrlEn;
-            if(mainImageUrl) {
+            const mainImageUrl = gameData.imageUrlJp
+                ? gameData.imageUrlJp
+                : gameData.imageUrlEn;
+            if (mainImageUrl) {
                 await addImageToDb(game, mainImageUrl, 'box', database);
             }
             if (
@@ -104,14 +106,23 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
                     JSON.stringify(game.additionalImages)
                 ) {
                     gameData.additionalImages = newAdditionalImages;
-                    game.redownloadAdditionalImages = true;
+                    await addAdditionalImagesToDb(
+                        game,
+                        newAdditionalImages,
+                        database
+                    );
                 }
             }
             if (
                 game.imageUrlEn !== gameData.imageUrlEn ||
                 game.imageUrlJp !== game.imageUrlJp
             ) {
-                game.redownloadMainImage = true;
+                const mainImageUrl = gameData.imageUrlJp
+                    ? gameData.imageUrlJp
+                    : gameData.imageUrlEn;
+                if (mainImageUrl) {
+                    await addImageToDb(game, mainImageUrl, 'box', database);
+                }
             }
             Object.assign(game, removeUndefined(gameData));
             if (game.status === 'invalid') {
@@ -120,28 +131,14 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
             game.dateModified = moment().format();
             await database.game.save(game);
 
-            if (game.additionalImages) {
-                for (const imageUri of game.additionalImages) {
-                    let imageEntry = await database.image.findOne({
-                        gameId: game.id,
-                        uri: imageUri,
-                    });
-                    if (!imageEntry) {
-                        await addImageToDb(game, imageUri, 'screenshot', database);
-                    }
-                }
-
-                if(game.additionalImages.length > 0) {
-                    const imageUri = game.additionalImages[game.additionalImages.length - 1];
-                    await addImageToDb(game, imageUri, 'background', database);
-                }
-            }
+            await addAdditionalImagesToDb(
+                game,
+                game.additionalImages,
+                database
+            );
         }
 
-        if (
-            (game.nameEn || game.nameJp) &&
-            game.forceAdditionalImagesUpdate
-        ) {
+        if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
             game.forceAdditionalImagesUpdate = false;
             const newAdditionalImages = await strategy.getAdditionalImages(
                 file.name
@@ -151,7 +148,11 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
                 JSON.stringify(game.additionalImages)
             ) {
                 game.additionalImages = newAdditionalImages;
-                game.redownloadAdditionalImages = true;
+                await addAdditionalImagesToDb(
+                    game,
+                    game.additionalImages,
+                    database
+                );
             }
             await database.game.save(game);
         }
@@ -183,15 +184,39 @@ function gameIsDeleted(file) {
     return subFiles.length === 0 || subFiles.some(f => f === 'DELETED');
 }
 
+async function addAdditionalImagesToDb(game, additionalImages, database) {
+    if (additionalImages) {
+        for (const imageUri of additionalImages) {
+            await addImageToDb(game, imageUri, 'screenshot', database);
+        }
+
+        if (additionalImages.length > 0) {
+            const imageUri = additionalImages[additionalImages.length - 1];
+            await addImageToDb(game, imageUri, 'background', database);
+        }
+    }
+}
+
 async function addImageToDb(game, imageUri, type, database) {
-    await database.image.save({
+    let imageEntry = await database.image.findOne({
         gameId: game.id,
-        launchboxId: game.launchboxId,
         uri: imageUri,
-        status: 'toDownload',
-        type: type,
-        filename: `${game.launchboxId}.${imageUri.substring(imageUri.lastIndexOf('/') + 1)}`,
     });
-};
+    if (!imageEntry) {
+        await database.image.save({
+            gameId: game.id,
+            launchboxId: game.launchboxId,
+            uri: imageUri,
+            status: 'toDownload',
+            type: type,
+            filename: `${game.launchboxId}.${imageUri.substring(
+                imageUri.lastIndexOf('/') + 1
+            )}`,
+        });
+    } else {
+        imageEntry.status = 'toDownload';
+        database.image.save(imageEntry);
+    }
+}
 
 module.exports = buildDbFromFolders;
