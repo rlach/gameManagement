@@ -33,8 +33,8 @@ async function downloadImages(settings, database) {
                 } else {
                     image.status = 'downloaded';
                 }
-                await database.image.save(image);
                 progressBar.increment();
+                await database.image.save(image);
             });
         }
         q.error((err, task) => {
