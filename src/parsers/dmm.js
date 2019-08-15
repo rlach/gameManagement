@@ -257,7 +257,7 @@ function getProGameMetadata(query) {
                     .trim()
             )
             .get(),
-        imageUrlJp: query('.bx-package img').attr('src'),
+        imageUrlJp: query('a[name="package-image"]').attr('href'),
         additionalImages: images,
         descriptionJp: query('.area-detail-read .text-overflow')
             .text()
