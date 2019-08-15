@@ -64,6 +64,7 @@ function getGame(mongoose) {
                 game = await this.createGame({
                     id,
                     launchboxId: UUID.v4(),
+                    portable: true,
                 });
             }
             return game;
