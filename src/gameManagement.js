@@ -6,6 +6,7 @@ const parserStrategies = require('./parsers');
 const strategies = Object.values(parserStrategies);
 const settingsSample = require('./settings-sample');
 const { initDatabase } = require('./database/database');
+const sleep = require('./util/sleep');
 
 async function gameManagement(settings, operation) {
     let database = await initDatabase(settings.database);
@@ -155,6 +156,7 @@ async function gameManagement(settings, operation) {
         }
     } finally {
         if (database) {
+            await sleep(1);
             await database.close();
         }
     }

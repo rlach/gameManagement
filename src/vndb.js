@@ -2,6 +2,7 @@ const VNDB = require('vndb');
 const VNDBtags = require('./assets/vndb-tags');
 const log = require('./logger');
 const moment = require('moment/moment');
+const sleep = require('./util/sleep');
 
 let vndb;
 
@@ -171,10 +172,6 @@ function getMetadataFromVn(VN) {
         communityStars: VN.rating / 2,
     };
 }
-
-const sleep = milliseconds => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
 
 module.exports = {
     getVndbData,

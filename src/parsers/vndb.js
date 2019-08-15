@@ -1,7 +1,4 @@
-const request = require('request-promise');
-const { parseSite } = require('../html');
 const { getVndbDataById, findVndbGames } = require('../vndb');
-const moment = require('moment');
 const log = require('./../logger');
 const SiteStrategy = require('./siteStrategy');
 

@@ -85,7 +85,11 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
         ) {
             game.forceSourceUpdate = false;
             log.debug('Updating source web page(s)');
-            const gameData = await strategy.fetchGameData(game.id, game);
+            const gameData = await strategy.fetchGameData(
+                game.id,
+                game,
+                `${file.path}/${file.name}`
+            );
             const mainImageUrl = gameData.imageUrlJp
                 ? gameData.imageUrlJp
                 : gameData.imageUrlEn;

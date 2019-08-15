@@ -3,4 +3,5 @@ module.exports = {
     dmmStrategy: require('./dmm'),
     getchuStrategy: require('./getchu'),
     vndbStrategy: require('./vndb'),
+    otherStrategy: require('./other'),
 };
