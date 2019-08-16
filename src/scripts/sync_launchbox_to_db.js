@@ -3,11 +3,19 @@ const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../logger');
 const convert = require('xml-js');
-const settings = require('../settings');
 const mapper = require('../mapper');
+const { ensureArray } = require('../util/objects');
 
-async function syncLaunchboxToDb(database) {
-    const launchboxPlatform = readLaunchboxPlatformFile();
+async function syncLaunchboxToDb(
+    launchboxPath,
+    launchboxPlatformName,
+    onlyUpdateNewer,
+    database
+) {
+    const launchboxPlatform = readLaunchboxPlatformFile(
+        launchboxPath,
+        launchboxPlatformName
+    );
     if (launchboxPlatform) {
         const progressBar = startProgressBar(
             launchboxPlatform.LaunchBox.Game.length
@@ -20,7 +28,10 @@ async function syncLaunchboxToDb(database) {
             const dbGame = await database.game.findOne({
                 launchboxId: launchboxGame.ID._text,
             });
-            if (dbGame) {
+            if (shouldSkipGame(launchboxGame, dbGame, onlyUpdateNewer)) {
+                log.debug('Skipping game due to outdated data in launchbox');
+            } else {
+                log.debug(`Syncing game ${dbGame.id}`);
                 await syncGame(launchboxGame, dbGame, database);
             }
             progressBar.update(index + 1);
@@ -29,26 +40,26 @@ async function syncLaunchboxToDb(database) {
     }
 }
 
+function shouldSkipGame(launchboxGame, dbGame, onlyUpdateNewer) {
+    return (
+        !dbGame ||
+        (onlyUpdateNewer &&
+            isOlder(launchboxGame.DateModified, dbGame.dateModified) &&
+            isOlder(launchboxGame.LastPlayedDate, dbGame.lastPlayedDate))
+    );
+}
+
 async function syncGame(launchboxGame, dbGame, database) {
-    log.debug(`Syncing game ${dbGame.id}`);
-    if (
-        settings.onlyUpdateNewer &&
-        isOlder(launchboxGame.DateModified, dbGame.dateModified) &&
-        isOlder(launchboxGame.LastPlayedDate, dbGame.lastPlayedDate)
-    ) {
-        log.debug('Skipping game due to outdated data in launchbox');
-    } else {
-        const result = mapper.reverseMap(launchboxGame);
+    const result = mapper.reverseMap(launchboxGame);
 
-        Object.assign(dbGame, result);
+    Object.assign(dbGame, result);
 
-        try {
-            await database.game.save(dbGame);
-            log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
-        } catch (e) {
-            log.debug('Game failed to be saved', e);
-            throw e;
-        }
+    try {
+        await database.game.save(dbGame);
+        log.debug(`Game updated with`, JSON.stringify(dbGame, null, 4));
+    } catch (e) {
+        log.debug('Game failed to be saved', e);
+        throw e;
     }
 }
 
@@ -64,25 +75,19 @@ function startProgressBar(gameAmount) {
     return progressBar;
 }
 
-function readLaunchboxPlatformFile() {
-    const launchboxXmlPath = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
+function readLaunchboxPlatformFile(launchboxPath, launchboxPlatformName) {
+    const launchboxXmlPath = `${launchboxPath}/Data/Platforms/${launchboxPlatformName}.xml`;
     if (fs.existsSync(launchboxXmlPath)) {
         const launchboxXml = fs.readFileSync(launchboxXmlPath, 'utf8');
         const convertedObject = convert.xml2js(launchboxXml, { compact: true });
 
-        if (!convertedObject.LaunchBox.Game) {
-            convertedObject.LaunchBox.Game = [];
-        } else if (!Array.isArray(convertedObject.LaunchBox.Game)) {
-            convertedObject.LaunchBox.Game = [convertedObject.LaunchBox.Game];
+        if (!convertedObject.LaunchBox) {
+            throw new Error('Not a launchbox file');
         }
 
-        if (!convertedObject.LaunchBox.CustomField) {
-            convertedObject.LaunchBox.CustomField = [];
-        } else if (!Array.isArray(convertedObject.LaunchBox.CustomField)) {
-            convertedObject.LaunchBox.CustomField = [
-                convertedObject.LaunchBox.CustomField,
-            ];
-        }
+        convertedObject.LaunchBox.Game = ensureArray(
+            convertedObject.LaunchBox.Game
+        );
 
         return convertedObject;
     }

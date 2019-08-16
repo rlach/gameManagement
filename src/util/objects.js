@@ -11,4 +11,12 @@ function removeUndefined(obj) {
     return obj;
 }
 
-module.exports = { removeUndefined };
+function ensureArray(obj) {
+    if (!obj) {
+        return [];
+    } else {
+        return Array.isArray(obj) ? obj : [obj];
+    }
+}
+
+module.exports = { removeUndefined, ensureArray };

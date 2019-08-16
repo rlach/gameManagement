@@ -2,7 +2,7 @@ const request = require('request-promise');
 const { parseSite } = require('../html');
 const { getVndbData } = require('../vndb');
 const moment = require('moment');
-const { removeUndefined } = require('../objects');
+const { removeUndefined } = require('../util/objects');
 const log = require('./../logger');
 const SiteStrategy = require('./siteStrategy');
 

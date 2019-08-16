@@ -1,4 +1,4 @@
-const objects = require('../src/objects');
+const objects = require('../src/util/objects');
 
 const { expect } = require('chai');
 
@@ -36,6 +36,21 @@ describe('objects.js', function() {
                     g: undefined,
                 })
             ).to.eql(fullyDefinedObject);
+        });
+    });
+
+    describe('ensure array', function() {
+        it('returns empty array when undefined is passed', async () => {
+            expect(objects.ensureArray(undefined)).to.eql([]);
+        });
+
+        it('returns single element array when object is passed', async () => {
+            expect(objects.ensureArray({ id: 1 })).to.eql([{ id: 1 }]);
+        });
+
+        it('returns passed array with no change', async () => {
+            const array = [{ id: 1 }, { id: 2 }];
+            expect(objects.ensureArray(array)).to.eql(array);
         });
     });
 });

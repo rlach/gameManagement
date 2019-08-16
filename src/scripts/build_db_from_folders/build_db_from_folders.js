@@ -1,7 +1,7 @@
 const log = require('../../logger');
 const moment = require('moment/moment');
 const fs = require('fs');
-const { removeUndefined } = require('../../objects');
+const { removeUndefined } = require('../../util/objects');
 const executables = require('./find_executable');
 const typeRecognizer = require('./recognize_game_type');
 const progress = require('../../progress');

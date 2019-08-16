@@ -99,7 +99,12 @@ async function gameManagement(settings, operation) {
                 });
                 break;
             case 'launchboxToDb':
-                await scripts.syncLaunchboxToDb(database);
+                await scripts.syncLaunchboxToDb(
+                    settings.paths.launchbox,
+                    settings.launchboxPlatform,
+                    settings.onlyUpdateNewer,
+                    database
+                );
                 break;
             case 'buildDb':
                 await scripts.buildDbFromFolders(
@@ -139,7 +144,12 @@ async function gameManagement(settings, operation) {
                     },
                     organizeDirectories: settings.organizeDirectories,
                 });
-                await scripts.syncLaunchboxToDb(database);
+                await scripts.syncLaunchboxToDb(
+                    settings.paths.launchbox,
+                    settings.launchboxPlatform,
+                    settings.onlyUpdateNewer,
+                    database
+                );
                 await scripts.buildDbFromFolders(
                     strategies,
                     database,

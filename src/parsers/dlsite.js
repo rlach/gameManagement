@@ -4,7 +4,7 @@ const moment = require('moment');
 const { parseSite } = require('../html');
 const { getVndbData } = require('../vndb');
 const SiteStrategy = require('./siteStrategy');
-const { removeUndefined } = require('../objects');
+const { removeUndefined } = require('../util/objects');
 const settings = require('../settings');
 
 class DlsiteStrategy extends SiteStrategy {
