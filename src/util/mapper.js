@@ -1,5 +1,5 @@
 const ObjectMapper = require('two-way-object-mapper');
-const settings = require('./settings');
+const settings = require('../settings');
 const moment = require('moment');
 
 const mapper = new ObjectMapper();

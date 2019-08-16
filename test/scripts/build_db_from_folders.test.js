@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const fs = require('fs');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
 const typeRecognizer = require('../../src/scripts/build_db_from_folders/recognize_game_type');

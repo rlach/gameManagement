@@ -1,12 +1,12 @@
 const sinon = require('sinon');
 const moment = require('moment');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 const fs = require('fs');
 const { initDatabase } = require('../../src/database/database');
 const Chai = require('chai');
 const ChaiPromised = require('chai-as-promised');
 const { expect } = Chai;
-const mapper = require('../../src/mapper');
+const mapper = require('../../src/util/mapper');
 
 Chai.use(ChaiPromised);
 

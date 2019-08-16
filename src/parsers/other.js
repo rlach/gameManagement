@@ -9,20 +9,19 @@ class OtherStrategy extends SiteStrategy {
     }
 
     async fetchGameData(_a, _b, path) {
-        const subdirectories = fs
+        const subdirectory = fs
             .readdirSync(path, { withFileTypes: true })
-            .filter(dirent => dirent.isDirectory())
-            .map(dirent => dirent.name);
+            .find(dirent => dirent.isDirectory());
 
-        if (subdirectories.length > 0) {
-            return {
-                nameEn: subdirectories[0],
-            };
-        }
+        return subdirectory
+            ? {
+                  nameEn: subdirectory.name,
+              }
+            : undefined;
     }
 
-    extractCode(name) {
-        return [];
+    extractCode() {
+        return '';
     }
 
     async findGame() {
@@ -34,7 +33,11 @@ class OtherStrategy extends SiteStrategy {
     }
 
     shouldUse(gameId) {
-        return gameId.match(OTHER_ID_REGEX);
+        return !!gameId.match(OTHER_ID_REGEX);
+    }
+
+    scoreCodes() {
+        return [];
     }
 }
 

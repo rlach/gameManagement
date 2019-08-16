@@ -1,4 +1,4 @@
-const log = require('./../logger');
+const log = require('../util/logger');
 const files = require('../util/files');
 const settings = require('../settings');
 

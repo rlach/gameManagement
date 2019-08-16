@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-const log = require('../logger');
+const log = require('../util/logger');
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 

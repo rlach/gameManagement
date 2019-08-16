@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const fs = require('fs');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 
 const getPossibleCodes = require('../../src/scripts/get_possible_codes');
 

@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const log = require('../logger');
+const log = require('../util/logger');
 
 async function setForceUpdate(database) {
     let answers = {};

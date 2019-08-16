@@ -1,9 +1,9 @@
 const fs = require('fs');
-const log = require('../../logger');
+const log = require('../../util/logger');
 const convert = require('xml-js');
-const mapper = require('../../mapper');
+const mapper = require('../../util/mapper');
 const externalLaunchboxProperties = require('./external_launchbox_properties');
-const progress = require('../../progress');
+const progress = require('../../util/progress');
 const files = require('../../util/files');
 const { ensureArray } = require('../../util/objects');
 

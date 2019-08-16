@@ -1,7 +1,13 @@
-# gameManagement
+# Hisho86
 
 [![Build Status](https://travis-ci.org/rlach/gameManagement.svg?branch=master)](https://travis-ci.org/rlach/gameManagement)
 [![Coverage Status](https://coveralls.io/repos/github/rlach/gameManagement/badge.svg?branch=master)](https://coveralls.io/github/rlach/gameManagement?branch=master)
+
+Hisho86 is a tool intended to help with organization and management of japanese games in [Launchbox game launcher](https://www.launchbox-app.com). This includes, but is not limited to, professional games, doujins, rpg maker based games, visual novels etc.
+
+Hisho86 requires you to keep your games in proper directory structure and uses external resources from multiple storefronts and databases to fill up Launchbox with relevant information. It also provides a tool to help you organize disorganized games into proper directory structure.
+
+This project is NOT endorsed by or in any way supported by Launchbox developers. You can treat it as unofficial plugin, except it's not being plugged in into Launchbox itself.
 
 ## Main utility
 

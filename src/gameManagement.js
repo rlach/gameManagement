@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const log = require('./logger');
+const log = require('./util/logger');
 const scripts = require('./scripts');
 const fs = require('fs');
 const parserStrategies = require('./parsers');

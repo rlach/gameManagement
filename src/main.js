@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 const gameManagement = require('./gameManagement');
-const vndb = require('./vndb');
+const vndb = require('./util/vndb');
 const settings = require('./settings');
-const log = require('./logger');
+const log = require('./util/logger');
 
 async function main() {
     await vndb.connect();

@@ -1,9 +1,9 @@
-const log = require('./../logger');
+const log = require('../util/logger');
 const moment = require('moment');
-const { callPage } = require('../html');
-const { parseSite } = require('../html');
+const { callPage } = require('../util/html');
+const { parseSite } = require('../util/html');
 const { removeUndefined } = require('../util/objects');
-const { getVndbData } = require('../vndb');
+const { getVndbData } = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;

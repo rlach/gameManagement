@@ -1,10 +1,10 @@
-const log = require('../../logger');
+const log = require('../../util/logger');
 const moment = require('moment/moment');
 const fs = require('fs');
 const { removeUndefined } = require('../../util/objects');
 const executables = require('./find_executable');
 const typeRecognizer = require('./recognize_game_type');
-const progress = require('../../progress');
+const progress = require('../../util/progress');
 const eachLimit = require('async/eachLimit');
 
 const operation = 'Building database from folders';

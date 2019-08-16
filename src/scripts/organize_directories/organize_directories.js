@@ -1,6 +1,6 @@
 const fs = require('fs');
-const log = require('../../logger');
-const progress = require('../../progress');
+const log = require('../../util/logger');
+const progress = require('../../util/progress');
 const scoreResults = require('./confirm_scoring_results');
 
 const operation = 'Organizing directories';

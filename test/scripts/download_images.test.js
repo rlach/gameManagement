@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
 const download = require('image-downloader');

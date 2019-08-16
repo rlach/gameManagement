@@ -1,5 +1,5 @@
-const { getVndbDataById, findVndbGames } = require('../vndb');
-const log = require('./../logger');
+const { getVndbDataById, findVndbGames } = require('../util/vndb');
+const log = require('../util/logger');
 const SiteStrategy = require('./siteStrategy');
 
 const VNDB_ID_REGEX = new RegExp(/^v\d+$/gi);

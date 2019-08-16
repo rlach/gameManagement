@@ -1,9 +1,9 @@
 const request = require('request-promise');
-const { parseSite } = require('../html');
-const { getVndbData } = require('../vndb');
+const { parseSite } = require('../util/html');
+const { getVndbData } = require('../util/vndb');
 const moment = require('moment');
 const { removeUndefined } = require('../util/objects');
-const log = require('./../logger');
+const log = require('../util/logger');
 const SiteStrategy = require('./siteStrategy');
 
 const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);

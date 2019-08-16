@@ -1,7 +1,7 @@
-const log = require('../../logger');
+const log = require('../../util/logger');
 const queue = require('async/queue');
 const downloadImage = require('./download_image');
-const progress = require('../../progress');
+const progress = require('../../util/progress');
 const files = require('../../util/files');
 
 const operation = 'Downloading images';

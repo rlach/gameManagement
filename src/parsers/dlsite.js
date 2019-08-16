@@ -1,8 +1,8 @@
 const request = require('request-promise');
-const log = require('./../logger');
+const log = require('../util/logger');
 const moment = require('moment');
-const { parseSite } = require('../html');
-const { getVndbData } = require('../vndb');
+const { parseSite } = require('../util/html');
+const { getVndbData } = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 const { removeUndefined } = require('../util/objects');
 const settings = require('../settings');
@@ -67,57 +67,27 @@ class DlsiteStrategy extends SiteStrategy {
 
     async findGame(name) {
         const replies = await Promise.all([
-            search(name, 'adult-jp'),
-            search(name, 'adult-en'),
-            search(name, 'pro'),
+            searchWithRetry(name, 'adult-jp'),
+            searchWithRetry(name, 'adult-en'),
+            searchWithRetry(name, 'pro'),
         ]);
-        let replyEn = replies[1];
-        let replyJp = replies[0];
-        let replyPro = replies[2];
-
         const works = [];
-
-        if (replyEn.work.length === 0) {
-            const replyEn2 = await search(
-                name.substring(0, name.length / 2),
-                'adult-en'
-            );
-            works.push(...replyEn2.work);
-        } else {
-            works.push(...replyEn.work);
-        }
-
-        if (replyJp.work.length === 0) {
-            const replyJp2 = await search(
-                name.substring(0, name.length / 2),
-                'adult-jp'
-            );
-            works.push(...replyJp2.work);
-        } else {
-            works.push(...replyJp.work);
-        }
-
-        if (replyPro.work.length === 0) {
-            const replyPro2 = await search(
-                name.substring(0, name.length / 2),
-                'pro'
-            );
-            works.push(...replyPro2.work);
-        } else {
-            works.push(...replyPro.work);
-        }
-
+        replies.forEach(reply => works.push(...reply));
         return works;
     }
 
     async getAdditionalImages(id) {
         log.debug(`Getting additional images for ${id}`);
         try {
-            let url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
+            let url = '';
             if (id.startsWith('RE')) {
                 url = `https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/${id}.html`;
             } else if (id.startsWith('VJ')) {
                 url = `https://www.dlsite.com/pro/popup/=/file/smp1/product_id/${id}.html`;
+            } else if (id.startsWith('RJ')) {
+                `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
+            } else {
+                return undefined;
             }
             let reply = await request.get({
                 method: 'GET',
@@ -211,6 +181,17 @@ class DlsiteStrategy extends SiteStrategy {
 
 let dlsiteStrategy = new DlsiteStrategy();
 module.exports = dlsiteStrategy;
+
+async function searchWithRetry(name, site) {
+    const reply = await search(name, site);
+
+    if (reply.work.length === 0) {
+        const reply2 = await search(name.substring(0, name.length / 2), site);
+        return reply2.work;
+    } else {
+        return reply.work;
+    }
+}
 
 async function search(name, site) {
     return JSON.parse(

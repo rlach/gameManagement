@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const fs = require('fs');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 
 const results = require('../../src/scripts/organize_directories/confirm_scoring_results');
 

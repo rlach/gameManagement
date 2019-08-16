@@ -1,14 +1,11 @@
 const sinon = require('sinon');
 const fs = require('fs');
 const files = require('../../src/util/files');
-const progress = require('../../src/progress');
+const progress = require('../../src/util/progress');
 const moment = require('moment');
 const convert = require('xml-js');
 const { initDatabase } = require('../../src/database/database');
-const mapper = require('../../src/mapper');
-const { expect } = require('chai');
-const typeRecognizer = require('../../src/scripts/build_db_from_folders/recognize_game_type');
-const executables = require('../../src/scripts/build_db_from_folders/find_executable');
+const mapper = require('../../src/util/mapper');
 
 const convertDbToLaunchbox = require('../../src/scripts/convert_db_to_launchbox/convert_db_to_launchbox');
 const externalXmlProperties = require('../../src/scripts/convert_db_to_launchbox/external_launchbox_properties');

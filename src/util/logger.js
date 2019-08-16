@@ -2,7 +2,7 @@ const bunyan = require('bunyan'),
     bformat = require('bunyan-format'),
     formatOut = bformat({ outputMode: 'short' });
 
-const settings = require('./settings');
+const settings = require('../settings');
 
 const log = bunyan.createLogger({
     name: 'app',
