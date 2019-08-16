@@ -1,22 +1,19 @@
 const download = require('image-downloader');
 const fs = require('fs');
-
-const boxFrontPath = 'Box - Front - Reconstructed'; // Use reconstructed so when user uploads his own box front to 'Box - Front' it will be used instead
-const backgroundPath = 'Clear Logo'; // So user can use 'Fanart - Background' which has higher priority
-const screenshotPath = 'Screenshot - Gameplay';
+const constants = require('../../string_constants');
 
 async function downloadImage(launchboxPath, platformName, image) {
     let imageTypePath;
     switch (image.type) {
         case 'background':
-            imageTypePath = backgroundPath;
+            imageTypePath = constants.backgroundPath;
             break;
         case 'box':
-            imageTypePath = boxFrontPath;
+            imageTypePath = constants.boxFrontPath;
             break;
         case 'screenshot':
         default:
-            imageTypePath = screenshotPath;
+            imageTypePath = constants.screenshotPath;
             break;
     }
 

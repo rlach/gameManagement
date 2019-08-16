@@ -1,15 +1,21 @@
 const fs = require('fs');
 const log = require('../../logger');
-const settings = require('../../settings');
 const convert = require('xml-js');
 const mapper = require('../../mapper');
 const externalLaunchboxProperties = require('./external_launchbox_properties');
 const progress = require('../../progress');
+const files = require('../../util/files');
+const { ensureArray } = require('../../util/objects');
 
-const LAUNCHBOX_PLATFORM_XML = `${settings.paths.launchbox}/Data/Platforms/${settings.launchboxPlatform}.xml`;
 const operation = 'Converting database to launchbox';
 
-async function convertDbToLaunchbox(database) {
+async function convertDbToLaunchbox(
+    launchboxPath,
+    launchboxPlatform,
+    backupPath,
+    externalIdField,
+    database
+) {
     const progressBar = progress.getBar(operation);
 
     let launchboxGames = [];
@@ -17,30 +23,22 @@ async function convertDbToLaunchbox(database) {
     let originalCustomFields = [];
     let originalObject;
 
+    const LAUNCHBOX_PLATFORM_XML = `${launchboxPath}/Data/Platforms/${launchboxPlatform}.xml`;
     if (fs.existsSync(LAUNCHBOX_PLATFORM_XML)) {
         log.debug('Platform file already exists, backing up');
 
         fs.copyFileSync(
             LAUNCHBOX_PLATFORM_XML,
-            `${settings.paths.backup}/${settings.launchboxPlatform}-backup.xml`
+            `${backupPath}/${launchboxPlatform}-backup.xml`
         );
 
         log.debug('Also, read old file so we can keep ids unchanged');
         const launchboxXml = fs.readFileSync(LAUNCHBOX_PLATFORM_XML, 'utf8');
         originalObject = convert.xml2js(launchboxXml, { compact: true });
-        if (originalObject.LaunchBox.Game.length > 0) {
-            launchboxGames = originalObject.LaunchBox.Game;
-        } else if (originalObject.LaunchBox.Game) {
-            launchboxGames.push(originalObject.LaunchBox.Game);
-        }
-        if (
-            originalObject.LaunchBox.CustomField &&
-            originalObject.LaunchBox.CustomField.length > 0
-        ) {
-            originalCustomFields = originalObject.LaunchBox.CustomField;
-        } else if (originalObject.LaunchBox.CustomField) {
-            originalCustomFields = [originalObject.LaunchBox.CustomField];
-        }
+        launchboxGames = ensureArray(originalObject.LaunchBox.Game);
+        originalCustomFields = ensureArray(
+            originalObject.LaunchBox.CustomField
+        );
     }
 
     const games = await database.game.Game.find({});
@@ -49,7 +47,6 @@ async function convertDbToLaunchbox(database) {
 
     progressBar.start(games.length, 0);
     for (const [index, game] of games.entries()) {
-        progress.updateName(progressBar, `${operation} [${game.id}]`);
         if (!game.deleted) {
             let matchingGame = launchboxGames.find(
                 g => g.ID._text === game.launchboxId
@@ -81,7 +78,7 @@ async function convertDbToLaunchbox(database) {
                     ...result,
                     ...externalLaunchboxProperties,
                 });
-                if (settings.externalIdField === 'CustomField') {
+                if (externalIdField === 'CustomField') {
                     addOrUpdateAdditionalField(
                         customFields,
                         launchboxId,
@@ -115,12 +112,7 @@ async function convertDbToLaunchbox(database) {
     }
 
     const xml = convert.js2xml(objectToExport, { compact: true });
-    if (!fs.existsSync(`${settings.paths.launchbox}/Data`)) {
-        fs.mkdirSync(`${settings.paths.launchbox}/Data`);
-    }
-    if (!fs.existsSync(`${settings.paths.launchbox}/Data/Platforms`)) {
-        fs.mkdirSync(`${settings.paths.launchbox}/Data/Platforms`);
-    }
+    files.createMissingLaunchboxDirectories(launchboxPath, launchboxPlatform);
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
     progress.updateName(progressBar, operation);

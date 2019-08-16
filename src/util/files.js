@@ -1,8 +1,9 @@
 const { promisify } = require('util');
-
+const fs = require('fs');
 const find = require('fs-find');
 const asyncFind = promisify(find);
 const settings = require('../settings');
+const constants = require('../string_constants');
 
 class Files {
     async findExecutables(path) {
@@ -10,13 +11,6 @@ class Files {
             file: f => hasProperExtension(f) && !isBanned(f),
             depth: settings.exeSearchDepth,
             followLinks: true,
-        });
-    }
-
-    async findImages(path, uuid) {
-        return asyncFind(path, {
-            file: (_, f) => f.matcher.startsWith(uuid),
-            depth: 1,
         });
     }
 
@@ -31,18 +25,21 @@ class Files {
     }
 
     createMissingLaunchboxDirectories(launchboxPath, platformName) {
+        this.createMissingDirectory(`${launchboxPath}/Data`);
+        this.createMissingDirectory(`${launchboxPath}/Data/Platforms`);
+
         const imagesPath = `${launchboxPath}/Images`;
 
         this.createMissingDirectory(imagesPath);
         this.createMissingDirectory(`${imagesPath}/${platformName}`);
         this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${boxFrontPath}`
+            `${imagesPath}/${platformName}/${constants.boxFrontPath}`
         );
         this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${screenshotPath}`
+            `${imagesPath}/${platformName}/${constants.screenshotPath}`
         );
         this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${backgroundPath}`
+            `${imagesPath}/${platformName}/${constants.backgroundPath}`
         );
     }
 

@@ -114,7 +114,13 @@ async function gameManagement(settings, operation) {
                 );
                 break;
             case 'dbToLaunchbox':
-                await scripts.convertDbToLaunchbox(database);
+                await scripts.convertDbToLaunchbox(
+                    settings.paths.launchbox,
+                    settings.launchboxPlatform,
+                    settings.paths.backup,
+                    settings.externalIdField,
+                    database
+                );
                 break;
             case 'downloadImages':
                 await scripts.downloadImages(
@@ -155,7 +161,13 @@ async function gameManagement(settings, operation) {
                     database,
                     settings.paths.main
                 );
-                await scripts.convertDbToLaunchbox(database);
+                await scripts.convertDbToLaunchbox(
+                    settings.paths.launchbox,
+                    settings.launchboxPlatform,
+                    settings.paths.backup,
+                    settings.externalIdField,
+                    database
+                );
                 await scripts.downloadImages(
                     {
                         launchboxPath: settings.paths.launchbox,
