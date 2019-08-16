@@ -2,7 +2,7 @@ const request = require('request-promise');
 const log = require('../util/logger');
 const moment = require('moment');
 const { parseSite } = require('../util/html');
-const { getVndbData } = require('../util/vndb');
+const vndb = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 const { removeUndefined } = require('../util/objects');
 const settings = require('../settings');
@@ -30,7 +30,7 @@ class DlsiteStrategy extends SiteStrategy {
             const jpnSite = await getProSite(gameId, game.sourceMissingJp);
             jpn = jpnSite ? jpnSite : {};
             if (jpn.nameJp) {
-                eng = await getVndbData(jpn.nameJp);
+                eng = await vndb.getVndbData(jpn.nameJp);
                 if (!eng) {
                     eng = {};
                 }
@@ -46,14 +46,14 @@ class DlsiteStrategy extends SiteStrategy {
             productInfo = await getProductInfo(gameId);
         }
 
-        const result = {
+        const result = removeUndefined({
             communityStars: productInfo
                 ? productInfo.rate_average_2dp
                 : undefined,
             communityStarVotes: productInfo
                 ? productInfo.rate_count
                 : undefined,
-        };
+        });
         Object.assign(result, removeUndefined(jpn));
         Object.assign(result, removeUndefined(eng));
         return result;
@@ -260,9 +260,11 @@ function getGameMetadata(query) {
         try {
             seriesText = query('#work_outline a')
                 .filter((i, e) =>
-                    query(e)
-                        .attr('href')
-                        .includes('work.series')
+                    query(e).attr('href')
+                        ? query(e)
+                              .attr('href')
+                              .includes('work.series')
+                        : false
                 )
                 .text()
                 .trim();
@@ -283,7 +285,7 @@ function getGameMetadata(query) {
             log.debug('Could not get genres');
         }
 
-        const description = query('.work_article')
+        const description = query('div[itemprop="description"]')
             .text()
             .trim();
         const tags = query('.work_genre span')
@@ -313,7 +315,7 @@ function getGameMetadata(query) {
 }
 
 async function getEnglishSite(id, sourceMissing) {
-    if (id.startsWith('VJ') || sourceMissing) {
+    if (sourceMissing) {
         return undefined;
     }
 
@@ -326,7 +328,7 @@ async function getEnglishSite(id, sourceMissing) {
         return {
             series: originalMetadata.series,
             nameEn: originalMetadata.name,
-            description: originalMetadata.descriptionEn,
+            descriptionEn: originalMetadata.description,
             genresEn: originalMetadata.genres,
             tagsEn: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,
@@ -378,7 +380,7 @@ async function getJapaneseSite(id, sourceMissing) {
         return {
             series: originalMetadata.series,
             nameJp: originalMetadata.name,
-            description: originalMetadata.descriptionEn,
+            descriptionJp: originalMetadata.description,
             genresJp: originalMetadata.genres,
             tagsJp: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,
@@ -422,7 +424,7 @@ async function getProSite(id, sourceMissing) {
         return {
             series: originalMetadata.series,
             nameJp: originalMetadata.name,
-            description: originalMetadata.descriptionEn,
+            descriptionJp: originalMetadata.description,
             genresJp: originalMetadata.genres,
             tagsJp: originalMetadata.tags,
             releaseDate: originalMetadata.releaseDate,

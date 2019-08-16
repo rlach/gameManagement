@@ -2,7 +2,7 @@
     "scripts": {
         "start": "node src/main.js",
         "test": "nyc --all mocha",
-        "test-cont": "nodemon --exec nyc --all --reporter=lcov --reporter=text mocha",
+        "test-cont": "nodemon --exec nyc --all --reporter=lcov mocha",
         "coveralls": "nyc --all npm test && nyc report --reporter=text-lcov | coveralls"
     },
     "name": "gameManager",
