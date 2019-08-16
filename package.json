@@ -1,9 +1,9 @@
 {
     "scripts": {
         "start": "node src/main.js",
-        "test": "nyc mocha",
-        "test-cont": "nodemon --exec nyc --reporter=lcov --reporter=text mocha",
-        "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+        "test": "nyc --all mocha",
+        "test-cont": "nodemon --exec nyc --all --reporter=lcov --reporter=text mocha",
+        "coveralls": "nyc --all npm test && nyc report --reporter=text-lcov | coveralls"
     },
     "name": "gameManager",
     "version": "1.0.0",

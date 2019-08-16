@@ -1,7 +1,8 @@
 const log = require('../../logger');
 const queue = require('async/queue');
-const { createMissingDirectories, downloadImage } = require('./download_image');
+const downloadImage = require('./download_image');
 const progress = require('../../progress');
+const files = require('../../util/files');
 
 const operation = 'Downloading images';
 
@@ -13,13 +14,13 @@ async function downloadImages(settings, database) {
     if (images.length > 0) {
         const progressBar = progress.getBar(operation);
         progressBar.start(images.length, 0);
-        createMissingDirectories(
+        files.createMissingLaunchboxDirectories(
             settings.launchboxPath,
             settings.launchboxPlatform
         );
 
         const q = queue(async image => {
-            return downloadImage(
+            return downloadImage.downloadImage(
                 settings.launchboxPath,
                 settings.launchboxPlatform,
                 image

@@ -1,6 +1,5 @@
-const moment = require('moment');
+/* istanbul ignore file */
 const DatabaseEntity = require('../databaseEntity');
-const UUID = require('uuid');
 
 function getImage(mongoose) {
     const imageSchema = new mongoose.Schema({

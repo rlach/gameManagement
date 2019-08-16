@@ -1,6 +1,7 @@
 const settings = require('../settings');
 const log = require('./../logger');
 
+/* istanbul ignore else */
 if (settings.database === 'nedb') {
     const NedbGame = require('./game/nedbGame');
     log.debug('Using nedb database');

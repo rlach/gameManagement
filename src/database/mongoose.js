@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const log = require('../logger');
 const mongoose = require('mongoose');
 const db = mongoose.connection;

@@ -30,20 +30,4 @@ async function downloadImage(launchboxPath, platformName, image) {
     }
 }
 
-function createMissingDirectories(launchboxPath, platformName) {
-    const imagesPath = `${launchboxPath}/Images`;
-
-    createMissingDirectory(imagesPath);
-    createMissingDirectory(`${imagesPath}/${platformName}`);
-    createMissingDirectory(`${imagesPath}/${platformName}/${boxFrontPath}`);
-    createMissingDirectory(`${imagesPath}/${platformName}/${screenshotPath}`);
-    createMissingDirectory(`${imagesPath}/${platformName}/${backgroundPath}`);
-}
-
-function createMissingDirectory(path) {
-    if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
-    }
-}
-
-module.exports = { createMissingDirectories, downloadImage };
+module.exports = { downloadImage };

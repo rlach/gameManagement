@@ -1,6 +1,6 @@
 const path = require('path');
 const databaseGame = require('../../database/database').game;
-const files = require('../../files');
+const files = require('../../util/files');
 const log = require('../../logger');
 const moment = require('moment/moment');
 const fs = require('fs');

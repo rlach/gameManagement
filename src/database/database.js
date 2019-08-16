@@ -1,4 +1,5 @@
 async function initDatabase(settings) {
+    /* istanbul ignore else */
     if (settings.database === 'nedb') {
         const { datastore } = require('nedb-promise');
 

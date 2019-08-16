@@ -1,5 +1,5 @@
 const log = require('./../logger');
-const files = require('../files');
+const files = require('../util/files');
 const settings = require('../settings');
 
 class SiteStrategy {

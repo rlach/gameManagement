@@ -2,7 +2,7 @@ const { promisify } = require('util');
 
 const find = require('fs-find');
 const asyncFind = promisify(find);
-const settings = require('./settings');
+const settings = require('../settings');
 
 class Files {
     async findExecutables(path) {
@@ -28,6 +28,28 @@ class Files {
         improvedName = improvedName.trim();
 
         return improvedName;
+    }
+
+    createMissingLaunchboxDirectories(launchboxPath, platformName) {
+        const imagesPath = `${launchboxPath}/Images`;
+
+        this.createMissingDirectory(imagesPath);
+        this.createMissingDirectory(`${imagesPath}/${platformName}`);
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${boxFrontPath}`
+        );
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${screenshotPath}`
+        );
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${backgroundPath}`
+        );
+    }
+
+    createMissingDirectory(path) {
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path);
+        }
     }
 }
 

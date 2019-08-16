@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const gameManagement = require('./gameManagement');
 const vndb = require('./vndb');
 const settings = require('./settings');

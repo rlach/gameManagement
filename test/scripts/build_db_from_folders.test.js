@@ -27,11 +27,6 @@ describe('buildDbFromFolders', function() {
                 targetSortFolder: './target',
                 unsortedGames: './mess',
             },
-            organizeDirectories: {
-                shouldAsk: true,
-                minimumScoreToAccept: 1,
-                minimumScoreToAsk: 0,
-            },
         };
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
