@@ -17,7 +17,7 @@ class OtherStrategy extends SiteStrategy {
             ? {
                   nameEn: subdirectory.name,
               }
-            : undefined;
+            : {};
     }
 
     extractCode() {

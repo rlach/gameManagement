@@ -39,9 +39,7 @@ describe('Dlsite strategy', function() {
 
     describe('fetch game data', () => {
         it('returns undefined when using from code for strategy', async () => {
-            expect(await dlsiteStrategy.fetchGameData('anything')).to.eql(
-                undefined
-            );
+            expect(await dlsiteStrategy.fetchGameData('anything')).to.eql({});
         });
 
         describe('source missing', () => {

@@ -3,7 +3,8 @@ function removeUndefined(obj) {
         if (
             obj.hasOwnProperty(k) &&
             (obj[k] === undefined ||
-                (Array.isArray(obj[k]) && obj[k].length === 0))
+                (Array.isArray(obj[k]) && obj[k].length === 0) ||
+                obj[k] === '')
         ) {
             delete obj[k];
         }

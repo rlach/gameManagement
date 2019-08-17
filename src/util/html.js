@@ -15,7 +15,9 @@ function parseSite(rawHtml) {
             log.debug('Parsing done!');
         }
     });
-    const parser = new Parser(handler);
+    const parser = new Parser(handler, {
+        decodeEntities: true,
+    });
     parser.write(rawHtml);
     parser.end();
     log.debug('Dom parsed!');
@@ -23,26 +25,13 @@ function parseSite(rawHtml) {
 }
 
 async function callPage(uri) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function() {
-            reject('Promise timed out after ' + 30000 + ' ms');
-        }, 30000);
-
-        request
-            .get({
-                method: 'GET',
-                uri: uri,
-                encoding: null,
-            })
-            .pipe(iconv.decodeStream(JAPANESE_ENCODING))
-            .collect(function(err, decodedBody) {
-                if (err) {
-                    return reject(err);
-                } else {
-                    return resolve(decodedBody);
-                }
-            });
+    const site = await request.get({
+        method: 'GET',
+        uri: uri,
+        encoding: null,
     });
+
+    return iconv.decode(site, JAPANESE_ENCODING);
 }
 
 module.exports = { callPage, parseSite };

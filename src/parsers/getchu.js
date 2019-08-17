@@ -1,9 +1,9 @@
 const log = require('../util/logger');
 const moment = require('moment');
-const { callPage } = require('../util/html');
+const html = require('../util/html');
 const { parseSite } = require('../util/html');
 const { removeUndefined } = require('../util/objects');
-const { getVndbData } = require('../util/vndb');
+const vndb = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
@@ -16,13 +16,14 @@ class GetchuStrategy extends SiteStrategy {
     async fetchGameData(gameId, game) {
         log.debug(`Fetching game ${gameId} with strategy ${this.name}`);
 
-        const jpnResult = await getJapaneseSite(gameId, game.sourceMissingJp);
+        const sourceMissing = game ? game.sourceMissingJp : undefined;
+        const jpnResult = await getJapaneseSite(gameId, sourceMissing);
         const jpn = jpnResult ? jpnResult : {};
         let eng = {};
         let reviews = {};
-        if (jpn.name) {
-            log.debug(`Getting english site for ${jpn.name}`);
-            const engResult = await getVndbData(jpn.name);
+        if (jpn.nameJp) {
+            log.debug(`Getting english site for ${jpn.nameJp}`);
+            const engResult = await vndb.getVndbData(jpn.nameJp);
             if (engResult) {
                 eng = engResult;
             }
@@ -48,7 +49,7 @@ class GetchuStrategy extends SiteStrategy {
             name
         )}&list_count=30&sort=sales&sort2=down&search_title=&search_brand=&search_person=&search_jan=&search_isbn=&genre=pc_soft&start_date=&end_date=&age=&list_type=list&gc=gc&search=search`;
         log.debug('Uri called for search', uri);
-        return callPage(uri);
+        return html.callPage(uri);
     }
 
     async findGame(name) {
@@ -89,8 +90,9 @@ module.exports = getchuStrategy;
 function getGameMetadataJp(query) {
     try {
         let releaseDayText = query('#tooltip-day').text();
+        let images = getImages(query);
 
-        return {
+        return removeUndefined({
             nameJp: query('#soft-title')
                 .children()
                 .remove()
@@ -104,22 +106,25 @@ function getGameMetadataJp(query) {
                 .text()
                 .trim(),
             makerJp: query('.glance').text(),
-            imageUrlJp: query('.highslide img')
-                .attr('src')
-                .replace('./', 'http://getchu.com/'),
-            additionalImages: getAdditionalImages(query),
-        };
+            imageUrlJp: images.find(image => image.includes('package')),
+            additionalImages: images.filter(image => image.includes('sample')),
+        });
     } catch (e) {
         log.debug('Metadata parsing failure', e);
     }
 }
 
-function getAdditionalImages(query) {
+function getImages(query) {
     return query('a.highslide')
-        .filter((i, e) =>
-            query(e)
-                .attr('href')
-                .includes('sample')
+        .filter(
+            (i, e) =>
+                query(e).attr('href') &&
+                (query(e)
+                    .attr('href')
+                    .includes('sample') ||
+                    query(e)
+                        .attr('href')
+                        .includes('package'))
         )
         .map((i, e) =>
             query(e)
@@ -140,7 +145,7 @@ async function getJapaneseSite(id, missingSource) {
         return undefined;
     }
     try {
-        let reply = await callPage(
+        let reply = await html.callPage(
             `http://www.getchu.com/soft.phtml?id=${encodeURIComponent(
                 id
             )}&gc=gc`
@@ -161,7 +166,7 @@ async function getJapaneseSite(id, missingSource) {
 
 async function getReviews(id) {
     try {
-        let reply = await callPage(
+        let reply = await html.callPage(
             `http://www.getchu.com/review/item_review.php?action=list&id=${encodeURIComponent(
                 id
             )}`

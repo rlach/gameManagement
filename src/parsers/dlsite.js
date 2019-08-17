@@ -38,7 +38,7 @@ class DlsiteStrategy extends SiteStrategy {
             }
         } else {
             log.debug('Wrong file for strategy', { name: this.name, gameId });
-            return;
+            return {};
         }
 
         let productInfo;
