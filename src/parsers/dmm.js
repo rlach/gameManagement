@@ -14,7 +14,8 @@ class DmmStrategy extends SiteStrategy {
     }
 
     async fetchGameData(gameId, game) {
-        const jpn = await getSite(gameId, game.sourceMissingJp);
+        const sourceMissing = game ? game.sourceMissingJp : undefined;
+        const jpn = await getSite(gameId, sourceMissing);
         let eng;
 
         if (jpn && jpn.nameJp) {
@@ -118,13 +119,13 @@ async function getSite(id, sourceMissing) {
     let method;
     if (id.match(/d_\d+/)) {
         uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
-        method = getGameMetadata;
+        method = getDoujinMetadata;
     } else if (id.match(/d_[a-z]+\d+/)) {
         uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`;
         method = getMonoGameMetadata;
     } else {
         uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
-        method = getProGameMetadata;
+        method = getProMetadata;
     }
 
     try {
@@ -149,7 +150,7 @@ async function getSite(id, sourceMissing) {
     }
 }
 
-function getGameMetadata(query) {
+function getDoujinMetadata(query) {
     const images = query('.fn-colorbox')
         .map((i, e) => query(e).attr('href'))
         .get();
@@ -242,7 +243,7 @@ function findTableValue(query, value) {
     );
 }
 
-function getProGameMetadata(query) {
+function getProMetadata(query) {
     const images = query('#item-rotationbnr img')
         .map((i, e) => query(e).attr('src'))
         .get();
@@ -365,13 +366,9 @@ function getGenres(query) {
 }
 
 function getMaker(query) {
-    try {
-        return query('.circleName__txt')
-            .text()
-            .trim();
-    } catch (e) {
-        log.debug('Maker not found or wrong');
-    }
+    return query('.circleName__txt')
+        .text()
+        .trim();
 }
 
 function getTitle(query) {
@@ -385,9 +382,5 @@ function getTitle(query) {
 }
 
 function getVideo(query) {
-    try {
-        return query('.productPreview__item source').attr('src');
-    } catch (e) {
-        log.debug('Could not get video source');
-    }
+    return query('.productPreview__item source').attr('src');
 }

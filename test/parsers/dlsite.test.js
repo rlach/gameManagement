@@ -358,6 +358,52 @@ describe('Dlsite strategy', function() {
                 undefined
             );
         });
+
+        it('returns array of images generated based on pages amount when calling for RJ', async () => {
+            const pagesAmount = 38;
+            sinon
+                .stub(request, 'get')
+                .resolves(
+                    `<html><body><td id="page">1/${pagesAmount}</td><img src="//dlsite.com/smp1.jpg" class="target_type" /></body></html>`
+                );
+
+            const result = await dlsiteStrategy.getAdditionalImages('RJ123456');
+            expect(result).to.have.length(38);
+            expect(result[0]).to.equal('http://dlsite.com/smp1.jpg');
+            expect(result[pagesAmount - 1]).to.equal(
+                `http://dlsite.com/smp${pagesAmount}.jpg`
+            );
+        });
+
+        it('returns array of images generated based on pages amount when calling for RE', async () => {
+            const pagesAmount = 38;
+            sinon
+                .stub(request, 'get')
+                .resolves(
+                    `<html><body><td id="page">1/${pagesAmount}</td><img src="//dlsite.com/smp1.jpg" class="target_type" /></body></html>`
+                );
+
+            const result = await dlsiteStrategy.getAdditionalImages('RE123456');
+            expect(result).to.have.length(38);
+            expect(result[0]).to.equal('http://dlsite.com/smp1.jpg');
+            expect(result[pagesAmount - 1]).to.equal(
+                `http://dlsite.com/smp${pagesAmount}.jpg`
+            );
+        });
+
+        it('returns all images from VJ page', async () => {
+            const site = fs.readFileSync(
+                './test/parsers/sites/dlsite-additional-images.html'
+            );
+            sinon.stub(request, 'get').resolves(site);
+
+            const result = await dlsiteStrategy.getAdditionalImages('VJ123456');
+            expect(result).to.eql([
+                'http://dlsite.com/smpa1.jpg',
+                'http://dlsite.com/smpa2.jpg',
+                'http://dlsite.com/smpa3.jpg',
+            ]);
+        });
     });
 
     describe('should use', () => {

@@ -114,11 +114,6 @@ class DlsiteStrategy extends SiteStrategy {
                 const firstImage = query('.target_type')
                     .attr('src')
                     .replace('//', 'http://');
-                log.debug(`Samples found`, {
-                    samplesCount,
-                    id,
-                    firstImage,
-                });
 
                 const additionalImages = [];
                 for (let i = 1; i <= samplesCount; i++) {

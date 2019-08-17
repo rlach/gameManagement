@@ -19,7 +19,9 @@ async function initDatabase(settings) {
             autoload: true,
         });
 
+        /* istanbul ignore next */
         database.close = () => {};
+        /* istanbul ignore next */
         databaseImages.close = () => {};
 
         const { getGame } = require('./game/nedbGame');

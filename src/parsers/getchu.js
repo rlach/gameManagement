@@ -40,8 +40,8 @@ class GetchuStrategy extends SiteStrategy {
 
     extractCode(name) {
         log.debug('Extracting code from name', { name });
-        const matches = name.match(GETCHU_ID_REGEX);
-        return matches ? matches[0] : '';
+        const matches = name.match(/\d{6,}/gi);
+        return matches && matches[0].length <= 8 ? matches[0] : '';
     }
 
     async callFindGame(name) {
@@ -76,11 +76,11 @@ class GetchuStrategy extends SiteStrategy {
 
     async getAdditionalImages(id) {
         const result = await getJapaneseSite(id);
-        return result ? result.additionalImages : undefined;
+        return result.additionalImages;
     }
 
     shouldUse(gameId) {
-        return gameId.match(GETCHU_ID_REGEX);
+        return !!gameId.match(/^\d{6,8}$/gi);
     }
 }
 

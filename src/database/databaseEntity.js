@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 class DatabaseEntity {
     async retrieveFromDb(id) {}
 
