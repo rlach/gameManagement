@@ -1,18 +1,17 @@
 const path = require('path');
-const databaseGame = require('../../database/database').game;
 const files = require('../../util/files');
 const log = require('../../util/logger');
 const moment = require('moment/moment');
 const fs = require('fs');
 
-async function updateExecutableAndDirectory(file, game, strategy, database) {
+async function updateExecutableAndDirectory(file, game, database) {
     if (!game.executableFile || game.forceExecutableUpdate) {
         log.debug('Updating executable path', game.id);
-        const executableFile = await findExecutableFile(file, strategy);
+        const executableFile = await findExecutableFile(file);
         game.forceExecutableUpdate = false;
         if (executableFile.deleted) {
             game.deleted = true;
-            await databaseGame.save(game);
+            await database.game.save(game);
         } else {
             await saveFileAndDirectory(executableFile, game, database);
         }
@@ -20,9 +19,6 @@ async function updateExecutableAndDirectory(file, game, strategy, database) {
 }
 
 async function findExecutableFile(file) {
-    let executableFile;
-
-    const foundFiles = await files.findExecutables(`${file.path}/${file.name}`);
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
         log.debug('Game was deleted', { file });
@@ -30,60 +26,46 @@ async function findExecutableFile(file) {
             deleted: true,
         };
     } else {
-        if (subFiles > 0) {
-            executableFile = {
-                directory: path.resolve(
-                    `${file.path}/${file.name}/${subFiles[0]}`
-                ),
-            };
-        } else {
-            executableFile = {
-                directory: path.resolve(`${file.path}/${file.name}`),
-            };
-        }
-    }
+        let executableFile = {
+            directory: path.resolve(`${file.path}/${file.name}/${subFiles[0]}`),
+        };
 
-    if (foundFiles.length === 0) {
-        log.debug(`There is no exe`, { file });
-    } else if (foundFiles.length === 1) {
-        log.debug('Found single exe file', foundFiles[0].file);
-        executableFile.file = path.resolve(
-            `${foundFiles[0].base}/${foundFiles[0].relative}`
+        const foundFiles = await files.findExecutables(
+            `${file.path}/${file.name}`
         );
-    } else {
-        log.debug('Found multiple exe files', foundFiles.map(f => f.file));
-        let gameExe = foundFiles.find(t =>
-            t.name.toLowerCase().startsWith('game')
-        );
-        if (!gameExe) {
-            gameExe = foundFiles.find(t =>
-                t.name.toLowerCase().endsWith('exe')
+        if (foundFiles.length === 0) {
+            log.debug(`There is no exe`, { file });
+        } else {
+            log.debug('Found multiple exe files', foundFiles.map(f => f.file));
+            let gameExe = foundFiles.find(t =>
+                t.name.toLowerCase().startsWith('game')
+            );
+            if (!gameExe) {
+                gameExe = foundFiles.find(t =>
+                    t.name.toLowerCase().endsWith('exe')
+                );
+            }
+            if (!gameExe) {
+                gameExe = foundFiles[0];
+            }
+
+            log.debug('game exe selected', gameExe);
+            executableFile.file = path.resolve(
+                `${gameExe.base}/${gameExe.relative}`
             );
         }
-        if (!gameExe) {
-            gameExe = foundFiles[0];
-        }
 
-        log.debug('game exe selected', gameExe);
-        executableFile.file = path.resolve(
-            `${gameExe.base}/${gameExe.relative}`
-        );
+        return executableFile;
     }
-
-    return executableFile;
 }
 
 async function saveFileAndDirectory(target, game, database) {
-    try {
-        log.debug(`saving link to executable`, target);
-        game.deleted = false;
-        game.directory = target.directory;
-        game.executableFile = target.file;
-        game.dateModified = moment().format();
-        await database.game.save(game);
-    } catch (e) {
-        log.debug(`Could not update game`, e);
-    }
+    log.debug(`saving link to executable`, target);
+    game.deleted = false;
+    game.directory = target.directory;
+    game.executableFile = target.file;
+    game.dateModified = moment().format();
+    await database.game.save(game);
 }
 
 module.exports = { updateExecutableAndDirectory };

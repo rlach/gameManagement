@@ -161,12 +161,7 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
             await database.game.save(game);
         }
 
-        await executables.updateExecutableAndDirectory(
-            file,
-            game,
-            strategy,
-            database
-        );
+        await executables.updateExecutableAndDirectory(file, game, database);
     }
     progressBar.increment();
 }
