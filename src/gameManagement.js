@@ -132,7 +132,7 @@ async function gameManagement(settings, operation) {
                 );
                 break;
             case 'findDuplicates':
-                await scripts.findPossibleDuplicates();
+                scripts.findPossibleDuplicates(settings.paths.main);
                 break;
             case 'setForceUpdate':
                 await scripts.setForceUpdate(database);
