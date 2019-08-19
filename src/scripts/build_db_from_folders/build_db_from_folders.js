@@ -9,7 +9,12 @@ const eachLimit = require('async/eachLimit');
 
 const operation = 'Building database from folders';
 
-async function buildDbFromFolders(strategies, database, mainPaths) {
+async function buildDbFromFolders(
+    strategies,
+    database,
+    mainPaths,
+    searchSettings
+) {
     const progressBar = progress.getBar(operation);
 
     log.debug(`Reading all main paths`, mainPaths);
@@ -39,7 +44,13 @@ async function buildDbFromFolders(strategies, database, mainPaths) {
     progressBar.stop();
 }
 
-async function buildDbFromFolder(file, strategies, database, progressBar) {
+async function buildDbFromFolder(
+    file,
+    strategies,
+    database,
+    progressBar,
+    searchSettings
+) {
     const strategy = selectStrategy(file.name, strategies);
     if (!strategy) {
         log.debug('No strategy for file', file);
@@ -161,7 +172,12 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
             await database.game.save(game);
         }
 
-        await executables.updateExecutableAndDirectory(file, game, database);
+        await executables.updateExecutableAndDirectory(
+            file,
+            game,
+            searchSettings,
+            database
+        );
     }
     progressBar.increment();
 }

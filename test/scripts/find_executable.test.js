@@ -10,6 +10,8 @@ const {
 } = require('../../src/scripts/build_db_from_folders/find_executable');
 
 describe('findExecutable', function() {
+    const searchSettings = { maxSearchDepth: 1 };
+
     const file = {
         name: 'gameName',
         path: 'gameDirectory',
@@ -43,7 +45,14 @@ describe('findExecutable', function() {
         game.forceExecutableUpdate = true;
         database.game.save(game);
         sinon.stub(fs, 'readdirSync').returns([]);
-        await updateExecutableAndDirectory(file, game, database);
+        await updateExecutableAndDirectory(
+            file,
+            game,
+            {
+                maxSearchDepth: 1,
+            },
+            database
+        );
         const deletedGame = await database.game.findOne({});
         expect(deletedGame).to.contain({
             id: '1',
@@ -55,7 +64,14 @@ describe('findExecutable', function() {
         it('marks game as deleted when there are no subdirectories', async () => {
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns([]);
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                {
+                    maxSearchDepth: 1,
+                },
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 id: '1',
@@ -66,7 +82,14 @@ describe('findExecutable', function() {
         it('marks game as deleted when there is subdirectory called DELETED', async () => {
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['DELETED']);
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                {
+                    maxSearchDepth: 1,
+                },
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 id: '1',
@@ -77,10 +100,17 @@ describe('findExecutable', function() {
 
     describe('base directory', () => {
         it('sets base directory when subdirectory exists', async () => {
-            sinon.stub(files, 'findExecutables').returns([]);
+            sinon.stub(files, 'findByFilter').returns([]);
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['versionDirectory']);
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                {
+                    maxSearchDepth: 1,
+                },
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 directory: path.resolve(
@@ -92,7 +122,7 @@ describe('findExecutable', function() {
         });
 
         it('sets base directory to first subdirectory from the response list', async () => {
-            sinon.stub(files, 'findExecutables').returns([]);
+            sinon.stub(files, 'findByFilter').returns([]);
             const game = await database.game.retrieveFromDb('1');
             sinon
                 .stub(fs, 'readdirSync')
@@ -101,7 +131,12 @@ describe('findExecutable', function() {
                     'versionDirectory2',
                     'versionDirectory3',
                 ]);
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                searchSettings,
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 directory: path.resolve(
@@ -121,7 +156,7 @@ describe('findExecutable', function() {
         });
 
         it('sets executable file to returned one if only one exists', async () => {
-            sinon.stub(files, 'findExecutables').returns([
+            sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',
                     relative: 'foo.bar',
@@ -129,7 +164,12 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                searchSettings,
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 executableFile: path.resolve('gameBase/foo.bar'),
@@ -142,7 +182,7 @@ describe('findExecutable', function() {
         });
 
         it('sets executable file to one starting with game if there is one', async () => {
-            sinon.stub(files, 'findExecutables').returns([
+            sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',
                     relative: 'foo.bar',
@@ -155,7 +195,12 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                searchSettings,
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 executableFile: path.resolve('gameBase/Game.bar'),
@@ -168,7 +213,7 @@ describe('findExecutable', function() {
         });
 
         it('sets executable file to one ending with exe if there is one', async () => {
-            sinon.stub(files, 'findExecutables').returns([
+            sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',
                     relative: 'foo.bar',
@@ -181,7 +226,12 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(file, game, database);
+            await updateExecutableAndDirectory(
+                file,
+                game,
+                searchSettings,
+                database
+            );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
                 executableFile: path.resolve('gameBase/foo.exe'),

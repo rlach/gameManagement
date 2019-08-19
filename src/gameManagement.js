@@ -84,52 +84,22 @@ async function gameManagement(settings, operation) {
 
         switch (answer.operation) {
             case 'getCodes':
-                await scripts.getPossibleCodes(
-                    strategies,
-                    settings.paths.unsortedGames
-                );
+                await getPossibleCodes(settings);
                 break;
             case 'organizeDirectories':
-                await scripts.organizeDirectories(strategies, {
-                    paths: {
-                        targetSortFolder: settings.paths.targetSortFolder,
-                        unsortedGames: settings.paths.unsortedGames,
-                    },
-                    organizeDirectories: settings.organizeDirectories,
-                });
+                await organizeDirectories(settings);
                 break;
             case 'launchboxToDb':
-                await scripts.syncLaunchboxToDb(
-                    settings.paths.launchbox,
-                    settings.launchboxPlatform,
-                    settings.onlyUpdateNewer,
-                    database
-                );
+                await syncLaunchboxToDb(settings, database);
                 break;
             case 'buildDb':
-                await scripts.buildDbFromFolders(
-                    strategies,
-                    database,
-                    settings.paths.main
-                );
+                await buildDatabaseFromFolders(settings, database);
                 break;
             case 'dbToLaunchbox':
-                await scripts.convertDbToLaunchbox(
-                    settings.paths.launchbox,
-                    settings.launchboxPlatform,
-                    settings.paths.backup,
-                    settings.externalIdField,
-                    database
-                );
+                await convertDatabaseToLaunchbox(settings, database);
                 break;
             case 'downloadImages':
-                await scripts.downloadImages(
-                    {
-                        launchboxPath: settings.paths.launchbox,
-                        launchboxPlatform: settings.launchboxPlatform,
-                    },
-                    database
-                );
+                await downloadImages(settings, database);
                 break;
             case 'findDuplicates':
                 scripts.findPossibleDuplicates(settings.paths.main);
@@ -139,42 +109,12 @@ async function gameManagement(settings, operation) {
                 break;
             case 'syncAll':
             default:
-                await scripts.getPossibleCodes(
-                    strategies,
-                    settings.paths.unsortedGames
-                );
-                await scripts.organizeDirectories(strategies, {
-                    paths: {
-                        targetSortFolder: settings.paths.targetSortFolder,
-                        unsortedGames: settings.paths.unsortedGames,
-                    },
-                    organizeDirectories: settings.organizeDirectories,
-                });
-                await scripts.syncLaunchboxToDb(
-                    settings.paths.launchbox,
-                    settings.launchboxPlatform,
-                    settings.onlyUpdateNewer,
-                    database
-                );
-                await scripts.buildDbFromFolders(
-                    strategies,
-                    database,
-                    settings.paths.main
-                );
-                await scripts.convertDbToLaunchbox(
-                    settings.paths.launchbox,
-                    settings.launchboxPlatform,
-                    settings.paths.backup,
-                    settings.externalIdField,
-                    database
-                );
-                await scripts.downloadImages(
-                    {
-                        launchboxPath: settings.paths.launchbox,
-                        launchboxPlatform: settings.launchboxPlatform,
-                    },
-                    database
-                );
+                await getPossibleCodes(settings);
+                await organizeDirectories(settings);
+                await syncLaunchboxToDb(settings, database);
+                await buildDatabaseFromFolders(settings, database);
+                await convertDatabaseToLaunchbox(settings, database);
+                await downloadImages(settings, database);
         }
     } finally {
         if (database) {
@@ -182,6 +122,62 @@ async function gameManagement(settings, operation) {
             await database.close();
         }
     }
+}
+
+async function getPossibleCodes(settings) {
+    await scripts.getPossibleCodes(strategies, settings.paths.unsortedGames);
+}
+
+async function organizeDirectories(settings) {
+    await scripts.organizeDirectories(strategies, {
+        paths: {
+            targetSortFolder: settings.paths.targetSortFolder,
+            unsortedGames: settings.paths.unsortedGames,
+        },
+        organizeDirectories: settings.organizeDirectories,
+    });
+}
+
+async function syncLaunchboxToDb(settings, database) {
+    await scripts.syncLaunchboxToDb(
+        settings.paths.launchbox,
+        settings.launchboxPlatform,
+        settings.onlyUpdateNewer,
+        database
+    );
+}
+
+async function buildDatabaseFromFolders(settings, database) {
+    await scripts.buildDbFromFolders(
+        strategies,
+        database,
+        settings.paths.main,
+        {
+            maxSearchDepth: settings.exeSearchDepth,
+            bannedFilenames: settings.bannedFilenames,
+            executableExtensions: settings.executableExtensions,
+        }
+    );
+}
+
+async function convertDatabaseToLaunchbox(settings, database) {
+    await scripts.convertDbToLaunchbox(
+        settings.paths.launchbox,
+        settings.launchboxPlatform,
+        settings.paths.backup,
+        settings.externalIdField,
+        database
+    );
+}
+
+async function downloadImages(settings, database) {
+    await scripts.downloadImages(
+        {
+            launchboxPath: settings.paths.launchbox,
+            launchboxPlatform: settings.launchboxPlatform,
+        },
+        database
+    );
 }
 
 module.exports = gameManagement;

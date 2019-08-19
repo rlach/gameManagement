@@ -2,22 +2,14 @@ const { promisify } = require('util');
 const fs = require('fs');
 const find = require('fs-find');
 const asyncFind = promisify(find);
-const settings = require('../settings');
 const constants = require('../string_constants');
 
 class Files {
-    async findExecutables(path) {
-        return asyncFind(path, {
-            file: f => hasProperExtension(f) && !isBanned(f),
-            depth: settings.exeSearchDepth,
-            followLinks: true,
-        });
-    }
-
-    async findByFilter(path, filterFunction) {
+    /* istanbul ignore next */
+    async findByFilter(path, filterFunction, searchDepth = 1) {
         return asyncFind(path, {
             file: (_, f) => filterFunction(f),
-            depth: Math.max(settings.exeSearchDepth, 1),
+            depth: Math.max(searchDepth, 1),
         });
     }
 
@@ -61,19 +53,3 @@ class Files {
 
 let files = new Files();
 module.exports = files;
-
-function hasProperExtension(fileName) {
-    return (
-        settings.executableExtensions.findIndex(extension =>
-            fileName.toLowerCase().endsWith(extension)
-        ) > -1
-    );
-}
-
-function isBanned(fileName) {
-    return (
-        settings.bannedFilenames.findIndex(bannedName =>
-            fileName.toLowerCase().includes(bannedName)
-        ) > -1
-    );
-}
