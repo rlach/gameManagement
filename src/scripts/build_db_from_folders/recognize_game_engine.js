@@ -1,12 +1,8 @@
-const { promisify } = require('util');
-
-const find = require('fs-find');
+const files = require('../../util/files');
 const fs = require('fs');
-const asyncFind = promisify(find);
-const settings = require('../../settings');
 const { recognizers, allRules } = require('./recognizers');
 
-async function recognizeGameType(file) {
+async function recognizeGameEngine(file) {
     const basePath = `${file.path}/${file.name}`;
     const subdirectories = fs
         .readdirSync(basePath, { withFileTypes: true })
@@ -41,12 +37,9 @@ function recognizeGame(gameRelatedFiles, recognizers) {
 }
 
 async function getFilesRelatedToEngine(versionPath) {
-    return asyncFind(versionPath, {
-        file: (_, f) => {
-            const matcher = f.matcher.toLowerCase();
-            return fulfillsAnyRule(allRules, matcher);
-        },
-        depth: Math.max(settings.exeSearchDepth, 1),
+    return files.findByFilter(versionPath, f => {
+        const matcher = f.matcher.toLowerCase();
+        return fulfillsAnyRule(allRules, matcher);
     });
 }
 
@@ -79,4 +72,4 @@ function fulfillsAnyRule(rules, matcher) {
     }
 }
 
-module.exports = { recognizeGameType };
+module.exports = { recognizeGameEngine };

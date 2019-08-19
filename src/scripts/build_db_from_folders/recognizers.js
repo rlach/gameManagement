@@ -39,7 +39,7 @@ function isRPGVXAce(gameRelatedFiles) {
 
 function isRPGVxOrXp(gameRelatedFiles) {
     if (
-        gameRelatedFiles.find(
+        gameRelatedFiles.some(
             f =>
                 f.name.toLowerCase() === 'game.exe' ||
                 f.name.toLowerCase().endsWith('rgssad') ||
@@ -80,20 +80,21 @@ function isRPGMV(gameRelatedFiles) {
     );
     if (packageJson) {
         const file = fs.readFileSync(packageJson.file);
-        if (file.includes('RPGMV')) {
+        if (file.toLowerCase().includes('rpgmv')) {
             return true;
         } else if (
             gameRelatedFiles.find(
-                f => f.name.toLowerCase() === 'resources.pak'
-            ) ||
-            gameRelatedFiles.find(f => f.name.toLowerCase() === 'game.exe')
+                f =>
+                    f.name.toLowerCase() === 'resources.pak' ||
+                    f.name.toLowerCase() === 'game.exe'
+            )
         ) {
             return true;
         }
-    } else if (
-        gameRelatedFiles.find(f => f.name.toLowerCase() === 'game_boxed.exe')
-    ) {
-        return true;
+    } else {
+        return gameRelatedFiles.some(
+            f => f.name.toLowerCase() === 'game_boxed.exe'
+        );
     }
 }
 
@@ -330,7 +331,7 @@ recognizers.forEach(r => {
         allRules.equals.push(...r.rules.equals);
     }
     if (r.rules.endsWith) {
-        allRules.startsWith.push(...r.rules.endsWith);
+        allRules.endsWith.push(...r.rules.endsWith);
     }
 });
 

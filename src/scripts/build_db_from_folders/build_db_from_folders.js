@@ -3,7 +3,7 @@ const moment = require('moment/moment');
 const fs = require('fs');
 const { removeUndefined } = require('../../util/objects');
 const executables = require('./find_executable');
-const typeRecognizer = require('./recognize_game_type');
+const engineRecognizer = require('./recognize_game_engine');
 const progress = require('../../util/progress');
 const eachLimit = require('async/eachLimit');
 
@@ -61,7 +61,7 @@ async function buildDbFromFolder(file, strategies, database, progressBar) {
     }
 
     if (!game.engine) {
-        game.engine = await typeRecognizer.recognizeGameType(file);
+        game.engine = await engineRecognizer.recognizeGameEngine(file);
         if (game.engine) {
             game.dateModified = moment().format();
             await database.game.save(game);

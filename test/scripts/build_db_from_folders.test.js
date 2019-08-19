@@ -3,7 +3,7 @@ const fs = require('fs');
 const progress = require('../../src/util/progress');
 const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
-const typeRecognizer = require('../../src/scripts/build_db_from_folders/recognize_game_type');
+const engineRecognizer = require('../../src/scripts/build_db_from_folders/recognize_game_engine');
 const executables = require('../../src/scripts/build_db_from_folders/find_executable');
 
 const buildDbFromFolders = require('../../src/scripts/build_db_from_folders/build_db_from_folders');
@@ -80,9 +80,9 @@ describe('buildDbFromFolders', function() {
 
         it('If game is not deleted tries to find engine, recognize game type and fetch sources', async () => {
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(
-                typeRecognizer,
-                'recognizeGameType'
+            const recognizeGameEngine = sinon.stub(
+                engineRecognizer,
+                'recognizeGameEngine'
             );
             const updateExecutableAndDirectory = sinon.stub(
                 executables,
@@ -107,7 +107,7 @@ describe('buildDbFromFolders', function() {
                 source: 'dummy',
             });
             sinon.assert.calledOnce(fetchGameData);
-            sinon.assert.calledOnce(recognizeGameType);
+            sinon.assert.calledOnce(recognizeGameEngine);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
 
@@ -134,9 +134,9 @@ describe('buildDbFromFolders', function() {
             };
 
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(
-                typeRecognizer,
-                'recognizeGameType'
+            const recognizeGameEngine = sinon.stub(
+                engineRecognizer,
+                'recognizeGameEngine'
             );
             const updateExecutableAndDirectory = sinon.stub(
                 executables,
@@ -165,7 +165,7 @@ describe('buildDbFromFolders', function() {
 
             expect(game).to.deep.include(expectedGame);
             sinon.assert.calledOnce(fetchGameData);
-            sinon.assert.calledOnce(recognizeGameType);
+            sinon.assert.calledOnce(recognizeGameEngine);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
 
@@ -175,9 +175,9 @@ describe('buildDbFromFolders', function() {
             };
 
             sinon.stub(fs, 'existsSync').returns(true);
-            const recognizeGameType = sinon.stub(
-                typeRecognizer,
-                'recognizeGameType'
+            const recognizeGameEngine = sinon.stub(
+                engineRecognizer,
+                'recognizeGameEngine'
             );
             const updateExecutableAndDirectory = sinon.stub(
                 executables,
@@ -215,7 +215,7 @@ describe('buildDbFromFolders', function() {
             expect(game).to.deep.include(expectedGame);
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(getAdditionalImages);
-            sinon.assert.calledOnce(recognizeGameType);
+            sinon.assert.calledOnce(recognizeGameEngine);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
     });

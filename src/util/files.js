@@ -14,6 +14,13 @@ class Files {
         });
     }
 
+    async findByFilter(path, filterFunction) {
+        return asyncFind(path, {
+            file: (_, f) => filterFunction(f),
+            depth: Math.max(settings.exeSearchDepth, 1),
+        });
+    }
+
     removeTagsAndMetadata(name) {
         let improvedName = name.replace(/\[([^\]]+)]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
