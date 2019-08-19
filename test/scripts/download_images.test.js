@@ -27,6 +27,7 @@ describe('downloadImages', function() {
         });
 
         sinon.stub(files, 'createMissingLaunchboxDirectories');
+        sinon.stub(files, 'createMissingDirectory');
     });
 
     afterEach(async () => {

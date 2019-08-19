@@ -42,6 +42,16 @@ class Files {
         this.createMissingDirectory(
             `${imagesPath}/${platformName}/${constants.backgroundPath}`
         );
+
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${constants.boxFrontPath}/Hisho86`
+        );
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${constants.screenshotPath}/Hisho86`
+        );
+        this.createMissingDirectory(
+            `${imagesPath}/${platformName}/${constants.backgroundPath}/Hisho86`
+        );
     }
 
     createMissingDirectory(path) {

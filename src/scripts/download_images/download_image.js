@@ -1,6 +1,7 @@
 const download = require('image-downloader');
 const fs = require('fs');
 const constants = require('../../string_constants');
+const files = require('../../util/files');
 
 async function downloadImage(launchboxPath, platformName, image) {
     let imageTypePath;
@@ -17,12 +18,13 @@ async function downloadImage(launchboxPath, platformName, image) {
             break;
     }
 
-    const targetPath = `${launchboxPath}/Images/${platformName}/${imageTypePath}/${image.filename}`;
+    const targetPath = `${launchboxPath}/Images/${platformName}/${imageTypePath}/Hisho86/${image.gameId}`;
+    files.createMissingDirectory(targetPath);
 
-    if (!fs.existsSync(targetPath)) {
+    if (!fs.existsSync(`${targetPath}/${image.filename}`)) {
         await download.image({
             url: image.uri,
-            dest: targetPath,
+            dest: `${targetPath}/${image.filename}`,
         });
     }
 }
