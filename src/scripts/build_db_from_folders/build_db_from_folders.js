@@ -37,7 +37,13 @@ async function buildDbFromFolders(
 
     progressBar.start(foundFiles.length, 0);
     await eachLimit(foundFiles, 5, async file => {
-        return buildDbFromFolder(file, strategies, database, progressBar);
+        return buildDbFromFolder(
+            file,
+            strategies,
+            database,
+            progressBar,
+            searchSettings
+        );
     });
 
     progress.updateName(progressBar, operation);

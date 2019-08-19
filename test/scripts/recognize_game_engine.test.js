@@ -136,6 +136,15 @@ describe('gameManagement', function() {
                 expect(result).to.eql('rpgMakerMv');
             });
 
+            it('Recognizes RPG Maker MV if package.json is a buffer', async () => {
+                sinon
+                    .stub(fs, 'readFileSync')
+                    .returns(Buffer.from('anything rpgmv anything', 'utf8'));
+                stubFindFiles(['package.json']);
+                const result = await recognizeGameEngine(file);
+                expect(result).to.eql('rpgMakerMv');
+            });
+
             it('Recognizes RPG Maker MV if package.json has no mention of rpgmv but game.exe exists', async () => {
                 sinon.stub(fs, 'readFileSync').returns('anything anything');
                 stubFindFiles(['package.json', 'game.exe']);

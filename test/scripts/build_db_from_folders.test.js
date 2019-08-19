@@ -11,9 +11,11 @@ const buildDbFromFolders = require('../../src/scripts/build_db_from_folders/buil
 describe('buildDbFromFolders', function() {
     const mainPaths = ['main'];
     let progressBarUpdate;
-    let settings;
     let database;
     let strategies;
+    const searchSettings = {
+        exeSearchDepth: 1,
+    };
 
     beforeEach(async () => {
         database = await initDatabase({
@@ -22,12 +24,6 @@ describe('buildDbFromFolders', function() {
         });
 
         strategies = [];
-        settings = {
-            paths: {
-                targetSortFolder: './target',
-                unsortedGames: './mess',
-            },
-        };
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
@@ -44,7 +40,12 @@ describe('buildDbFromFolders', function() {
     it('Marks all entries in database as deleted when there are no files', async () => {
         sinon.stub(fs, 'readdirSync').returns([]);
         const updateManySpy = sinon.spy(database.game, 'updateMany');
-        await buildDbFromFolders(strategies, database, [mainPaths]);
+        await buildDbFromFolders(
+            strategies,
+            database,
+            mainPaths,
+            searchSettings
+        );
 
         sinon.assert.calledWith(updateManySpy, { id: { $nin: [] } });
     });
@@ -52,7 +53,12 @@ describe('buildDbFromFolders', function() {
     it('Marks as deleted entries in database not found in directory scan', async () => {
         sinon.stub(fs, 'readdirSync').returns(['dir']);
         const updateManySpy = sinon.spy(database.game, 'updateMany');
-        await buildDbFromFolders(strategies, database, [mainPaths]);
+        await buildDbFromFolders(
+            strategies,
+            database,
+            mainPaths,
+            searchSettings
+        );
 
         sinon.assert.calledWith(updateManySpy, { id: { $nin: ['dir'] } });
     });
@@ -68,7 +74,12 @@ describe('buildDbFromFolders', function() {
                 shouldUse: () => true,
             };
 
-            await buildDbFromFolders([strategy], database, [mainPaths]);
+            await buildDbFromFolders(
+                [strategy],
+                database,
+                mainPaths,
+                searchSettings
+            );
 
             const game = await database.game.findOne({});
             expect(game).to.include({
@@ -97,7 +108,12 @@ describe('buildDbFromFolders', function() {
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
 
-            await buildDbFromFolders([strategy], database, [mainPaths]);
+            await buildDbFromFolders(
+                [strategy],
+                database,
+                mainPaths,
+                searchSettings
+            );
 
             const game = await database.game.findOne({});
             expect(game).to.include({
@@ -108,7 +124,16 @@ describe('buildDbFromFolders', function() {
             });
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(recognizeGameEngine);
-            sinon.assert.calledOnce(updateExecutableAndDirectory);
+            sinon.assert.calledWith(
+                updateExecutableAndDirectory,
+                {
+                    name: 'dir',
+                    path: 'main',
+                },
+                sinon.match.any,
+                searchSettings,
+                database
+            );
         });
 
         it('If game data was fetched fills the game with results', async () => {
@@ -151,7 +176,12 @@ describe('buildDbFromFolders', function() {
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
 
-            await buildDbFromFolders([strategy], database, [mainPaths]);
+            await buildDbFromFolders(
+                [strategy],
+                database,
+                mainPaths,
+                searchSettings
+            );
 
             const game = await database.game.findOne({});
 
@@ -199,7 +229,12 @@ describe('buildDbFromFolders', function() {
                 'getAdditionalImages'
             );
 
-            await buildDbFromFolders([strategy], database, [mainPaths]);
+            await buildDbFromFolders(
+                [strategy],
+                database,
+                mainPaths,
+                searchSettings
+            );
 
             const game = await database.game.findOne({});
 

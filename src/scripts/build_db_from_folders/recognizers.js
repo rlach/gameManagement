@@ -80,7 +80,12 @@ function isRPGMV(gameRelatedFiles) {
     );
     if (packageJson) {
         const file = fs.readFileSync(packageJson.file);
-        if (file.toLowerCase().includes('rpgmv')) {
+        if (
+            file
+                .toString()
+                .toLowerCase()
+                .includes('rpgmv')
+        ) {
             return true;
         } else if (
             gameRelatedFiles.find(
