@@ -17,7 +17,9 @@ class Files {
     removeTagsAndMetadata(name) {
         let improvedName = name.replace(/\[([^\]]+)]/g, ''); //remove []
         improvedName = improvedName.replace(/\(([^)]+)\)/g, ''); //remove ()
+        improvedName = improvedName.replace(/（([^）]+)）/g, ''); //remove japanese ()
         improvedName = improvedName.replace(/Ver.*/gi, ''); //remove versions
+        improvedName = improvedName.replace(/・/g, ''); // replace bad characters
         improvedName = improvedName.replace(/\s+/g, ' ');
         improvedName = improvedName.trim();
 

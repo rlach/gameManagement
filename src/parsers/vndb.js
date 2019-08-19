@@ -1,4 +1,4 @@
-const { getVndbDataById, findVndbGames } = require('../util/vndb');
+const { getVNById, findVNsByName } = require('../util/vndb');
 const log = require('../util/logger');
 const SiteStrategy = require('./siteStrategy');
 
@@ -11,7 +11,7 @@ class VndbStrategy extends SiteStrategy {
 
     async fetchGameData(gameId, game) {
         const vndbId = Number.parseInt(gameId.replace('v', ''));
-        const result = await getVndbDataById(vndbId);
+        const result = await getVNById(vndbId);
 
         return result;
     }
@@ -23,7 +23,7 @@ class VndbStrategy extends SiteStrategy {
     }
 
     async findGame(name) {
-        return findVndbGames(name);
+        return findVNsByName(name);
     }
 
     async getAdditionalImages(id) {

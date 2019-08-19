@@ -60,7 +60,7 @@ describe('Getchu strategy', function() {
                 .stub(request, 'get')
                 .onFirstCall()
                 .resolves(mockEncodedSite('./test/parsers/sites/getchu.html'));
-            sinon.stub(vndb, 'getVndbData');
+            sinon.stub(vndb, 'getVNByName');
 
             expect(await getchuStrategy.fetchGameData('123456')).to.eql({
                 ...japaneseParseResult,
@@ -87,7 +87,7 @@ describe('Getchu strategy', function() {
                 .stub(request, 'get')
                 .onFirstCall()
                 .resolves(mockEncodedSite('./test/parsers/sites/getchu.html'));
-            sinon.stub(vndb, 'getVndbData').resolves(vndbData);
+            sinon.stub(vndb, 'getVNByName').resolves(vndbData);
 
             expect(await getchuStrategy.fetchGameData('123456')).to.eql({
                 ...japaneseParseResult,
@@ -109,7 +109,7 @@ describe('Getchu strategy', function() {
                             './test/parsers/sites/getchu-reviews.html'
                         )
                     );
-                sinon.stub(vndb, 'getVndbData');
+                sinon.stub(vndb, 'getVNByName');
 
                 expect(await getchuStrategy.fetchGameData('123456')).to.eql({
                     ...japaneseParseResult,
@@ -126,7 +126,7 @@ describe('Getchu strategy', function() {
                     )
                     .onSecondCall()
                     .resolves('<html></html>');
-                sinon.stub(vndb, 'getVndbData');
+                sinon.stub(vndb, 'getVNByName');
 
                 expect(await getchuStrategy.fetchGameData('123456')).to.eql({
                     ...japaneseParseResult,
@@ -169,7 +169,7 @@ describe('Getchu strategy', function() {
                 .stub(request, 'get')
                 .onFirstCall()
                 .resolves(mockEncodedSite('./test/parsers/sites/getchu.html'));
-            sinon.stub(vndb, 'getVndbData');
+            sinon.stub(vndb, 'getVNByName');
 
             expect(await getchuStrategy.getAdditionalImages('123456')).to.eql(
                 japaneseParseResult.additionalImages
@@ -181,7 +181,7 @@ describe('Getchu strategy', function() {
                 .stub(request, 'get')
                 .onFirstCall()
                 .resolves('<html></html>');
-            sinon.stub(vndb, 'getVndbData');
+            sinon.stub(vndb, 'getVNByName');
 
             expect(await getchuStrategy.getAdditionalImages('123456')).to.eql(
                 undefined

@@ -23,7 +23,7 @@ class GetchuStrategy extends SiteStrategy {
         let reviews = {};
         if (jpn.nameJp) {
             log.debug(`Getting english site for ${jpn.nameJp}`);
-            const engResult = await vndb.getVndbData(jpn.nameJp);
+            const engResult = await vndb.getVNByName(jpn.nameJp);
             if (engResult) {
                 eng = engResult;
             }

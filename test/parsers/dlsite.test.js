@@ -181,8 +181,8 @@ describe('Dlsite strategy', function() {
 
         describe('pro sources(VJ)', () => {
             it('returns parsed site and calls vndb with found name', async () => {
-                const getVndbDataStub = sinon
-                    .stub(vndb, 'getVndbData')
+                const getVNByNameStub = sinon
+                    .stub(vndb, 'getVNByName')
                     .returns(undefined);
 
                 const site = fs.readFileSync(
@@ -193,12 +193,12 @@ describe('Dlsite strategy', function() {
                 expect(
                     await dlsiteStrategy.fetchGameData('VJ249908', {})
                 ).to.eql(dlsiteParseResultJp);
-                sinon.assert.calledOnce(getVndbDataStub);
+                sinon.assert.calledOnce(getVNByNameStub);
             });
 
             it('calls announce site if pro call failed', async () => {
-                const getVndbDataStub = sinon
-                    .stub(vndb, 'getVndbData')
+                const getVNByNameStub = sinon
+                    .stub(vndb, 'getVNByName')
                     .returns(undefined);
 
                 const site = fs.readFileSync(
@@ -229,7 +229,7 @@ describe('Dlsite strategy', function() {
                     communityStarVotes: 12345,
                     communityStars: 3.5,
                 });
-                sinon.assert.calledOnce(getVndbDataStub);
+                sinon.assert.calledOnce(getVNByNameStub);
                 sinon.assert.calledThrice(getStub);
             });
 
@@ -249,8 +249,8 @@ describe('Dlsite strategy', function() {
                     communityStars: 3.5,
                 };
 
-                const getVndbDataStub = sinon
-                    .stub(vndb, 'getVndbData')
+                const getVNByNameStub = sinon
+                    .stub(vndb, 'getVNByName')
                     .returns(vndbData);
 
                 const site = fs.readFileSync(
@@ -264,7 +264,7 @@ describe('Dlsite strategy', function() {
                     ...dlsiteParseResultJp,
                     ...vndbData,
                 });
-                sinon.assert.calledOnce(getVndbDataStub);
+                sinon.assert.calledOnce(getVNByNameStub);
             });
         });
     });

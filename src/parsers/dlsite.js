@@ -30,7 +30,7 @@ class DlsiteStrategy extends SiteStrategy {
             const jpnSite = await getProSite(gameId, game.sourceMissingJp);
             jpn = jpnSite ? jpnSite : {};
             if (jpn.nameJp) {
-                eng = await vndb.getVndbData(jpn.nameJp);
+                eng = await vndb.getVNByName(jpn.nameJp);
                 if (!eng) {
                     eng = {};
                 }

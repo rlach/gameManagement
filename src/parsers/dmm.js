@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const { parseSite } = require('../util/html');
-const { getVndbData } = require('../util/vndb');
+const vndb = require('../util/vndb');
 const moment = require('moment');
 const { removeUndefined } = require('../util/objects');
 const log = require('../util/logger');
@@ -20,7 +20,7 @@ class DmmStrategy extends SiteStrategy {
 
         if (jpn && jpn.nameJp) {
             log.debug(`Getting english site for ${jpn.nameJp}`);
-            eng = await getVndbData(jpn.nameJp);
+            eng = await vndb.getVNByName(jpn.nameJp);
         }
 
         const result = {};

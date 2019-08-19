@@ -4,6 +4,7 @@ const fs = require('fs');
 const request = require('request-promise');
 const dmmStrategy = require('../../src/parsers/dmm');
 const moment = require('moment');
+const vndb = require('../../src/util/vndb');
 
 describe('DMM strategy', function() {
     afterEach(async () => {
@@ -35,6 +36,8 @@ describe('DMM strategy', function() {
 
         describe('pro site', () => {
             it('returns parsed data when response is proper', async () => {
+                sinon.stub(vndb, 'getVNByName').resolves(undefined);
+
                 const site = fs.readFileSync(
                     './test/parsers/sites/dmm-pro.html'
                 );
@@ -68,6 +71,8 @@ describe('DMM strategy', function() {
 
         describe('doujin site', () => {
             it('returns parsed data when response is proper', async () => {
+                sinon.stub(vndb, 'getVNByName').resolves(undefined);
+
                 const site = fs.readFileSync(
                     './test/parsers/sites/dmm-doujin.html'
                 );
@@ -102,6 +107,8 @@ describe('DMM strategy', function() {
 
         describe('mono site', () => {
             it('returns parsed data when response is proper', async () => {
+                sinon.stub(vndb, 'getVNByName').resolves(undefined);
+
                 const site = fs.readFileSync(
                     './test/parsers/sites/dmm-mono.html'
                 );
