@@ -4,8 +4,8 @@ const SiteStrategy = require('./siteStrategy');
 const OTHER_ID_REGEX = new RegExp(/^other\d+$/gi);
 
 class OtherStrategy extends SiteStrategy {
-    constructor() {
-        super('other');
+    constructor(settings) {
+        super('other', settings);
     }
 
     async fetchGameData(_a, _b, path) {
@@ -41,5 +41,4 @@ class OtherStrategy extends SiteStrategy {
     }
 }
 
-let otherStrategy = new OtherStrategy();
-module.exports = otherStrategy;
+module.exports = OtherStrategy;

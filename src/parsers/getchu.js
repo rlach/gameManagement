@@ -7,10 +7,11 @@ const vndb = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 
 const GETCHU_ID_REGEX = /\d{6,8}/gi;
+const STRATEGY_NAME = 'getchu';
 
 class GetchuStrategy extends SiteStrategy {
-    constructor() {
-        super('getchu');
+    constructor(settings) {
+        super(STRATEGY_NAME, settings);
     }
 
     async fetchGameData(gameId, game) {
@@ -84,8 +85,7 @@ class GetchuStrategy extends SiteStrategy {
     }
 }
 
-let getchuStrategy = new GetchuStrategy();
-module.exports = getchuStrategy;
+module.exports = GetchuStrategy;
 
 function getGameMetadataJp(query) {
     try {
@@ -159,7 +159,7 @@ async function getJapaneseSite(id, missingSource) {
         const root = parseSite(reply);
         return getGameMetadataJp(root);
     } catch (e) {
-        log.debug(`Error getting ${id} from ${getchuStrategy.name}`, e);
+        log.debug(`Error getting ${id} from ${STRATEGY_NAME}`, e);
         return undefined;
     }
 }
@@ -183,9 +183,7 @@ async function getReviews(id) {
             ),
         };
     } catch (e) {
-        log.debug(
-            `Error getting reviews for ${id} from ${getchuStrategy.name}`
-        );
+        log.debug(`Error getting reviews for ${id} from ${STRATEGY_NAME}`);
         return undefined;
     }
 }

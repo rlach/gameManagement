@@ -2,11 +2,16 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const fs = require('fs');
 const request = require('request-promise');
-const dmmStrategy = require('../../src/parsers/dmm');
+const DmmStrategy = require('../../src/parsers/dmm');
 const moment = require('moment');
 const vndb = require('../../src/util/vndb');
 
 describe('DMM strategy', function() {
+    let dmmStrategy;
+    beforeEach(async () => {
+        dmmStrategy = new DmmStrategy();
+    });
+
     afterEach(async () => {
         sinon.verifyAndRestore();
     });

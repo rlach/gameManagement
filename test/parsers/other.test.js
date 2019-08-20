@@ -1,9 +1,14 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const fs = require('fs');
-const otherStrategy = require('../../src/parsers/other');
+const OtherStrategy = require('../../src/parsers/other');
 
 describe('Other strategy', function() {
+    let otherStrategy;
+    beforeEach(async () => {
+        otherStrategy = new OtherStrategy();
+    });
+
     afterEach(async () => {
         sinon.verifyAndRestore();
     });

@@ -9,8 +9,8 @@ const SiteStrategy = require('./siteStrategy');
 const DMM_ID_REGEX = new RegExp(/[a-z]+_[a-z]*\d+/gi);
 
 class DmmStrategy extends SiteStrategy {
-    constructor() {
-        super('dmm');
+    constructor(settings) {
+        super('dmm', settings);
     }
 
     async fetchGameData(gameId, game) {
@@ -54,8 +54,7 @@ class DmmStrategy extends SiteStrategy {
     }
 }
 
-let dmmStrategy = new DmmStrategy();
-module.exports = dmmStrategy;
+module.exports = DmmStrategy;
 
 async function getDoujinResults(name) {
     const uri = `https://www.dmm.co.jp/search/=/searchstr=${encodeURIComponent(

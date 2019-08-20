@@ -5,7 +5,7 @@ const vndb = require('../../src/util/vndb');
 const { expect } = require('chai');
 const fs = require('fs');
 const request = require('request-promise');
-const getchuStrategy = require('../../src/parsers/getchu');
+const GetchuStrategy = require('../../src/parsers/getchu');
 
 describe('Getchu strategy', function() {
     const japaneseParseResult = {
@@ -19,6 +19,11 @@ describe('Getchu strategy', function() {
         nameJp: '素晴らしいゲーム',
         releaseDate: moment('2019-04-26', 'YYYY-MM-DD').format(),
     };
+
+    let getchuStrategy;
+    beforeEach(async () => {
+        getchuStrategy = new GetchuStrategy();
+    });
 
     afterEach(async () => {
         sinon.verifyAndRestore();

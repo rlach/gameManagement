@@ -1,15 +1,15 @@
 const log = require('../util/logger');
 const files = require('../util/files');
-const settings = require('../settings');
 
 class SiteStrategy {
-    constructor(name) {
+    constructor(name, settings) {
         this.name = name;
+        this.settings = settings;
     }
 
     async fetchGameData(gameId, game) {
         log.debug(`No override for fetchGameDate on ${gameId}`);
-        return undefined;
+        return {};
     }
 
     extractCode(name) {
@@ -34,7 +34,7 @@ class SiteStrategy {
         codes.foundCodes.forEach(code => {
             this.addToCodeScore(
                 results,
-                settings.advanced.scores.resultExists,
+                this.settings.advanced.scores.resultExists,
                 code.workno,
                 code.work_name
             );
@@ -44,7 +44,7 @@ class SiteStrategy {
         if (codes.foundCodes.length === 1) {
             this.addToCodeScore(
                 results,
-                settings.advanced.scores.onlyOneResultExists,
+                this.settings.advanced.scores.onlyOneResultExists,
                 codes.foundCodes[0].workno,
                 codes.foundCodes[0].work_name
             );
@@ -63,7 +63,7 @@ class SiteStrategy {
             if (lowerCaseFoundName === strippedOriginal) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.exactMatch,
+                    this.settings.advanced.scores.exactMatch,
                     code.workno,
                     code.work_name
                 );
@@ -73,7 +73,7 @@ class SiteStrategy {
             if (lowerCaseFoundName.includes(strippedOriginal)) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.similarMatch,
+                    this.settings.advanced.scores.similarMatch,
                     code.workno,
                     code.work_name
                 );
@@ -83,7 +83,7 @@ class SiteStrategy {
             if (strippedOriginal.includes(lowerCaseFoundName)) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.similarMatchSecondSide,
+                    this.settings.advanced.scores.similarMatchSecondSide,
                     code.workno,
                     code.work_name
                 );
@@ -93,7 +93,7 @@ class SiteStrategy {
             if (noSpacesFoundName === noSpacesOriginal) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.noSpaceExactMatch,
+                    this.settings.advanced.scores.noSpaceExactMatch,
                     code.workno,
                     code.work_name
                 );
@@ -103,7 +103,7 @@ class SiteStrategy {
             if (noSpacesFoundName.includes(noSpacesOriginal)) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.similarMatch,
+                    this.settings.advanced.scores.similarMatch,
                     code.workno,
                     code.work_name
                 );
@@ -113,7 +113,7 @@ class SiteStrategy {
             if (noSpacesOriginal.includes(noSpacesFoundName)) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.similarMatch,
+                    this.settings.advanced.scores.similarMatch,
                     code.workno,
                     code.work_name
                 );

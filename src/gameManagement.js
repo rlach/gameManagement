@@ -3,7 +3,6 @@ const log = require('./util/logger');
 const scripts = require('./scripts');
 const fs = require('fs');
 const parserStrategies = require('./parsers');
-const strategies = Object.values(parserStrategies);
 const settingsSample = require('./settings-sample');
 const { initDatabase } = require('./database/database');
 const sleep = require('./util/sleep');
@@ -13,6 +12,11 @@ class GameManagement {
     constructor(settings, operation) {
         this.operation = operation;
         this.settings = settings;
+
+        this.strategies = [];
+        Object.values(parserStrategies).forEach(strategy => {
+            this.strategies.push(new strategy(this.settings));
+        });
     }
 
     async main() {
@@ -87,13 +91,13 @@ class GameManagement {
 
     async getPossibleCodes() {
         await scripts.getPossibleCodes(
-            strategies,
+            this.strategies,
             this.settings.paths.unsortedGames
         );
     }
 
     async organizeDirectories() {
-        await scripts.organizeDirectories(strategies, {
+        await scripts.organizeDirectories(this.strategies, {
             paths: {
                 targetSortFolder: this.settings.paths.targetSortFolder,
                 unsortedGames: this.settings.paths.unsortedGames,
@@ -114,7 +118,7 @@ class GameManagement {
 
     async buildDatabaseFromFolders() {
         await scripts.buildDbFromFolders(
-            strategies,
+            this.strategies,
             this.database,
             this.settings.paths.main,
             {

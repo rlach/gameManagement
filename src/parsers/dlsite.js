@@ -5,11 +5,12 @@ const { parseSite } = require('../util/html');
 const vndb = require('../util/vndb');
 const SiteStrategy = require('./siteStrategy');
 const { removeUndefined } = require('../util/objects');
-const settings = require('../settings');
+
+const STRATEGY_NAME = 'dlsite';
 
 class DlsiteStrategy extends SiteStrategy {
-    constructor() {
-        super('dlsite');
+    constructor(settings) {
+        super(STRATEGY_NAME, settings);
     }
 
     async fetchGameData(gameId, game) {
@@ -174,8 +175,7 @@ class DlsiteStrategy extends SiteStrategy {
     }
 }
 
-let dlsiteStrategy = new DlsiteStrategy();
-module.exports = dlsiteStrategy;
+module.exports = DlsiteStrategy;
 
 async function searchWithRetry(name, site) {
     const reply = await search(name, site);
@@ -331,7 +331,7 @@ async function getEnglishSite(id, sourceMissing) {
             imageUrlEn: originalMetadata.image,
         };
     } catch (e) {
-        log.debug(`Error getting ${idEn} from ${dlsiteStrategy.name}`, {
+        log.debug(`Error getting ${idEn} from ${STRATEGY_NAME}`, {
             name: e.name,
             statusCode: e.statusCode,
             message: e.message,

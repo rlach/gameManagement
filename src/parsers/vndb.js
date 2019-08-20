@@ -1,40 +1,39 @@
-const { getVNById, findVNsByName } = require('../util/vndb');
+const vndb = require('../util/vndb');
 const log = require('../util/logger');
 const SiteStrategy = require('./siteStrategy');
 
 const VNDB_ID_REGEX = new RegExp(/^v\d+$/gi);
 
 class VndbStrategy extends SiteStrategy {
-    constructor() {
-        super('vndb');
+    constructor(settings) {
+        super('vndb', settings);
     }
 
     async fetchGameData(gameId, game) {
         const vndbId = Number.parseInt(gameId.replace('v', ''));
-        const result = await getVNById(vndbId);
+        const result = await vndb.getVNById(vndbId);
 
         return result;
     }
 
     extractCode(name) {
         log.debug('Extracting code from name', { name });
-        const matches = name.match(VNDB_ID_REGEX);
+        const matches = name.match(/v\d+/gi);
         return matches ? matches[0] : '';
     }
 
     async findGame(name) {
-        return findVNsByName(name);
+        return vndb.findVNsByName(name);
     }
 
     async getAdditionalImages(id) {
         const result = await this.fetchGameData(id);
-        return result ? result.additionalImages : undefined;
+        return result.additionalImages;
     }
 
     shouldUse(gameId) {
-        return gameId.match(VNDB_ID_REGEX);
+        return !!gameId.match(VNDB_ID_REGEX);
     }
 }
 
-let vndbStrategy = new VndbStrategy();
-module.exports = vndbStrategy;
+module.exports = VndbStrategy;

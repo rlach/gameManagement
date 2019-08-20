@@ -3,7 +3,7 @@ const Chai = require('chai');
 const { expect } = Chai;
 const ChaiPromised = require('chai-as-promised');
 const request = require('request-promise');
-const dlsiteStrategy = require('../../src/parsers/dlsite');
+const DlsiteStrategy = require('../../src/parsers/dlsite');
 const fs = require('fs');
 const vndb = require('../../src/util/vndb');
 const moment = require('moment');
@@ -32,6 +32,12 @@ describe('Dlsite strategy', function() {
         releaseDate: moment('2019-07-04', 'YYYY-MM-DD').format(),
         tagsJp: ['Tag', 'Tag 2'],
     };
+
+    let dlsiteStrategy;
+
+    beforeEach(async () => {
+        dlsiteStrategy = new DlsiteStrategy();
+    });
 
     afterEach(async () => {
         sinon.verifyAndRestore();
