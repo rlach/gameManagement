@@ -5,7 +5,6 @@ const progress = require('../../src/util/progress');
 const moment = require('moment');
 const convert = require('xml-js');
 const { initDatabase } = require('../../src/database/database');
-const mapper = require('../../src/util/mapper');
 
 const convertDbToLaunchbox = require('../../src/scripts/convert_db_to_launchbox/convert_db_to_launchbox');
 const externalXmlProperties = require('../../src/scripts/convert_db_to_launchbox/external_launchbox_properties');
@@ -24,6 +23,9 @@ describe('convertDbToLaunchbox', function() {
     let database;
     let strategies;
     let writeFileStub;
+    let mapper = {
+        map: () => {},
+    };
 
     beforeEach(async () => {
         sinon.stub(files, 'createMissingLaunchboxDirectories');
@@ -60,7 +62,8 @@ describe('convertDbToLaunchbox', function() {
             launchboxPlatform,
             backupPath,
             externalIdField,
-            database
+            database,
+            mapper
         );
         sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
@@ -74,7 +77,8 @@ describe('convertDbToLaunchbox', function() {
             launchboxPlatform,
             backupPath,
             externalIdField,
-            database
+            database,
+            mapper
         );
         sinon.assert.calledWithExactly(
             copyFileStub,
@@ -93,7 +97,8 @@ describe('convertDbToLaunchbox', function() {
             launchboxPlatform,
             backupPath,
             externalIdField,
-            database
+            database,
+            mapper
         );
         sinon.assert.calledOnce(progressBarUpdate);
         sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
@@ -126,7 +131,8 @@ describe('convertDbToLaunchbox', function() {
                 launchboxPlatform,
                 backupPath,
                 externalIdField,
-                database
+                database,
+                mapper
             );
 
             sinon.assert.calledOnce(progressBarUpdate);
@@ -177,7 +183,8 @@ describe('convertDbToLaunchbox', function() {
                 launchboxPlatform,
                 backupPath,
                 externalIdField,
-                database
+                database,
+                mapper
             );
 
             sinon.assert.calledOnce(progressBarUpdate);
@@ -231,7 +238,8 @@ describe('convertDbToLaunchbox', function() {
                     launchboxPlatform,
                     backupPath,
                     externalIdField,
-                    database
+                    database,
+                    mapper
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
@@ -294,7 +302,8 @@ describe('convertDbToLaunchbox', function() {
                     launchboxPlatform,
                     backupPath,
                     externalIdField,
-                    database
+                    database,
+                    mapper
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
@@ -363,7 +372,8 @@ describe('convertDbToLaunchbox', function() {
                     launchboxPlatform,
                     backupPath,
                     externalIdField,
-                    database
+                    database,
+                    mapper
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
@@ -421,7 +431,8 @@ describe('convertDbToLaunchbox', function() {
                 launchboxPlatform,
                 backupPath,
                 'CustomField',
-                database
+                database,
+                mapper
             );
 
             sinon.assert.calledOnce(progressBarUpdate);

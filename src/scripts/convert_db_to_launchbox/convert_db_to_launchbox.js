@@ -1,7 +1,6 @@
 const fs = require('fs');
 const log = require('../../util/logger');
 const convert = require('xml-js');
-const mapper = require('../../util/mapper');
 const externalLaunchboxProperties = require('./external_launchbox_properties');
 const progress = require('../../util/progress');
 const files = require('../../util/files');
@@ -14,7 +13,8 @@ async function convertDbToLaunchbox(
     launchboxPlatform,
     backupPath,
     externalIdField,
-    database
+    database,
+    mapper
 ) {
     const progressBar = progress.getBar(operation);
 

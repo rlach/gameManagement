@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const files = require('../src/util/files');
+const files = require('../../src/util/files');
 
 describe('files.js', async () => {
     describe('removes tags and metadata', async () => {

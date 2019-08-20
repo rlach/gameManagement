@@ -7,7 +7,7 @@ const moment = require('moment');
 
 Chai.use(ChaiPromised);
 
-const vndb = require('../src/util/vndb');
+const vndb = require('../../src/util/vndb');
 
 describe('vndb.js', function() {
     const vnResponse = {

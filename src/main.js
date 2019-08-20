@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-const gameManagement = require('./gameManagement');
+const GameManagement = require('./gameManagement');
 const vndb = require('./util/vndb');
 const settings = require('./settings');
 const log = require('./util/logger');
@@ -17,7 +17,8 @@ async function main() {
         }
     });
 
-    await gameManagement(settings, operation);
+    const gameManagement = new GameManagement(settings, operation);
+    await gameManagement.main();
 }
 
 main()

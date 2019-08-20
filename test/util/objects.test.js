@@ -1,4 +1,4 @@
-const objects = require('../src/util/objects');
+const objects = require('../../src/util/objects');
 
 const { expect } = require('chai');
 

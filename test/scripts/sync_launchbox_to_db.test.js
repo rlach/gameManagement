@@ -6,7 +6,6 @@ const { initDatabase } = require('../../src/database/database');
 const Chai = require('chai');
 const ChaiPromised = require('chai-as-promised');
 const { expect } = Chai;
-const mapper = require('../../src/util/mapper');
 
 Chai.use(ChaiPromised);
 
@@ -22,6 +21,9 @@ describe('syncLaunchboxToDb', function() {
     let progressBarUpdate;
     let progressBarStart;
     let database;
+    const mapper = {
+        reverseMap: () => {},
+    };
 
     beforeEach(async () => {
         database = await initDatabase({
@@ -180,7 +182,8 @@ describe('syncLaunchboxToDb', function() {
                 launchboxPath,
                 launchboxPlatform,
                 true,
-                database
+                database,
+                mapper
             );
             const gameAfter = await database.game.findOne({
                 id: 1,
@@ -215,7 +218,8 @@ describe('syncLaunchboxToDb', function() {
                 launchboxPath,
                 launchboxPlatform,
                 true,
-                database
+                database,
+                mapper
             );
             const gameAfter = await database.game.findOne({
                 id: 1,
@@ -251,7 +255,8 @@ describe('syncLaunchboxToDb', function() {
                 launchboxPath,
                 launchboxPlatform,
                 true,
-                database
+                database,
+                mapper
             );
             const gameAfter = await database.game.findOne({
                 id: 1,
@@ -296,7 +301,8 @@ describe('syncLaunchboxToDb', function() {
                     launchboxPath,
                     launchboxPlatform,
                     true,
-                    database
+                    database,
+                    mapper
                 )
             ).to.eventually.be.rejectedWith('failed to save');
         });

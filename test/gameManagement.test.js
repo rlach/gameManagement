@@ -1,4 +1,4 @@
-const gameManagement = require('../src/gameManagement');
+const GameManagement = require('../src/gameManagement');
 const settingsSample = require('../src/settings-sample');
 const scripts = require('../src/scripts');
 const inquirer = require('inquirer');
@@ -31,7 +31,8 @@ describe('gameManagement', function() {
     it('creates settings.json based on sample when it does NOT exist and returns', async () => {
         const existsSync = sandbox.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sandbox.stub(fs, 'writeFileSync');
-        await gameManagement(settings);
+        const gameManagement = new GameManagement(settings);
+        await gameManagement.main();
         sinon.assert.calledOnce(existsSync);
         sinon.assert.calledWithExactly(
             writeFileSync,
@@ -47,7 +48,8 @@ describe('gameManagement', function() {
 
         it('calls getPossibleCodes when getCodes', async () => {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
-            await gameManagement(settings, 'getCodes');
+            const gameManagement = new GameManagement(settings, 'getCodes');
+            await gameManagement.main();
             sinon.assert.calledOnce(getPossibleCodes);
         });
 
@@ -56,7 +58,11 @@ describe('gameManagement', function() {
                 scripts,
                 'organizeDirectories'
             );
-            await gameManagement(settings, 'organizeDirectories');
+            const gameManagement = new GameManagement(
+                settings,
+                'organizeDirectories'
+            );
+            await gameManagement.main();
             sinon.assert.calledOnce(organizeDirectories);
         });
 
@@ -65,7 +71,11 @@ describe('gameManagement', function() {
                 scripts,
                 'syncLaunchboxToDb'
             );
-            await gameManagement(settings, 'launchboxToDb');
+            const gameManagement = new GameManagement(
+                settings,
+                'launchboxToDb'
+            );
+            await gameManagement.main();
             sinon.assert.calledOnce(syncLaunchboxToDb);
         });
 
@@ -74,8 +84,19 @@ describe('gameManagement', function() {
                 scripts,
                 'buildDbFromFolders'
             );
-            await gameManagement(settings, 'buildDb');
+            const gameManagement = new GameManagement(settings, 'buildDb');
+            await gameManagement.main();
             sinon.assert.calledOnce(buildDbFromFolders);
+        });
+
+        it('calls downloadImages when downloadImages', async () => {
+            const downloadImages = sandbox.stub(scripts, 'downloadImages');
+            const gameManagement = new GameManagement(
+                settings,
+                'downloadImages'
+            );
+            await gameManagement.main();
+            sinon.assert.calledOnce(downloadImages);
         });
 
         it('calls convertDbToLaunchbox when dbToLaunchbox', async () => {
@@ -83,7 +104,11 @@ describe('gameManagement', function() {
                 scripts,
                 'convertDbToLaunchbox'
             );
-            await gameManagement(settings, 'dbToLaunchbox');
+            const gameManagement = new GameManagement(
+                settings,
+                'dbToLaunchbox'
+            );
+            await gameManagement.main();
             sinon.assert.calledOnce(convertDbToLaunchbox);
         });
 
@@ -92,13 +117,21 @@ describe('gameManagement', function() {
                 scripts,
                 'findPossibleDuplicates'
             );
-            await gameManagement(settings, 'findDuplicates');
+            const gameManagement = new GameManagement(
+                settings,
+                'findDuplicates'
+            );
+            await gameManagement.main();
             sinon.assert.calledOnce(findPossibleDuplicates);
         });
 
         it('calls setForceUpdate when setForceUpdate', async () => {
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
-            await gameManagement(settings, 'setForceUpdate');
+            const gameManagement = new GameManagement(
+                settings,
+                'setForceUpdate'
+            );
+            await gameManagement.main();
             sinon.assert.calledOnce(setForceUpdate);
         });
 
@@ -123,7 +156,8 @@ describe('gameManagement', function() {
 
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
 
-            await gameManagement(settings, 'syncAll');
+            const gameManagement = new GameManagement(settings, 'syncAll');
+            await gameManagement.main();
             sinon.assert.calledOnce(getPossibleCodes);
             sinon.assert.calledOnce(organizeDirectories);
             sinon.assert.calledOnce(syncLaunchboxToDb);
@@ -149,7 +183,8 @@ describe('gameManagement', function() {
             sandbox.stub(inquirer, 'prompt').resolves({
                 operation: 'getCodes',
             });
-            await gameManagement(settings);
+            const gameManagement = new GameManagement(settings);
+            await gameManagement.main();
 
             sinon.assert.calledOnce(getPossibleCodes);
             sinon.assert.notCalled(organizeDirectories);

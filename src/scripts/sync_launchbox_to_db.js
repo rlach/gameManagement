@@ -3,14 +3,14 @@ const moment = require('moment/moment');
 const fs = require('fs');
 const log = require('../util/logger');
 const convert = require('xml-js');
-const mapper = require('../util/mapper');
 const { ensureArray } = require('../util/objects');
 
 async function syncLaunchboxToDb(
     launchboxPath,
     launchboxPlatformName,
     onlyUpdateNewer,
-    database
+    database,
+    mapper
 ) {
     const launchboxPlatform = readLaunchboxPlatformFile(
         launchboxPath,
@@ -32,7 +32,7 @@ async function syncLaunchboxToDb(
                 log.debug('Skipping game due to outdated data in launchbox');
             } else {
                 log.debug(`Syncing game ${dbGame.id}`);
-                await syncGame(launchboxGame, dbGame, database);
+                await syncGame(launchboxGame, dbGame, database, mapper);
             }
             progressBar.update(index + 1);
         }
@@ -49,7 +49,7 @@ function shouldSkipGame(launchboxGame, dbGame, onlyUpdateNewer) {
     );
 }
 
-async function syncGame(launchboxGame, dbGame, database) {
+async function syncGame(launchboxGame, dbGame, database, mapper) {
     const result = mapper.reverseMap(launchboxGame);
 
     Object.assign(dbGame, result);
