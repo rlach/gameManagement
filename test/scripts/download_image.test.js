@@ -27,12 +27,12 @@ describe('downloadImage', function() {
     it('Downloads image as screenshot when type is missing', async () => {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         await downloadImage.downloadImage(launchboxPath, platformName, image);
-        sinon.assert.calledWith(imageDownload, {
+        sinon.assert.calledWithExactly(imageDownload, {
             dest:
                 'launchboxPath/Images/PLATFORM/Screenshot - Gameplay/Hisho86/gameId/image.jpg',
             url: 'https://very.good.link/image.jpg',
         });
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             createDirectoryStub,
             'launchboxPath/Images/PLATFORM/Screenshot - Gameplay/Hisho86/gameId'
         );
@@ -42,12 +42,12 @@ describe('downloadImage', function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'screenshot';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
-        sinon.assert.calledWith(imageDownload, {
+        sinon.assert.calledWithExactly(imageDownload, {
             dest:
                 'launchboxPath/Images/PLATFORM/Screenshot - Gameplay/Hisho86/gameId/image.jpg',
             url: 'https://very.good.link/image.jpg',
         });
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             createDirectoryStub,
             'launchboxPath/Images/PLATFORM/Screenshot - Gameplay/Hisho86/gameId'
         );
@@ -57,12 +57,12 @@ describe('downloadImage', function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'box';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
-        sinon.assert.calledWith(imageDownload, {
+        sinon.assert.calledWithExactly(imageDownload, {
             dest:
                 'launchboxPath/Images/PLATFORM/Box - Front - Reconstructed/Hisho86/gameId/image.jpg',
             url: 'https://very.good.link/image.jpg',
         });
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             createDirectoryStub,
             'launchboxPath/Images/PLATFORM/Box - Front - Reconstructed/Hisho86/gameId'
         );
@@ -72,12 +72,12 @@ describe('downloadImage', function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'background';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
-        sinon.assert.calledWith(imageDownload, {
+        sinon.assert.calledWithExactly(imageDownload, {
             dest:
                 'launchboxPath/Images/PLATFORM/Clear Logo/Hisho86/gameId/image.jpg',
             url: 'https://very.good.link/image.jpg',
         });
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             createDirectoryStub,
             'launchboxPath/Images/PLATFORM/Clear Logo/Hisho86/gameId'
         );

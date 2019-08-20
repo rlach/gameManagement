@@ -62,7 +62,7 @@ describe('convertDbToLaunchbox', function() {
             externalIdField,
             database
         );
-        sinon.assert.calledWith(writeFileStub, xmlFullPath, emptyXml);
+        sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
     it('Backups existing xml file if it exists', async () => {
@@ -76,12 +76,12 @@ describe('convertDbToLaunchbox', function() {
             externalIdField,
             database
         );
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             copyFileStub,
             xmlFullPath,
             'backupPath/PLATFORM-backup.xml'
         );
-        sinon.assert.calledWith(writeFileStub, xmlFullPath, emptyXml);
+        sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
     it('Skips deleted games from database', async () => {
@@ -96,7 +96,7 @@ describe('convertDbToLaunchbox', function() {
             database
         );
         sinon.assert.calledOnce(progressBarUpdate);
-        sinon.assert.calledWith(writeFileStub, xmlFullPath, emptyXml);
+        sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
     describe('converts database game to xml', () => {
@@ -130,11 +130,11 @@ describe('convertDbToLaunchbox', function() {
             );
 
             sinon.assert.calledOnce(progressBarUpdate);
-            sinon.assert.calledWith(mapperStub, {
+            sinon.assert.calledWithExactly(mapperStub, {
                 _id: game._id,
                 ...gameDates,
             });
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 js2xmlStub,
                 {
                     LaunchBox: {
@@ -147,7 +147,7 @@ describe('convertDbToLaunchbox', function() {
                 },
                 { compact: true }
             );
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeFileStub,
                 xmlFullPath,
                 '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><DateAdded>1986-01-01T00:00:00+01:00</DateAdded><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game></LaunchBox>'
@@ -181,11 +181,11 @@ describe('convertDbToLaunchbox', function() {
             );
 
             sinon.assert.calledOnce(progressBarUpdate);
-            sinon.assert.calledWith(mapperStub, {
+            sinon.assert.calledWithExactly(mapperStub, {
                 _id: game._id,
                 ...gameDates,
             });
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 js2xmlStub,
                 {
                     LaunchBox: {
@@ -200,7 +200,7 @@ describe('convertDbToLaunchbox', function() {
                 },
                 { compact: true }
             );
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeFileStub,
                 xmlFullPath,
                 '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ID>uuid</ID><SomethingElse>else</SomethingElse><DateAdded>1986-01-01T00:00:00+01:00</DateAdded></Game></LaunchBox>'
@@ -235,11 +235,11 @@ describe('convertDbToLaunchbox', function() {
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
-                sinon.assert.calledWith(mapperStub, {
+                sinon.assert.calledWithExactly(mapperStub, {
                     _id: game._id,
                     ...gameDates,
                 });
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     js2xmlStub,
                     {
                         LaunchBox: {
@@ -258,7 +258,7 @@ describe('convertDbToLaunchbox', function() {
                     },
                     { compact: true }
                 );
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     writeFileStub,
                     xmlFullPath,
                     '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ID>uuid</ID><DateAdded>1986-01-01T00:00:00+01:00</DateAdded></Game><CustomField><GameID>uuid</GameID><Name>foo</Name><Value>bar</Value></CustomField></LaunchBox>'
@@ -298,12 +298,12 @@ describe('convertDbToLaunchbox', function() {
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
-                sinon.assert.calledWith(mapperStub, {
+                sinon.assert.calledWithExactly(mapperStub, {
                     _id: game._id,
                     ...gameDates,
                     engine: 'rocketEngine',
                 });
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     js2xmlStub,
                     {
                         LaunchBox: {
@@ -327,7 +327,7 @@ describe('convertDbToLaunchbox', function() {
                     },
                     { compact: true }
                 );
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     writeFileStub,
                     xmlFullPath,
                     '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ID>uuid</ID><SomethingElse>else</SomethingElse><DateAdded>1986-01-01T00:00:00+01:00</DateAdded></Game><CustomField><GameID>uuid</GameID><Name>engine</Name><Value>rocketEngine</Value></CustomField></LaunchBox>'
@@ -367,12 +367,12 @@ describe('convertDbToLaunchbox', function() {
                 );
 
                 sinon.assert.calledOnce(progressBarUpdate);
-                sinon.assert.calledWith(mapperStub, {
+                sinon.assert.calledWithExactly(mapperStub, {
                     _id: game._id,
                     ...gameDates,
                     engine: 'betterEngine',
                 });
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     js2xmlStub,
                     {
                         LaunchBox: {
@@ -391,7 +391,7 @@ describe('convertDbToLaunchbox', function() {
                     },
                     { compact: true }
                 );
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     writeFileStub,
                     xmlFullPath,
                     '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><ID>uuid</ID><DateAdded>1986-01-01T00:00:00+01:00</DateAdded></Game><CustomField><GameID>uuid</GameID><Name>engine</Name><Value>betterEngine</Value></CustomField></LaunchBox>'
@@ -425,12 +425,12 @@ describe('convertDbToLaunchbox', function() {
             );
 
             sinon.assert.calledOnce(progressBarUpdate);
-            sinon.assert.calledWith(mapperStub, {
+            sinon.assert.calledWithExactly(mapperStub, {
                 _id: game._id,
                 id: game.id,
                 ...gameDates,
             });
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 js2xmlStub,
                 {
                     LaunchBox: {
@@ -449,7 +449,7 @@ describe('convertDbToLaunchbox', function() {
                 },
                 { compact: true }
             );
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeFileStub,
                 xmlFullPath,
                 '<?xml version="1.0" standalone="yes"?><LaunchBox><Game><DateAdded>1986-01-01T00:00:00+01:00</DateAdded><ID>uuid</ID><CommandLine/><ConfigurationCommandLine/><ConfigurationPath/><DosBoxConfigurationPath/><Emulator/><ManualPath/><MusicPath/><Publisher/><ScummVMAspectCorrection>false</ScummVMAspectCorrection><ScummVMFullscreen>false</ScummVMFullscreen><ScummVMGameDataFolderPath/><ScummVMGameType/><UseDosBox>false</UseDosBox><UseScummVM>false</UseScummVM><PlayMode/><Region/><VideoPath/><MissingVideo>true</MissingVideo><MissingBoxFrontImage>false</MissingBoxFrontImage><MissingScreenshotImage>false</MissingScreenshotImage><MissingClearLogoImage>false</MissingClearLogoImage><MissingBackgroundImage>false</MissingBackgroundImage><UseStartupScreen>false</UseStartupScreen><HideAllNonExclusiveFullscreenWindows>false</HideAllNonExclusiveFullscreenWindows><StartupLoadDelay>0</StartupLoadDelay><HideMouseCursorInGame>false</HideMouseCursorInGame><DisableShutdownScreen>false</DisableShutdownScreen><AggressiveWindowHiding>false</AggressiveWindowHiding><OverrideDefaultStartupScreenSettings>false</OverrideDefaultStartupScreenSettings><UsePauseScreen>false</UsePauseScreen><OverrideDefaultPauseScreenSettings>false</OverrideDefaultPauseScreenSettings><SuspendProcessOnPause>false</SuspendProcessOnPause><ForcefulPauseScreenActivation>false</ForcefulPauseScreenActivation><CustomDosBoxVersionPath/></Game><CustomField><GameID>uuid</GameID><Name>externalId</Name><Value>1</Value></CustomField></LaunchBox>'

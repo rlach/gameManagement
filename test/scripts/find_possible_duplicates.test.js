@@ -17,7 +17,7 @@ describe('findPossibleDuplicates', function() {
         const readdirStub = sinon.stub(fs, 'readdirSync').returns([]);
         const result = findPossibleDuplicates(['mainPath1', 'mainPath2']);
         sinon.assert.calledTwice(readdirStub);
-        sinon.assert.calledWith(writeStub, 'duplicates.txt', '{}');
+        sinon.assert.calledWithExactly(writeStub, 'duplicates.txt', '{}');
     });
 
     it('When directory has no subdirectories writes it to file with -1 count', async () => {
@@ -28,7 +28,7 @@ describe('findPossibleDuplicates', function() {
             .onSecondCall()
             .returns([]);
         findPossibleDuplicates(['mainPath']);
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeStub,
             'duplicates.txt',
             JSON.stringify({ directory: -1 }, null, 4)
@@ -53,7 +53,7 @@ describe('findPossibleDuplicates', function() {
                 },
             ]);
         findPossibleDuplicates(['mainPath']);
-        sinon.assert.calledWith(writeStub, 'duplicates.txt', '{}');
+        sinon.assert.calledWithExactly(writeStub, 'duplicates.txt', '{}');
     });
 
     it('Writes object with directories that have 2 subdirectories with score of 1', async () => {
@@ -73,7 +73,7 @@ describe('findPossibleDuplicates', function() {
                 },
             ]);
         findPossibleDuplicates(['mainPath']);
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeStub,
             'duplicates.txt',
             JSON.stringify({ directory: 1 }, null, 4)
@@ -105,7 +105,7 @@ describe('findPossibleDuplicates', function() {
                 },
             ]);
         findPossibleDuplicates(['mainPath']);
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeStub,
             'duplicates.txt',
             JSON.stringify({ directory: 3 }, null, 4)
@@ -133,7 +133,7 @@ describe('findPossibleDuplicates', function() {
                     },
                 ]);
             findPossibleDuplicates(['mainPath']);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeStub,
                 'duplicates.txt',
                 JSON.stringify({ directory: 1 }, null, 4)
@@ -160,7 +160,7 @@ describe('findPossibleDuplicates', function() {
                     },
                 ]);
             findPossibleDuplicates(['mainPath']);
-            sinon.assert.calledWith(writeStub, 'duplicates.txt', '{}');
+            sinon.assert.calledWithExactly(writeStub, 'duplicates.txt', '{}');
         });
     });
 });

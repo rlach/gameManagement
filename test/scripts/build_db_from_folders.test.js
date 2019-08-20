@@ -47,7 +47,11 @@ describe('buildDbFromFolders', function() {
             searchSettings
         );
 
-        sinon.assert.calledWith(updateManySpy, { id: { $nin: [] } });
+        sinon.assert.calledWithExactly(
+            updateManySpy,
+            { id: { $nin: [] } },
+            { deleted: true }
+        );
     });
 
     it('Marks as deleted entries in database not found in directory scan', async () => {
@@ -60,7 +64,11 @@ describe('buildDbFromFolders', function() {
             searchSettings
         );
 
-        sinon.assert.calledWith(updateManySpy, { id: { $nin: ['dir'] } });
+        sinon.assert.calledWithExactly(
+            updateManySpy,
+            { id: { $nin: ['dir'] } },
+            { deleted: true }
+        );
     });
 
     describe('strategy available', () => {
@@ -124,7 +132,7 @@ describe('buildDbFromFolders', function() {
             });
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(recognizeGameEngine);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 updateExecutableAndDirectory,
                 {
                     name: 'dir',

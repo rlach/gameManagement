@@ -1,18 +1,18 @@
 const inquirer = require('inquirer');
 
-async function confirmResults(results, file) {
+async function confirmResults(results, file, maxResultsToSuggest) {
+    if (!results || results.length === 0) {
+        throw new Error('No results to confirm');
+    }
     if (results.length === 1) {
         return await confirmSingleResult(results, file);
     } else {
-        return await confirmMultipleResults(results, file);
+        return await confirmMultipleResults(results, file, maxResultsToSuggest);
     }
 }
 
-async function confirmMultipleResults(results, file) {
-    let bestResults = results.slice(
-        0,
-        settings.organizeDirectories.maxResultsToSuggest
-    );
+async function confirmMultipleResults(results, file, maxResultsToSuggest) {
+    let bestResults = results.slice(0, maxResultsToSuggest);
     const choices = [
         { name: 'None', value: 0 },
         ...bestResults.map((result, index) => ({

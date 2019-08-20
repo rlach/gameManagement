@@ -52,7 +52,8 @@ async function organizeDirectories(strategies, settings) {
                     try {
                         bestResult = await scoreResults.confirmResults(
                             results,
-                            file
+                            file,
+                            settings.organizeDirectories.maxResultsToSuggest
                         );
                     } catch (e) {
                         if (e.code === 'RESULT_REJECTED') {

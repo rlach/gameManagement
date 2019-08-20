@@ -17,6 +17,7 @@ describe('organizeDirectories', function() {
             },
             organizeDirectories: {
                 shouldAsk: true,
+                maxResultsToSuggest: 5,
                 minimumScoreToAccept: 1,
                 minimumScoreToAsk: 0,
             },
@@ -136,7 +137,7 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 renameSync,
                 './mess/dir',
                 './target/code/dir'
@@ -178,8 +179,8 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
-            sinon.assert.calledWith(mkdirSync, './target/code');
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(mkdirSync, './target/code');
+            sinon.assert.calledWithExactly(
                 renameSync,
                 './mess/dir',
                 './target/code/dir'
@@ -227,7 +228,7 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.notCalled(confirmResultsStub);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 renameSync,
                 './mess/dir',
                 './target/best/dir'
@@ -291,8 +292,13 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
-            sinon.assert.calledWith(confirmResultsStub, [{ score: 0 }]);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
+                confirmResultsStub,
+                [{ score: 0 }],
+                'dir',
+                5
+            );
+            sinon.assert.calledWithExactly(
                 writeFileSync,
                 './mess/dir/!foundCodes.txt',
                 JSON.stringify({ noMatch: true }, null, 4)
@@ -339,11 +345,13 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
-            sinon.assert.calledWith(confirmResultsStub, [
-                { code: 'a', score: 0 },
-                { code: 'b', score: 0 },
-            ]);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
+                confirmResultsStub,
+                [{ code: 'a', score: 0 }, { code: 'b', score: 0 }],
+                'dir',
+                5
+            );
+            sinon.assert.calledWithExactly(
                 writeFileSync,
                 './mess/dir/!foundCodes.txt',
                 JSON.stringify({ noMatch: true }, null, 4)
@@ -379,7 +387,7 @@ describe('organizeDirectories', function() {
             sinon.assert.calledOnce(readFileSync);
             sinon.assert.calledOnce(strategy.scoreCodes);
             sinon.assert.calledOnce(confirmResultsStub);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 renameSync,
                 './mess/dir',
                 './target/code/dir'

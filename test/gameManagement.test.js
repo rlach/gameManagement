@@ -33,7 +33,7 @@ describe('gameManagement', function() {
         const writeFileSync = sandbox.stub(fs, 'writeFileSync');
         await gameManagement(settings);
         sinon.assert.calledOnce(existsSync);
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeFileSync,
             './settings.json',
             JSON.stringify(settingsSample, null, 4)

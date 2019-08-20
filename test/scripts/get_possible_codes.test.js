@@ -23,7 +23,7 @@ describe('getPossibleCodes', function() {
         const readdir = sinon.stub(fs, 'readdirSync').returns([]);
         const existsSync = sinon.spy(fs, 'existsSync');
         await getPossibleCodes([], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
+        sinon.assert.calledWithExactly(readdir, gamePath);
         sinon.assert.notCalled(existsSync);
     });
 
@@ -32,8 +32,8 @@ describe('getPossibleCodes', function() {
         const existsSync = sinon.stub(fs, 'existsSync').returns(true);
         const writeFileSync = sinon.spy(fs, 'writeFileSync');
         await getPossibleCodes([], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
-        sinon.assert.calledWith(existsSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(readdir, gamePath);
+        sinon.assert.calledWithExactly(existsSync, 'path/dir/!foundCodes.txt');
         sinon.assert.notCalled(writeFileSync);
     });
 
@@ -42,9 +42,19 @@ describe('getPossibleCodes', function() {
         const existsSync = sinon.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sinon.stub(fs, 'writeFileSync');
         await getPossibleCodes([], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
-        sinon.assert.calledWith(existsSync, 'path/dir/!foundCodes.txt');
-        sinon.assert.calledWith(writeFileSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(readdir, gamePath);
+        sinon.assert.calledWithExactly(existsSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(
+            writeFileSync,
+            'path/dir/!foundCodes.txt',
+            JSON.stringify(
+                {
+                    file: 'dir',
+                },
+                null,
+                4
+            )
+        );
     });
 
     it('Swallows file write errors', async function() {
@@ -52,9 +62,19 @@ describe('getPossibleCodes', function() {
         const existsSync = sinon.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sinon.stub(fs, 'writeFileSync').throws('whoops');
         await getPossibleCodes([], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
-        sinon.assert.calledWith(existsSync, 'path/dir/!foundCodes.txt');
-        sinon.assert.calledWith(writeFileSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(readdir, gamePath);
+        sinon.assert.calledWithExactly(existsSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(
+            writeFileSync,
+            'path/dir/!foundCodes.txt',
+            JSON.stringify(
+                {
+                    file: 'dir',
+                },
+                null,
+                4
+            )
+        );
     });
 
     it('Runs supplied strategy', async function() {
@@ -68,13 +88,13 @@ describe('getPossibleCodes', function() {
         const existsSync = sinon.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sinon.stub(fs, 'writeFileSync');
         await getPossibleCodes([strategy], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
-        sinon.assert.calledWith(existsSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(readdir, gamePath);
+        sinon.assert.calledWithExactly(existsSync, 'path/dir/!foundCodes.txt');
 
-        sinon.assert.calledWith(strategy.findGame, 'dir');
-        sinon.assert.calledWith(strategy.extractCode, 'dir');
+        sinon.assert.calledWithExactly(strategy.findGame, 'dir');
+        sinon.assert.calledWithExactly(strategy.extractCode, 'dir');
 
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeFileSync,
             'path/dir/!foundCodes.txt',
             JSON.stringify(
@@ -118,13 +138,13 @@ describe('getPossibleCodes', function() {
         const existsSync = sinon.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sinon.stub(fs, 'writeFileSync');
         await getPossibleCodes([strategy, strategy2], gamePath);
-        sinon.assert.calledWith(readdir, gamePath);
-        sinon.assert.calledWith(existsSync, 'path/dir/!foundCodes.txt');
+        sinon.assert.calledWithExactly(readdir, gamePath);
+        sinon.assert.calledWithExactly(existsSync, 'path/dir/!foundCodes.txt');
 
-        sinon.assert.calledWith(strategy.findGame, 'dir');
-        sinon.assert.calledWith(strategy.extractCode, 'dir');
+        sinon.assert.calledWithExactly(strategy.findGame, 'dir');
+        sinon.assert.calledWithExactly(strategy.extractCode, 'dir');
 
-        sinon.assert.calledWith(
+        sinon.assert.calledWithExactly(
             writeFileSync,
             'path/dir/!foundCodes.txt',
             JSON.stringify(

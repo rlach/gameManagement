@@ -54,7 +54,7 @@ describe('vndb.js', function() {
         it('creates new instance and sends login message', async () => {
             await vndb.connect();
             sinon.assert.calledOnce(startStub);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeStub,
                 'login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}'
             );
@@ -64,7 +64,7 @@ describe('vndb.js', function() {
             await vndb.connect();
             await vndb.connect();
             sinon.assert.calledOnce(startStub);
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 writeStub,
                 'login {"protocol":1,"client":"pervyGameEnthusiastWithLongDataStrings","clientver":"0.0.1"}'
             );
@@ -105,11 +105,11 @@ describe('vndb.js', function() {
                     .resolves('results {}');
                 const result = await vndb.getVNById('12345');
                 sinon.assert.calledThrice(writeStub);
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     writeStub.secondCall,
                     'get vn basic,details,tags,screens,stats (id=12345)'
                 );
-                sinon.assert.calledWith(
+                sinon.assert.calledWithExactly(
                     writeStub.thirdCall,
                     'get release basic,producers (vn=12345)'
                 );
@@ -330,15 +330,15 @@ describe('vndb.js', function() {
                         );
                     const result = await vndb.getVNById('12345');
                     sinon.assert.callCount(writeStub, 4);
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.secondCall,
                         'get vn basic,details,tags,screens,stats (id=12345)'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.thirdCall,
                         'get vn basic,details,tags,screens,stats (id=12345)'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.getCall(3),
                         'get release basic,producers (vn=12345)'
                     );
@@ -354,15 +354,15 @@ describe('vndb.js', function() {
                         );
                     const result = await vndb.getVNById('12345');
                     sinon.assert.callCount(writeStub, 4);
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.secondCall,
                         'get vn basic,details,tags,screens,stats (id=12345)'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.thirdCall,
                         'get release basic,producers (vn=12345)'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.getCall(3),
                         'get release basic,producers (vn=12345)'
                     );
@@ -538,11 +538,11 @@ describe('vndb.js', function() {
                         );
                     const result = await vndb.getVNByName('amazing game');
                     sinon.assert.calledThrice(writeStub);
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.secondCall,
                         'get vn basic,details,tags,screens,stats (search~"amazing game")'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.thirdCall,
                         'get vn basic,details,tags,screens,stats (search~"amazing game")'
                     );
@@ -632,11 +632,11 @@ describe('vndb.js', function() {
                         );
                     const result = await vndb.findVNsByName('amazing game');
                     sinon.assert.calledThrice(writeStub);
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.secondCall,
                         'get vn basic (search~"amazing game")'
                     );
-                    sinon.assert.calledWith(
+                    sinon.assert.calledWithExactly(
                         writeStub.thirdCall,
                         'get vn basic (search~"amazing game")'
                     );
