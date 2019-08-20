@@ -124,37 +124,32 @@ function languageDependentSimpleProperty(mapper, from, to, preferredLanguage) {
     });
 }
 
-function languageDependentArrayProperty(
-    mapper,
-    from,
-    to,
-    preferredLanguage,
-    split = ';'
-) {
+function languageDependentArrayProperty(mapper, from, to, preferredLanguage) {
     const baseFrom = preferredLanguage === 'en' ? `${from}En` : `${from}Jp`;
     const backupFrom = preferredLanguage === 'en' ? `${from}Jp` : `${from}En`;
     mapper.addMapping(function(source, target) {
-        const sourceValue = source[baseFrom]
-            ? source[baseFrom]
-            : source[backupFrom];
-        target[to] = arrayTransform(sourceValue, split);
+        const sourceValue =
+            source[baseFrom] && source[baseFrom].length > 0
+                ? source[baseFrom]
+                : source[backupFrom];
+        target[to] = arrayTransform(sourceValue);
         return target;
     });
     mapper.addReverseMapping(function(source, target) {
         if (source[to]) {
-            target[baseFrom] = arrayReverseTransform(source[to], split);
+            target[baseFrom] = arrayReverseTransform(source[to]);
         }
         return target;
     });
 }
 
-function arrayReverseTransform(value, split) {
-    return value && value._text ? value._text.split(split) : [];
+function arrayReverseTransform(value) {
+    return value && value._text ? value._text.split(';') : [];
 }
 
-function arrayTransform(value, split) {
+function arrayTransform(value) {
     return {
-        _text: value ? value.join(split) : '',
+        _text: value ? value.join(';') : '',
     };
 }
 
@@ -199,7 +194,7 @@ function integerProperty(from, to) {
         from: from,
         to: to,
         reverseTransform: function(value) {
-            return value._text ? Number.parseInt(value._text) : undefined;
+            return Number.parseInt(value._text);
         },
         transform: integerTransform,
         default: {
@@ -223,7 +218,7 @@ function dateProperty(from, to, defaultDate) {
         },
         transform: function(value) {
             return {
-                _text: value ? value : moment().format(),
+                _text: value,
             };
         },
         default: {
@@ -243,7 +238,7 @@ function booleanProperty(from, to) {
         },
         transform: function(value) {
             return {
-                _text: value ? value : 'false',
+                _text: value.toString(),
             };
         },
         default: {
