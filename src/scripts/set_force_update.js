@@ -1,5 +1,11 @@
 const inquirer = require('inquirer');
 const log = require('../util/logger');
+const matcher = require('matcher');
+
+inquirer.registerPrompt(
+    'checkbox-plus',
+    require('inquirer-checkbox-plus-prompt')
+);
 
 async function setForceUpdate(database) {
     let answers = {};
@@ -29,6 +35,8 @@ async function setForceUpdate(database) {
             message:
                 'Select filters for which games to force refresh(no filers = all games, all filters connected by OR)',
             choices: [
+                new inquirer.Separator('= Other (overwrites other choices) ='),
+                { name: 'select concrete games', value: 'game' },
                 new inquirer.Separator('= By source page ='),
                 { name: 'dlsite', value: 'dlsite' },
                 { name: 'getchu', value: 'getchu' },
@@ -40,27 +48,68 @@ async function setForceUpdate(database) {
         })
     );
 
+    let searchQuery = {};
+
     log.debug('answers', answers);
 
-    let searchQuery = {};
-    const sources = answers.filters.filter(element =>
-        ['dlsite', 'getchu', 'dmm'].includes(element)
-    );
-    const idFilters = answers.filters.filter(element =>
-        ['VJ', 'RJ'].includes(element)
-    );
-    if (idFilters.length > 0 || sources.length > 0) {
-        searchQuery['$or'] = [];
-    }
+    if (answers.filters.some(f => f === 'game')) {
+        const allGames = await database.game.find({});
+        const choices = allGames.map(g => ({
+            name: `${g.nameEn ? g.nameEn : g.nameJp} [${g.id}]`,
+            value: g.id,
+        }));
 
-    if (sources.length > 0) {
-        searchQuery.$or.push({ source: { $in: sources } });
-    }
+        log.info('chosen game');
+        Object.assign(
+            answers,
+            await inquirer.prompt({
+                type: 'checkbox-plus',
+                name: 'games',
+                message:
+                    'Select filters for which games to force refresh(no filers = all games, all filters connected by OR)',
+                source: async (answersSoFar, input) => {
+                    input = input || '';
 
-    if (idFilters.length > 0) {
-        const expression = `^(${idFilters.join('|')})`;
-        const regex = RegExp(expression);
-        searchQuery.$or.push({ id: { $regex: regex } });
+                    const filteredChoices = choices.filter(c =>
+                        matcher.isMatch(c.name, `*${input}*`, {
+                            caseSensitive: false,
+                        })
+                    );
+
+                    return filteredChoices;
+                },
+                searchable: true,
+            })
+        );
+
+        if (answers.games.length === 0) {
+            log.info('No games selected');
+            return;
+        } else {
+            searchQuery.id = { $in: answers.games };
+        }
+
+        log.info('Games selected', answers.games);
+    } else {
+        const sources = answers.filters.filter(element =>
+            ['dlsite', 'getchu', 'dmm'].includes(element)
+        );
+        const idFilters = answers.filters.filter(element =>
+            ['VJ', 'RJ'].includes(element)
+        );
+        if (idFilters.length > 0 || sources.length > 0) {
+            searchQuery['$or'] = [];
+        }
+
+        if (sources.length > 0) {
+            searchQuery.$or.push({ source: { $in: sources } });
+        }
+
+        if (idFilters.length > 0) {
+            const expression = `^(${idFilters.join('|')})`;
+            const regex = RegExp(expression);
+            searchQuery.$or.push({ id: { $regex: regex } });
+        }
     }
 
     log.debug('query', JSON.stringify(searchQuery));

@@ -89,6 +89,10 @@ function getGame(mongoose) {
             game.dateModified = moment().format();
             return this.save(game);
         }
+
+        async find(searchQuery) {
+            return this.Game.find(searchQuery).exec();
+        }
     }
 
     return new MongooseGame();
