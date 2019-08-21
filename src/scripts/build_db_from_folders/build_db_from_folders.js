@@ -1,5 +1,4 @@
 const log = require('../../util/logger');
-const moment = require('moment/moment');
 const fs = require('fs');
 const { removeUndefined } = require('../../util/objects');
 const executables = require('./find_executable');
@@ -66,110 +65,19 @@ async function buildDbFromFolder(
     let game = await database.game.retrieveFromDb(file.name);
     game.source = strategy.name;
 
-    if (gameIsDeleted(file)) {
-        game.deleted = true;
-        game.dateModified = moment().format();
-        await database.game.save(game);
+    if (isDeleted(file)) {
+        if (!game.deleted) {
+            game.deleted = true;
+            await database.game.save(game);
+        }
+
         return;
     } else if (game.deleted) {
         game.deleted = false;
-        game.dateModified = moment().format();
         await database.game.save(game);
     }
 
-    if (!game.engine) {
-        game.engine = await engineRecognizer.recognizeGameEngine(file);
-        if (game.engine) {
-            game.dateModified = moment().format();
-            await database.game.save(game);
-        }
-    }
-
-    if (
-        game.executableFile &&
-        !game.forceSourceUpdate &&
-        !game.forceExecutableUpdate &&
-        !game.forceAdditionalImagesUpdate
-    ) {
-        log.debug(`Skipping ${file.name}`);
-    } else {
-        log.debug(`Processing ${file.name}`);
-        if ((!game.nameEn && !game.nameJp) || game.forceSourceUpdate) {
-            game.forceSourceUpdate = false;
-            log.debug('Updating source web page(s)');
-            const gameData = await strategy.fetchGameData(
-                game.id,
-                game,
-                `${file.path}/${file.name}`
-            );
-            const mainImageUrl = gameData.imageUrlJp
-                ? gameData.imageUrlJp
-                : gameData.imageUrlEn;
-            if (mainImageUrl) {
-                await addImageToDb(game, mainImageUrl, 'box', database);
-            }
-            if (
-                (gameData.nameJp || gameData.nameEn) &&
-                (!gameData.additionalImages ||
-                    gameData.additionalImages.length === 0)
-            ) {
-                game.forceAdditionalImagesUpdate = false;
-                const newAdditionalImages = await strategy.getAdditionalImages(
-                    file.name
-                );
-                if (
-                    JSON.stringify(newAdditionalImages) !==
-                    JSON.stringify(game.additionalImages)
-                ) {
-                    gameData.additionalImages = newAdditionalImages;
-                    await addAdditionalImagesToDb(
-                        game,
-                        newAdditionalImages,
-                        database
-                    );
-                }
-            }
-            if (
-                game.imageUrlEn !== gameData.imageUrlEn ||
-                game.imageUrlJp !== game.imageUrlJp
-            ) {
-                const mainImageUrl = gameData.imageUrlJp
-                    ? gameData.imageUrlJp
-                    : gameData.imageUrlEn;
-                if (mainImageUrl) {
-                    await addImageToDb(game, mainImageUrl, 'box', database);
-                }
-            }
-            Object.assign(game, removeUndefined(gameData));
-            game.dateModified = moment().format();
-            await database.game.save(game);
-
-            await addAdditionalImagesToDb(
-                game,
-                game.additionalImages,
-                database
-            );
-        }
-
-        if ((game.nameEn || game.nameJp) && game.forceAdditionalImagesUpdate) {
-            game.forceAdditionalImagesUpdate = false;
-            const newAdditionalImages = await strategy.getAdditionalImages(
-                file.name
-            );
-            if (
-                JSON.stringify(newAdditionalImages) !==
-                JSON.stringify(game.additionalImages)
-            ) {
-                game.additionalImages = newAdditionalImages;
-                await addAdditionalImagesToDb(
-                    game,
-                    game.additionalImages,
-                    database
-                );
-            }
-            await database.game.save(game);
-        }
-
+    if (!game.executableFile || game.forceExecutableUpdate) {
         await executables.updateExecutableAndDirectory(
             file,
             game,
@@ -177,7 +85,57 @@ async function buildDbFromFolder(
             database
         );
     }
+
+    if (game.executableFile && !game.engine) {
+        game.engine = await engineRecognizer.recognizeGameEngine(file);
+        if (game.engine) {
+            await database.game.save(game);
+        }
+    }
+
+    if (!hasSourcesDownloaded(game)) {
+        await updateSources(file, game, strategy, database);
+    }
+
+    if (game.forceSourceUpdate && !allSourcesAreMissing(game)) {
+        await updateSources(file, game, strategy, database);
+    }
+
+    if (game.forceAdditionalImagesUpdate && !allSourcesAreMissing(game)) {
+        await updateAdditionalImages(file, game, strategy, database);
+    }
+
     progressBar.increment();
+}
+
+async function updateAdditionalImages(file, game, strategy, database) {
+    game.forceAdditionalImagesUpdate = false;
+    game.additionalImages = await strategy.getAdditionalImages(file.name);
+    await addAdditionalImagesToDb(game, game.additionalImages, database);
+    await database.game.save(game);
+}
+
+async function updateSources(file, game, strategy, database) {
+    game.forceSourceUpdate = false;
+    const gameData = await strategy.fetchGameData(
+        game.id,
+        game,
+        `${file.path}/${file.name}`
+    );
+    const mainImageUrl = gameData.imageUrlJp
+        ? gameData.imageUrlJp
+        : gameData.imageUrlEn;
+    if (mainImageUrl) {
+        await addImageToDb(game, mainImageUrl, 'box', database);
+    }
+    Object.assign(game, removeUndefined(gameData));
+    await database.game.save(game);
+
+    if (game.additionalImages) {
+        await addAdditionalImagesToDb(game, game.additionalImages, database);
+    } else {
+        await updateAdditionalImages(file, game, strategy, database);
+    }
 }
 
 function selectStrategy(gameId, strategies) {
@@ -188,7 +146,15 @@ function selectStrategy(gameId, strategies) {
     }
 }
 
-function gameIsDeleted(file) {
+function allSourcesAreMissing(game) {
+    return game.sourceMissingJp && game.sourceMissingEn;
+}
+
+function hasSourcesDownloaded(game) {
+    return !!game.nameEn || !!game.nameJp || allSourcesAreMissing(game);
+}
+
+function isDeleted(file) {
     if (!fs.existsSync(`${file.path}/${file.name}`)) {
         return true;
     }

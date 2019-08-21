@@ -76,6 +76,7 @@ function getGame(mongoose) {
         }
 
         async save(game) {
+            game.dateModified = moment().format();
             return game.save();
         }
 

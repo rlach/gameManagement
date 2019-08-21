@@ -97,7 +97,7 @@ describe('buildDbFromFolders', function() {
             });
         });
 
-        it('If game is not deleted tries to find engine, recognize game type and fetch sources', async function() {
+        it('If game is not deleted tries to find executable, recognize game type and fetch sources', async function() {
             sinon.stub(fs, 'existsSync').returns(true);
             const recognizeGameEngine = sinon.stub(
                 engineRecognizer,
@@ -113,6 +113,9 @@ describe('buildDbFromFolders', function() {
                 fetchGameData: async () => {
                     return {};
                 },
+                getAdditionalImages: async () => {
+                    return undefined;
+                },
             };
             const fetchGameData = sinon.spy(strategy, 'fetchGameData');
 
@@ -125,13 +128,12 @@ describe('buildDbFromFolders', function() {
 
             const game = await database.game.findOne({});
             expect(game).to.include({
-                engine: undefined,
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy',
             });
             sinon.assert.calledOnce(fetchGameData);
-            sinon.assert.calledOnce(recognizeGameEngine);
+            sinon.assert.notCalled(recognizeGameEngine);
             sinon.assert.calledWithExactly(
                 updateExecutableAndDirectory,
                 {
@@ -194,7 +196,6 @@ describe('buildDbFromFolders', function() {
             const game = await database.game.findOne({});
 
             const expectedGame = {
-                engine: undefined,
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy',
@@ -203,7 +204,7 @@ describe('buildDbFromFolders', function() {
 
             expect(game).to.deep.include(expectedGame);
             sinon.assert.calledOnce(fetchGameData);
-            sinon.assert.calledOnce(recognizeGameEngine);
+            sinon.assert.notCalled(recognizeGameEngine);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
 
@@ -247,7 +248,6 @@ describe('buildDbFromFolders', function() {
             const game = await database.game.findOne({});
 
             const expectedGame = {
-                engine: undefined,
                 forceSourceUpdate: false,
                 id: 'dir',
                 source: 'dummy',
@@ -258,7 +258,7 @@ describe('buildDbFromFolders', function() {
             expect(game).to.deep.include(expectedGame);
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(getAdditionalImages);
-            sinon.assert.calledOnce(recognizeGameEngine);
+            sinon.assert.notCalled(recognizeGameEngine);
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
     });

@@ -1,7 +1,6 @@
 const path = require('path');
 const files = require('../../util/files');
 const log = require('../../util/logger');
-const moment = require('moment/moment');
 const fs = require('fs');
 
 async function updateExecutableAndDirectory(
@@ -10,30 +9,21 @@ async function updateExecutableAndDirectory(
     searchSettings,
     database
 ) {
-    if (!game.executableFile || game.forceExecutableUpdate) {
-        log.debug('Updating executable path', game.id);
-        const executableFile = await findExecutableFile(file, searchSettings);
-        game.forceExecutableUpdate = false;
-        if (executableFile.deleted) {
-            game.deleted = true;
-            await database.game.save(game);
-        } else {
-            await saveFileAndDirectory(executableFile, game, database);
-        }
-    }
+    const executableFile = await findExecutableFile(file, searchSettings);
+    game.forceExecutableUpdate = false;
+    await saveFileAndDirectory(executableFile, game, database);
 }
 
 async function findExecutableFile(file, searchSettings) {
+    let executableFile = {
+        directory: path.resolve(`${file.path}/${file.name}`),
+    };
+
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
-    if (subFiles.length === 0 || subFiles.find(f => f === 'DELETED')) {
-        log.debug('Game was deleted', { file });
-        return {
-            deleted: true,
-        };
-    } else {
-        let executableFile = {
-            directory: path.resolve(`${file.path}/${file.name}/${subFiles[0]}`),
-        };
+    if (subFiles.length > 0) {
+        executableFile.directory = path.resolve(
+            `${file.path}/${file.name}/${subFiles[0]}`
+        );
 
         const foundFiles = await files.findByFilter(
             `${file.path}/${file.name}`,
@@ -48,9 +38,7 @@ async function findExecutableFile(file, searchSettings) {
             },
             searchSettings.maxSearchDepth
         );
-        if (foundFiles.length === 0) {
-            log.debug(`There is no exe`, { file });
-        } else {
+        if (foundFiles.length > 0) {
             log.debug('Found multiple exe files', foundFiles.map(f => f.file));
             let gameExe = foundFiles.find(t =>
                 t.name.toLowerCase().startsWith('game')
@@ -69,9 +57,9 @@ async function findExecutableFile(file, searchSettings) {
                 `${gameExe.base}/${gameExe.relative}`
             );
         }
-
-        return executableFile;
     }
+
+    return executableFile;
 }
 
 async function saveFileAndDirectory(target, game, database) {
@@ -79,7 +67,6 @@ async function saveFileAndDirectory(target, game, database) {
     game.deleted = false;
     game.directory = target.directory;
     game.executableFile = target.file;
-    game.dateModified = moment().format();
     await database.game.save(game);
 }
 

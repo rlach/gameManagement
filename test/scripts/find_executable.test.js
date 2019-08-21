@@ -29,39 +29,8 @@ describe('findExecutable', function() {
         sinon.verifyAndRestore();
     });
 
-    it('does not update game if executableFile exists', async function() {
-        const game = await database.game.retrieveFromDb('1');
-        game.executableFile = 'something';
-        database.game.save(game);
-
-        await updateExecutableAndDirectory(file, game, database);
-        const deletedGame = await database.game.findOne({});
-        expect(deletedGame).to.eql(game);
-    });
-
-    it('forces update when executable exists but force update is true', async function() {
-        const game = await database.game.retrieveFromDb('1');
-        game.executableFile = 'something';
-        game.forceExecutableUpdate = true;
-        database.game.save(game);
-        sinon.stub(fs, 'readdirSync').returns([]);
-        await updateExecutableAndDirectory(
-            file,
-            game,
-            {
-                maxSearchDepth: 1,
-            },
-            database
-        );
-        const deletedGame = await database.game.findOne({});
-        expect(deletedGame).to.contain({
-            id: '1',
-            deleted: true,
-        });
-    });
-
-    describe('mark as deleted', function() {
-        it('marks game as deleted when there are no subdirectories', async function() {
+    describe('base directory', function() {
+        it('returns base directory when there are no subdirectories', async function() {
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns([]);
             await updateExecutableAndDirectory(
@@ -74,31 +43,10 @@ describe('findExecutable', function() {
             );
             const deletedGame = await database.game.findOne({});
             expect(deletedGame).to.contain({
-                id: '1',
-                deleted: true,
+                directory: path.resolve('gameDirectory/gameName'),
             });
         });
 
-        it('marks game as deleted when there is subdirectory called DELETED', async function() {
-            const game = await database.game.retrieveFromDb('1');
-            sinon.stub(fs, 'readdirSync').returns(['DELETED']);
-            await updateExecutableAndDirectory(
-                file,
-                game,
-                {
-                    maxSearchDepth: 1,
-                },
-                database
-            );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
-                id: '1',
-                deleted: true,
-            });
-        });
-    });
-
-    describe('base directory', function() {
         it('sets base directory when subdirectory exists', async function() {
             sinon.stub(files, 'findByFilter').returns([]);
             const game = await database.game.retrieveFromDb('1');
