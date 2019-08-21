@@ -3,7 +3,8 @@
         "start": "node src/main.js",
         "test": "nyc --all mocha",
         "test-cont": "nodemon --exec nyc --all --reporter=lcov mocha",
-        "coveralls": "nyc --all npm test && nyc report --reporter=text-lcov | coveralls"
+        "coveralls": "nyc --all npm test && nyc report --reporter=text-lcov | coveralls",
+        "lint": "eslint src/**/*.js test/**/*.js"
     },
     "name": "gameManager",
     "version": "1.0.0",
@@ -44,7 +45,10 @@
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "coveralls": "^3.0.6",
+        "eslint": "^6.2.1",
+        "eslint-plugin-mocha": "^6.0.0",
         "husky": "^3.0.3",
+        "lint-staged": "^9.2.3",
         "mocha": "^6.2.0",
         "mocha-lcov-reporter": "^1.3.0",
         "nyc": "^14.1.1",
@@ -52,9 +56,15 @@
         "pretty-quick": "^1.11.1",
         "sinon": "^7.4.1"
     },
+    "lint-staged": {
+        "*.js": [
+            "eslint",
+            "git add"
+        ]
+    },
     "husky": {
         "hooks": {
-            "pre-commit": "pretty-quick --staged"
+            "pre-commit": "pretty-quick --staged && lint-staged && mocha"
         }
     }
 }

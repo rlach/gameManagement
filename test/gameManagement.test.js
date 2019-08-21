@@ -9,7 +9,7 @@ const fs = require('fs');
 describe('gameManagement', function() {
     let sandbox;
     let settings;
-    before(async () => {
+    before(async function() {
         settings = {};
         Object.assign(settings, settingsSample);
         Object.assign(settings, {
@@ -20,15 +20,15 @@ describe('gameManagement', function() {
         });
     });
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         sandbox = sinon.createSandbox();
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sandbox.verifyAndRestore();
     });
 
-    it('creates settings.json based on sample when it does NOT exist and returns', async () => {
+    it('creates settings.json based on sample when it does NOT exist and returns', async function() {
         const existsSync = sandbox.stub(fs, 'existsSync').returns(false);
         const writeFileSync = sandbox.stub(fs, 'writeFileSync');
         const gameManagement = new GameManagement(settings);
@@ -41,19 +41,19 @@ describe('gameManagement', function() {
         );
     });
 
-    describe('with operation given', () => {
-        beforeEach(async () => {
+    describe('with operation given', function() {
+        beforeEach(async function() {
             sandbox.stub(fs, 'existsSync').returns(true);
         });
 
-        it('calls getPossibleCodes when getCodes', async () => {
+        it('calls getPossibleCodes when getCodes', async function() {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
             const gameManagement = new GameManagement(settings, 'getCodes');
             await gameManagement.main();
             sinon.assert.calledOnce(getPossibleCodes);
         });
 
-        it('calls organizeDirectories when organizeDirectories', async () => {
+        it('calls organizeDirectories when organizeDirectories', async function() {
             const organizeDirectories = sandbox.stub(
                 scripts,
                 'organizeDirectories'
@@ -66,7 +66,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(organizeDirectories);
         });
 
-        it('calls syncLaunchboxToDb when launchboxToDb', async () => {
+        it('calls syncLaunchboxToDb when launchboxToDb', async function() {
             const syncLaunchboxToDb = sandbox.stub(
                 scripts,
                 'syncLaunchboxToDb'
@@ -79,7 +79,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(syncLaunchboxToDb);
         });
 
-        it('calls buildDbFromFolders when buildDb', async () => {
+        it('calls buildDbFromFolders when buildDb', async function() {
             const buildDbFromFolders = sandbox.stub(
                 scripts,
                 'buildDbFromFolders'
@@ -89,7 +89,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(buildDbFromFolders);
         });
 
-        it('calls downloadImages when downloadImages', async () => {
+        it('calls downloadImages when downloadImages', async function() {
             const downloadImages = sandbox.stub(scripts, 'downloadImages');
             const gameManagement = new GameManagement(
                 settings,
@@ -99,7 +99,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(downloadImages);
         });
 
-        it('calls convertDbToLaunchbox when dbToLaunchbox', async () => {
+        it('calls convertDbToLaunchbox when dbToLaunchbox', async function() {
             const convertDbToLaunchbox = sandbox.stub(
                 scripts,
                 'convertDbToLaunchbox'
@@ -112,7 +112,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(convertDbToLaunchbox);
         });
 
-        it('calls findPossibleDuplicates when findDuplicates', async () => {
+        it('calls findPossibleDuplicates when findDuplicates', async function() {
             const findPossibleDuplicates = sandbox.stub(
                 scripts,
                 'findPossibleDuplicates'
@@ -125,7 +125,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(findPossibleDuplicates);
         });
 
-        it('calls setForceUpdate when setForceUpdate', async () => {
+        it('calls setForceUpdate when setForceUpdate', async function() {
             const setForceUpdate = sandbox.stub(scripts, 'setForceUpdate');
             const gameManagement = new GameManagement(
                 settings,
@@ -135,7 +135,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(setForceUpdate);
         });
 
-        it('calls all syncing phases when syncAll', async () => {
+        it('calls all syncing phases when syncAll', async function() {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
             const organizeDirectories = sandbox.stub(
                 scripts,
@@ -168,12 +168,12 @@ describe('gameManagement', function() {
         });
     });
 
-    describe('without operation given', () => {
-        beforeEach(async () => {
+    describe('without operation given', function() {
+        beforeEach(async function() {
             sandbox.stub(fs, 'existsSync').returns(true);
         });
 
-        it('asks which scripts to use and runs it', async () => {
+        it('asks which scripts to use and runs it', async function() {
             const getPossibleCodes = sandbox.stub(scripts, 'getPossibleCodes');
             const organizeDirectories = sandbox.stub(
                 scripts,

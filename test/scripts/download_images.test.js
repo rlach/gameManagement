@@ -12,7 +12,7 @@ describe('downloadImages', function() {
     let progressBarStart;
     let progressBarStop;
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         database = await initDatabase({
             database: 'nedb',
             nedbExtension: '',
@@ -30,16 +30,16 @@ describe('downloadImages', function() {
         sinon.stub(files, 'createMissingDirectory');
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Completes without downloading anything when there are no images', async () => {
+    it('Completes without downloading anything when there are no images', async function() {
         await downloadImages({}, database);
         sinon.assert.notCalled(progressBarStart);
     });
 
-    it('Completes without downloading anything when there are no images in toDownload status', async () => {
+    it('Completes without downloading anything when there are no images in toDownload status', async function() {
         database.image.save({
             status: 'downloaded',
         });
@@ -50,7 +50,7 @@ describe('downloadImages', function() {
         sinon.assert.notCalled(progressBarStart);
     });
 
-    it('Marks image as errored if it has toDownload status and there is an error downloading', async () => {
+    it('Marks image as errored if it has toDownload status and there is an error downloading', async function() {
         await database.image.save({
             status: 'toDownload',
         });
@@ -62,7 +62,7 @@ describe('downloadImages', function() {
         sinon.assert.calledOnce(progressBarStop);
     });
 
-    it('Marks image as downloaded if it has toDownload status and download succeed', async () => {
+    it('Marks image as downloaded if it has toDownload status and download succeed', async function() {
         await database.image.save({
             status: 'toDownload',
         });
@@ -77,7 +77,7 @@ describe('downloadImages', function() {
         sinon.assert.calledOnce(progressBarStop);
     });
 
-    it('Handles multiple images', async () => {
+    it('Handles multiple images', async function() {
         for (let i = 0; i < 10; i++) {
             await database.image.save({
                 status: 'toDownload',

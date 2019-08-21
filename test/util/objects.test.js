@@ -40,15 +40,15 @@ describe('objects.js', function() {
     });
 
     describe('ensure array', function() {
-        it('returns empty array when undefined is passed', async () => {
+        it('returns empty array when undefined is passed', async function() {
             expect(objects.ensureArray(undefined)).to.eql([]);
         });
 
-        it('returns single element array when object is passed', async () => {
+        it('returns single element array when object is passed', async function() {
             expect(objects.ensureArray({ id: 1 })).to.eql([{ id: 1 }]);
         });
 
-        it('returns passed array with no change', async () => {
+        it('returns passed array with no change', async function() {
             const array = [{ id: 1 }, { id: 2 }];
             expect(objects.ensureArray(array)).to.eql(array);
         });

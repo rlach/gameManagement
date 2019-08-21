@@ -1,7 +1,7 @@
 function removeUndefined(obj) {
     for (let k in obj) {
         if (
-            obj.hasOwnProperty(k) &&
+            Object.prototype.hasOwnProperty.call(obj, k) &&
             (obj[k] === undefined ||
                 (Array.isArray(obj[k]) && obj[k].length === 0) ||
                 obj[k] === '')

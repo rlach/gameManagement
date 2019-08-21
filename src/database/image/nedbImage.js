@@ -8,16 +8,12 @@ function getImage(db) {
             this.Image = db;
         }
 
-        async retrieveFromDb(id) {
-            throw new Error('Not implemented');
-        }
-
         async findOne(searchQuery) {
             return db.findOne(searchQuery);
         }
 
         async save(image) {
-            if(!image._id) {
+            if (!image._id) {
                 await db.insert(image);
             } else {
                 await db.update({ _id: image._id }, image);

@@ -9,7 +9,7 @@ const organizeDirectories = require('../../src/scripts/organize_directories/orga
 describe('organizeDirectories', function() {
     let progressBarUpdate;
     let settings;
-    beforeEach(async () => {
+    beforeEach(async function() {
         settings = {
             paths: {
                 targetSortFolder: './target',
@@ -31,7 +31,7 @@ describe('organizeDirectories', function() {
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
@@ -107,7 +107,7 @@ describe('organizeDirectories', function() {
         sinon.assert.notCalled(confirmResultsStub);
     });
 
-    describe('above minimum score to accept', () => {
+    describe('above minimum score to accept', function() {
         it('moves directory to new one based on result code', async function() {
             const strategy = {
                 name: 'strategyName',
@@ -236,7 +236,7 @@ describe('organizeDirectories', function() {
         });
     });
 
-    describe('below minimum score to accept and above minimum score to ask', () => {
+    describe('below minimum score to accept and above minimum score to ask', function() {
         it('Does NOT Confirm results when shouldAsk is false', async function() {
             settings.organizeDirectories.shouldAsk = false;
             const strategy = {

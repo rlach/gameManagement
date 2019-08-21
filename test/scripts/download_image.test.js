@@ -11,7 +11,7 @@ describe('downloadImage', function() {
     const imageFilename = 'image.jpg';
     let image;
     let imageDownload;
-    beforeEach(async () => {
+    beforeEach(async function() {
         image = {
             uri: imageUrl,
             filename: imageFilename,
@@ -20,11 +20,11 @@ describe('downloadImage', function() {
         imageDownload = sinon.stub(download, 'image');
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Downloads image as screenshot when type is missing', async () => {
+    it('Downloads image as screenshot when type is missing', async function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         await downloadImage.downloadImage(launchboxPath, platformName, image);
         sinon.assert.calledWithExactly(imageDownload, {
@@ -38,7 +38,7 @@ describe('downloadImage', function() {
         );
     });
 
-    it('Downloads image as screenshot when type is screenshot', async () => {
+    it('Downloads image as screenshot when type is screenshot', async function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'screenshot';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
@@ -53,7 +53,7 @@ describe('downloadImage', function() {
         );
     });
 
-    it('Downloads image as box front (reconstructed) when type is box', async () => {
+    it('Downloads image as box front (reconstructed) when type is box', async function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'box';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
@@ -68,7 +68,7 @@ describe('downloadImage', function() {
         );
     });
 
-    it('Downloads image as clear logo when type is background', async () => {
+    it('Downloads image as clear logo when type is background', async function() {
         const createDirectoryStub = sinon.stub(files, 'createMissingDirectory');
         image.type = 'background';
         await downloadImage.downloadImage(launchboxPath, platformName, image);
@@ -83,7 +83,7 @@ describe('downloadImage', function() {
         );
     });
 
-    it('Skips download when file already exists', async () => {
+    it('Skips download when file already exists', async function() {
         sinon.stub(fs, 'existsSync').returns(true);
         image.type = 'background';
         await downloadImage.downloadImage(launchboxPath, platformName, image);

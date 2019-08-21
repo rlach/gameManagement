@@ -19,15 +19,13 @@ describe('convertDbToLaunchbox', function() {
     const backupPath = 'backupPath';
     let externalIdField;
     let progressBarUpdate;
-    let settings;
     let database;
-    let strategies;
     let writeFileStub;
     let mapper = {
         map: () => {},
     };
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         sinon.stub(files, 'createMissingLaunchboxDirectories');
         externalIdField = 'Status';
         database = await initDatabase({
@@ -35,13 +33,6 @@ describe('convertDbToLaunchbox', function() {
             nedbExtension: '',
         });
 
-        strategies = [];
-        settings = {
-            paths: {
-                targetSortFolder: './target',
-                unsortedGames: './mess',
-            },
-        };
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
@@ -52,11 +43,11 @@ describe('convertDbToLaunchbox', function() {
         writeFileStub = sinon.stub(fs, 'writeFileSync');
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Writes xml with main node when database is empty', async () => {
+    it('Writes xml with main node when database is empty', async function() {
         await convertDbToLaunchbox(
             launchboxPath,
             launchboxPlatform,
@@ -68,7 +59,7 @@ describe('convertDbToLaunchbox', function() {
         sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
-    it('Backups existing xml file if it exists', async () => {
+    it('Backups existing xml file if it exists', async function() {
         sinon.stub(fs, 'existsSync').returns(true);
         const copyFileStub = sinon.stub(fs, 'copyFileSync');
         sinon.stub(fs, 'readFileSync').returns(emptyXml);
@@ -88,7 +79,7 @@ describe('convertDbToLaunchbox', function() {
         sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
-    it('Skips deleted games from database', async () => {
+    it('Skips deleted games from database', async function() {
         const game = await database.game.retrieveFromDb(1);
         game.deleted = true;
         await database.game.save(game);
@@ -104,10 +95,10 @@ describe('convertDbToLaunchbox', function() {
         sinon.assert.calledWithExactly(writeFileStub, xmlFullPath, emptyXml);
     });
 
-    describe('converts database game to xml', () => {
+    describe('converts database game to xml', function() {
         let gameDates;
 
-        beforeEach(async () => {
+        beforeEach(async function() {
             const date = moment('1986-01-01', 'YYYY-MM-DD').format();
             gameDates = {
                 launchboxId: launchboxGameId,
@@ -117,7 +108,7 @@ describe('convertDbToLaunchbox', function() {
             };
         });
 
-        it('creates new entry when game does not exist in xml and adds external properties to it', async () => {
+        it('creates new entry when game does not exist in xml and adds external properties to it', async function() {
             const xmlGame = {
                 DateAdded: { _text: '1986-01-01T00:00:00+01:00' },
             };
@@ -160,7 +151,7 @@ describe('convertDbToLaunchbox', function() {
             );
         });
 
-        it('updates old entry when game exists in xml', async () => {
+        it('updates old entry when game exists in xml', async function() {
             sinon.stub(fs, 'existsSync').returns(true);
             sinon.stub(fs, 'copyFileSync');
             sinon
@@ -214,8 +205,8 @@ describe('convertDbToLaunchbox', function() {
             );
         });
 
-        describe('custom fields', () => {
-            it('preserves existing custom fields', async () => {
+        describe('custom fields', function() {
+            it('preserves existing custom fields', async function() {
                 sinon.stub(fs, 'existsSync').returns(true);
                 sinon.stub(fs, 'copyFileSync');
                 sinon
@@ -273,7 +264,7 @@ describe('convertDbToLaunchbox', function() {
                 );
             });
 
-            it('adds engine custom field when engine exists on database game', async () => {
+            it('adds engine custom field when engine exists on database game', async function() {
                 sinon.stub(fs, 'existsSync').returns(true);
                 sinon.stub(fs, 'copyFileSync');
                 sinon
@@ -343,7 +334,7 @@ describe('convertDbToLaunchbox', function() {
                 );
             });
 
-            it('updates existing custom field when related value exists on database game', async () => {
+            it('updates existing custom field when related value exists on database game', async function() {
                 sinon.stub(fs, 'existsSync').returns(true);
                 sinon.stub(fs, 'copyFileSync');
                 sinon
@@ -409,7 +400,7 @@ describe('convertDbToLaunchbox', function() {
             });
         });
 
-        it('stores externalId field in CustomField when settings are set to it', async () => {
+        it('stores externalId field in CustomField when settings are set to it', async function() {
             const xmlGame = {
                 DateAdded: { _text: '1986-01-01T00:00:00+01:00' },
                 ID: { _text: launchboxGameId },

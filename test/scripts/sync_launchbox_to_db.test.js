@@ -13,8 +13,8 @@ const syncLaunchboxToDb = require('../../src/scripts/sync_launchbox_to_db');
 
 describe('syncLaunchboxToDb', function() {
     const launchboxId = 'uuid';
-    const olderDate = moment('1986-01-01', 'YYYY-MM-DD').format();
-    const newerDate = moment('2019-01-01', 'YYYY-MM-DD').format();
+    let olderDate;
+    let newerDate;
     const launchboxPath = 'launchboxPath';
     const launchboxPlatform = 'PLATFORM';
     let gameSaveSpy;
@@ -25,7 +25,10 @@ describe('syncLaunchboxToDb', function() {
         reverseMap: () => {},
     };
 
-    beforeEach(async () => {
+    beforeEach(async function() {
+        olderDate = moment('1986-01-01', 'YYYY-MM-DD').format();
+        newerDate = moment('2019-01-01', 'YYYY-MM-DD').format();
+
         database = await initDatabase({
             database: 'nedb',
             nedbExtension: '',
@@ -42,11 +45,11 @@ describe('syncLaunchboxToDb', function() {
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Completes if launchbox file does not exist', async () => {
+    it('Completes if launchbox file does not exist', async function() {
         await syncLaunchboxToDb(
             launchboxPath,
             launchboxPlatform,
@@ -56,7 +59,7 @@ describe('syncLaunchboxToDb', function() {
         sinon.assert.notCalled(progressBarStart);
     });
 
-    it('Throws when xml file has no LaunchBox tag', async () => {
+    it('Throws when xml file has no LaunchBox tag', async function() {
         sinon.stub(fs, 'existsSync').returns(true);
         sinon.stub(fs, 'readFileSync').returns('');
         return expect(
@@ -64,7 +67,7 @@ describe('syncLaunchboxToDb', function() {
         ).to.be.eventually.rejectedWith('Not a launchbox file');
     });
 
-    it('Completes when file has no games', async () => {
+    it('Completes when file has no games', async function() {
         sinon.stub(fs, 'existsSync').returns(true);
         sinon.stub(fs, 'readFileSync').returns('<LaunchBox />');
         await syncLaunchboxToDb(
@@ -77,12 +80,12 @@ describe('syncLaunchboxToDb', function() {
         sinon.assert.notCalled(progressBarUpdate);
     });
 
-    describe('skips game', () => {
-        beforeEach(async () => {
+    describe('skips game', function() {
+        beforeEach(async function() {
             sinon.stub(fs, 'existsSync').returns(true);
         });
 
-        it('when game not in database', async () => {
+        it('when game not in database', async function() {
             sinon
                 .stub(fs, 'readFileSync')
                 .returns(
@@ -100,7 +103,7 @@ describe('syncLaunchboxToDb', function() {
             sinon.assert.notCalled(gameSaveSpy);
         });
 
-        it('when game in database but is newer than xml file', async () => {
+        it('when game in database but is newer than xml file', async function() {
             sinon
                 .stub(fs, 'readFileSync')
                 .returns(
@@ -124,7 +127,7 @@ describe('syncLaunchboxToDb', function() {
             sinon.assert.notCalled(gameSaveSpy);
         });
 
-        it('when game in database but is newer than xml file and last played is newer than xml file', async () => {
+        it('when game in database but is newer than xml file and last played is newer than xml file', async function() {
             sinon
                 .stub(fs, 'readFileSync')
                 .returns(
@@ -150,8 +153,8 @@ describe('syncLaunchboxToDb', function() {
         });
     });
 
-    describe('syncs game', () => {
-        beforeEach(async () => {
+    describe('syncs game', function() {
+        beforeEach(async function() {
             await database.game.retrieveFromDb(1);
             sinon.stub(fs, 'existsSync').returns(true);
             sinon.stub(mapper, 'reverseMap').returns({
@@ -161,7 +164,7 @@ describe('syncLaunchboxToDb', function() {
             });
         });
 
-        it('when xml game is newer than database', async () => {
+        it('when xml game is newer than database', async function() {
             sinon
                 .stub(fs, 'readFileSync')
                 .returns(
@@ -197,7 +200,7 @@ describe('syncLaunchboxToDb', function() {
             });
         });
 
-        it('treats undefined values in database as older', async () => {
+        it('treats undefined values in database as older', async function() {
             sinon
                 .stub(fs, 'readFileSync')
                 .returns(
@@ -233,7 +236,7 @@ describe('syncLaunchboxToDb', function() {
             });
         });
 
-        it('when xml game is older than database but was played after database modification', async () => {
+        it('when xml game is older than database but was played after database modification', async function() {
             // Launchbox doesn't update DateModified when it changes play count and LastPlayedDate, so we have to check both dates
             sinon
                 .stub(fs, 'readFileSync')
@@ -270,7 +273,7 @@ describe('syncLaunchboxToDb', function() {
             });
         });
 
-        it('throws when database throws', async () => {
+        it('throws when database throws', async function() {
             database = await initDatabase({
                 database: 'nedb',
                 nedbExtension: '',

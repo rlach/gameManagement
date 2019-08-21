@@ -248,6 +248,6 @@ function booleanProperty(from, to) {
 }
 
 // remove everything forbidden by XML 1.0 specifications, plus the unicode replacement character U+FFFD
-const invalidChars = /([^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFC\u{10000}-\u{10FFFF}])/gu;
+const invalidChars = /([^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFC\u{10000}-\u{10FFFF}])/gu; // eslint-disable-line no-control-regex
 
 module.exports = LaunchboxMapper;

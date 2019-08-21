@@ -6,7 +6,7 @@ const getPossibleCodes = require('../../src/scripts/get_possible_codes');
 
 describe('getPossibleCodes', function() {
     const gamePath = 'path';
-    beforeEach(async () => {
+    beforeEach(async function() {
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
             start: sinon.spy(),
@@ -15,7 +15,7 @@ describe('getPossibleCodes', function() {
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 

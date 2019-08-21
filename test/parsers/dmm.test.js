@@ -8,16 +8,16 @@ const vndb = require('../../src/util/vndb');
 
 describe('DMM strategy', function() {
     let dmmStrategy;
-    beforeEach(async () => {
+    beforeEach(async function() {
         dmmStrategy = new DmmStrategy();
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    describe('fetch game data', () => {
-        it('returns empty object when source is marked as missing', async () => {
+    describe('fetch game data', function() {
+        it('returns empty object when source is marked as missing', async function() {
             expect(
                 await dmmStrategy.fetchGameData('anything', {
                     sourceMissingJp: true,
@@ -25,12 +25,12 @@ describe('DMM strategy', function() {
             ).to.eql({});
         });
 
-        it('returns empty object when page request throws', async () => {
+        it('returns empty object when page request throws', async function() {
             sinon.stub(request, 'get').throws('anything');
             expect(await dmmStrategy.fetchGameData('anything')).to.eql({});
         });
 
-        it('marks source as missing when page request throws 404', async () => {
+        it('marks source as missing when page request throws 404', async function() {
             sinon.stub(request, 'get').throws({
                 statusCode: 404,
             });
@@ -39,8 +39,8 @@ describe('DMM strategy', function() {
             });
         });
 
-        describe('pro site', () => {
-            it('returns parsed data when response is proper', async () => {
+        describe('pro site', function() {
+            it('returns parsed data when response is proper', async function() {
                 sinon.stub(vndb, 'getVNByName').resolves(undefined);
 
                 const site = fs.readFileSync(
@@ -66,7 +66,7 @@ describe('DMM strategy', function() {
                 });
             });
 
-            it('returns empty object when page misses data', async () => {
+            it('returns empty object when page misses data', async function() {
                 sinon.stub(request, 'get').resolves('<html></html>');
                 expect(await dmmStrategy.fetchGameData('next_12345')).to.eql(
                     {}
@@ -74,8 +74,8 @@ describe('DMM strategy', function() {
             });
         });
 
-        describe('doujin site', () => {
-            it('returns parsed data when response is proper', async () => {
+        describe('doujin site', function() {
+            it('returns parsed data when response is proper', async function() {
                 sinon.stub(vndb, 'getVNByName').resolves(undefined);
 
                 const site = fs.readFileSync(
@@ -104,14 +104,14 @@ describe('DMM strategy', function() {
                 });
             });
 
-            it('returns empty object when page misses data', async () => {
+            it('returns empty object when page misses data', async function() {
                 sinon.stub(request, 'get').resolves('<html></html>');
                 expect(await dmmStrategy.fetchGameData('d_12345')).to.eql({});
             });
         });
 
-        describe('mono site', () => {
-            it('returns parsed data when response is proper', async () => {
+        describe('mono site', function() {
+            it('returns parsed data when response is proper', async function() {
                 sinon.stub(vndb, 'getVNByName').resolves(undefined);
 
                 const site = fs.readFileSync(
@@ -138,7 +138,7 @@ describe('DMM strategy', function() {
                 });
             });
 
-            it('returns empty object when page misses data', async () => {
+            it('returns empty object when page misses data', async function() {
                 sinon.stub(request, 'get').resolves('<html></html>');
                 expect(
                     await dmmStrategy.fetchGameData('d_something12345')

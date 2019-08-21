@@ -18,18 +18,18 @@ describe('findExecutable', function() {
     };
     let database;
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         database = await initDatabase({
             database: 'nedb',
             nedbExtension: '',
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('does not update game if executableFile exists', async () => {
+    it('does not update game if executableFile exists', async function() {
         const game = await database.game.retrieveFromDb('1');
         game.executableFile = 'something';
         database.game.save(game);
@@ -39,7 +39,7 @@ describe('findExecutable', function() {
         expect(deletedGame).to.eql(game);
     });
 
-    it('forces update when executable exists but force update is true', async () => {
+    it('forces update when executable exists but force update is true', async function() {
         const game = await database.game.retrieveFromDb('1');
         game.executableFile = 'something';
         game.forceExecutableUpdate = true;
@@ -60,8 +60,8 @@ describe('findExecutable', function() {
         });
     });
 
-    describe('mark as deleted', () => {
-        it('marks game as deleted when there are no subdirectories', async () => {
+    describe('mark as deleted', function() {
+        it('marks game as deleted when there are no subdirectories', async function() {
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns([]);
             await updateExecutableAndDirectory(
@@ -79,7 +79,7 @@ describe('findExecutable', function() {
             });
         });
 
-        it('marks game as deleted when there is subdirectory called DELETED', async () => {
+        it('marks game as deleted when there is subdirectory called DELETED', async function() {
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['DELETED']);
             await updateExecutableAndDirectory(
@@ -98,8 +98,8 @@ describe('findExecutable', function() {
         });
     });
 
-    describe('base directory', () => {
-        it('sets base directory when subdirectory exists', async () => {
+    describe('base directory', function() {
+        it('sets base directory when subdirectory exists', async function() {
             sinon.stub(files, 'findByFilter').returns([]);
             const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['versionDirectory']);
@@ -121,7 +121,7 @@ describe('findExecutable', function() {
             });
         });
 
-        it('sets base directory to first subdirectory from the response list', async () => {
+        it('sets base directory to first subdirectory from the response list', async function() {
             sinon.stub(files, 'findByFilter').returns([]);
             const game = await database.game.retrieveFromDb('1');
             sinon
@@ -148,14 +148,14 @@ describe('findExecutable', function() {
         });
     });
 
-    describe('executable file', () => {
+    describe('executable file', function() {
         let game;
-        beforeEach(async () => {
+        beforeEach(async function() {
             game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['versionDirectory']);
         });
 
-        it('sets executable file to returned one if only one exists', async () => {
+        it('sets executable file to returned one if only one exists', async function() {
             sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',
@@ -181,7 +181,7 @@ describe('findExecutable', function() {
             });
         });
 
-        it('sets executable file to one starting with game if there is one', async () => {
+        it('sets executable file to one starting with game if there is one', async function() {
             sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',
@@ -212,7 +212,7 @@ describe('findExecutable', function() {
             });
         });
 
-        it('sets executable file to one ending with exe if there is one', async () => {
+        it('sets executable file to one ending with exe if there is one', async function() {
             sinon.stub(files, 'findByFilter').returns([
                 {
                     name: 'foo.bar',

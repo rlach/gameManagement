@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const log = require('../util/logger');
 const files = require('../util/files');
 
@@ -7,23 +8,19 @@ class SiteStrategy {
         this.settings = settings;
     }
 
-    async fetchGameData(gameId, game) {
-        log.debug(`No override for fetchGameDate on ${gameId}`);
+    async fetchGameData(gameId, game, path) {
         return {};
     }
 
     extractCode(name) {
-        log.debug(`No override for extractCode on ${name}`);
         return '';
     }
 
     async findGame(name) {
-        log.debug(`No override for findGame on ${name}`);
         return [];
     }
 
-    async getAdditionalImages(gameId) {
-        log.debug(`No override for getAdditionalImages on ${gameId}`);
+    async getAdditionalImages(id) {
         return undefined;
     }
 
@@ -124,7 +121,6 @@ class SiteStrategy {
     }
 
     shouldUse(gameId) {
-        log.debug(`No override for shouldUse on ${gameId}`);
         return false;
     }
 

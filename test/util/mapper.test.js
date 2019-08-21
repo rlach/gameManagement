@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const Mapper = require('../../src/util/mapper');
 const moment = require('moment');
 
-describe('files.js', async () => {
+describe('files.js', function() {
     const xmlKeyList = [
         'ApplicationPath',
         'Broken',
@@ -35,8 +35,8 @@ describe('files.js', async () => {
         'Version',
     ];
 
-    describe('json to xml', async () => {
-        it('Maps empty object with default and empty values', async () => {
+    describe('json to xml', function() {
+        it('Maps empty object with default and empty values', async function() {
             const mapper = new Mapper('PLATFORM', 'CustomField', 'en');
             const mappedValues = mapper.map({});
 
@@ -64,8 +64,8 @@ describe('files.js', async () => {
             expect(mappedValues.SortTitle).to.eql({});
         });
 
-        describe('External Id', () => {
-            it('maps external id to Status if set so', async () => {
+        describe('External Id', function() {
+            it('maps external id to Status if set so', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     status: 'status',
@@ -79,7 +79,7 @@ describe('files.js', async () => {
                 expect(mappedValues.SortTitle._text).to.eql('sortName');
             });
 
-            it('maps external id to SortTitle if set so', async () => {
+            it('maps external id to SortTitle if set so', async function() {
                 const mapper = new Mapper('PLATFORM', 'SortTitle', 'en');
                 const mappedValues = mapper.map({
                     status: 'status',
@@ -93,7 +93,7 @@ describe('files.js', async () => {
                 expect(mappedValues.SortTitle._text).to.eql('id');
             });
 
-            it('maps external id to Source if set so', async () => {
+            it('maps external id to Source if set so', async function() {
                 const mapper = new Mapper('PLATFORM', 'Source', 'en');
                 const mappedValues = mapper.map({
                     status: 'status',
@@ -107,7 +107,7 @@ describe('files.js', async () => {
                 expect(mappedValues.SortTitle._text).to.eql('sortName');
             });
 
-            it('does not map id to anything if set as CustomField', async () => {
+            it('does not map id to anything if set as CustomField', async function() {
                 const mapper = new Mapper('PLATFORM', 'CustomField', 'en');
                 const mappedValues = mapper.map({
                     status: 'status',
@@ -121,7 +121,7 @@ describe('files.js', async () => {
                 expect(mappedValues.SortTitle._text).to.eql('sortName');
             });
 
-            it('does not map id to anything if externalId not set to anything', async () => {
+            it('does not map id to anything if externalId not set to anything', async function() {
                 const mapper = new Mapper('PLATFORM', undefined, 'en');
                 const mappedValues = mapper.map({
                     status: 'status',
@@ -136,9 +136,9 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Language dependent values', () => {
-            describe('simple proprerty', () => {
-                it('maps simple property from japanese if set so', async () => {
+        describe('Language dependent values', function() {
+            describe('simple proprerty', function() {
+                it('maps simple property from japanese if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({
                         nameJp: 'japanese',
@@ -148,14 +148,14 @@ describe('files.js', async () => {
                     expect(mappedValues.Title._text).to.eql('japanese');
                 });
 
-                it('maps simple property from english if set to japanese but only english exists', async () => {
+                it('maps simple property from english if set to japanese but only english exists', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({ nameEn: 'english' });
 
                     expect(mappedValues.Title._text).to.eql('english');
                 });
 
-                it('maps simple property from english if set so', async () => {
+                it('maps simple property from english if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'en');
                     const mappedValues = mapper.map({
                         nameJp: 'japanese',
@@ -165,14 +165,14 @@ describe('files.js', async () => {
                     expect(mappedValues.Title._text).to.eql('english');
                 });
 
-                it('maps simple property from japanese if set to english but only japanese exists', async () => {
+                it('maps simple property from japanese if set to english but only japanese exists', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({ nameJp: 'japanese' });
 
                     expect(mappedValues.Title._text).to.eql('japanese');
                 });
 
-                it('maps simple property from english by default', async () => {
+                it('maps simple property from english by default', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', undefined);
                     const mappedValues = mapper.map({
                         nameJp: 'japanese',
@@ -183,8 +183,8 @@ describe('files.js', async () => {
                 });
             });
 
-            describe('array property', () => {
-                it('maps array property from japanese if set so', async () => {
+            describe('array property', function() {
+                it('maps array property from japanese if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({
                         genresJp: ['japanese', 'japanese2'],
@@ -196,7 +196,7 @@ describe('files.js', async () => {
                     );
                 });
 
-                it('maps array property from english if set so', async () => {
+                it('maps array property from english if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'en');
                     const mappedValues = mapper.map({
                         genresJp: ['japanese', 'japanese2'],
@@ -206,7 +206,7 @@ describe('files.js', async () => {
                     expect(mappedValues.Genre._text).to.eql('english;english2');
                 });
 
-                it('maps array property from english by default', async () => {
+                it('maps array property from english by default', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', undefined);
                     const mappedValues = mapper.map({
                         genresJp: ['japanese', 'japanese2'],
@@ -216,7 +216,7 @@ describe('files.js', async () => {
                     expect(mappedValues.Genre._text).to.eql('english;english2');
                 });
 
-                it('maps array property from english if set to japanese but only english exists', async () => {
+                it('maps array property from english if set to japanese but only english exists', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({
                         genresEn: ['english', 'english2'],
@@ -225,7 +225,7 @@ describe('files.js', async () => {
                     expect(mappedValues.Genre._text).to.eql('english;english2');
                 });
 
-                it('maps array property from english if set to japanese but only english has entries', async () => {
+                it('maps array property from english if set to japanese but only english has entries', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'jp');
                     const mappedValues = mapper.map({
                         genresJp: [],
@@ -235,7 +235,7 @@ describe('files.js', async () => {
                     expect(mappedValues.Genre._text).to.eql('english;english2');
                 });
 
-                it('maps array property from japanese if set to english but only japanese exists', async () => {
+                it('maps array property from japanese if set to english but only japanese exists', async function() {
                     const mapper = new Mapper('PLATFORM', 'Status', 'en');
                     const mappedValues = mapper.map({
                         genresJp: ['japanese', 'japanese2'],
@@ -248,8 +248,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Integer property', () => {
-            it('maps number with no change', async () => {
+        describe('Integer property', function() {
+            it('maps number with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     rating: 5,
@@ -258,7 +258,7 @@ describe('files.js', async () => {
                 expect(mappedValues.Rating._text).to.eql(5);
             });
 
-            it('maps floors float value', async () => {
+            it('maps floors float value', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     rating: 5.5,
@@ -267,7 +267,7 @@ describe('files.js', async () => {
                 expect(mappedValues.Rating._text).to.eql(5);
             });
 
-            it('maps missing number to 0', async () => {
+            it('maps missing number to 0', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({});
 
@@ -275,8 +275,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Float property', () => {
-            it('maps float with no change', async () => {
+        describe('Float property', function() {
+            it('maps float with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     stars: 5.5,
@@ -285,7 +285,7 @@ describe('files.js', async () => {
                 expect(mappedValues.StarRatingFloat._text).to.eql(5.5);
             });
 
-            it('maps missing value to 0', async () => {
+            it('maps missing value to 0', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({});
 
@@ -293,8 +293,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Date property', () => {
-            it('maps date with no change', async () => {
+        describe('Date property', function() {
+            it('maps date with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const date = '2019-03-04';
                 const mappedValues = mapper.map({
@@ -304,7 +304,7 @@ describe('files.js', async () => {
                 expect(mappedValues.ReleaseDate._text).to.eql(date);
             });
 
-            it('maps date to now by default', async () => {
+            it('maps date to now by default', async function() {
                 this.clock = date => sinon.useFakeTimers(new Date(date));
                 this.clock('2019-07-07');
 
@@ -316,7 +316,7 @@ describe('files.js', async () => {
                 );
             });
 
-            it('maps date to default time if set', async () => {
+            it('maps date to default time if set', async function() {
                 this.clock = date => sinon.useFakeTimers(new Date(date));
                 this.clock('2019-07-07');
 
@@ -329,8 +329,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Boolean property', () => {
-            it('maps boolean as string', async () => {
+        describe('Boolean property', function() {
+            it('maps boolean as string', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     favorite: true,
@@ -339,7 +339,7 @@ describe('files.js', async () => {
                 expect(mappedValues.Favorite._text).to.eql('true');
             });
 
-            it('maps boolean to false by default', async () => {
+            it('maps boolean to false by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({});
 
@@ -347,8 +347,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('One way mappings', () => {
-            it('maps star rating to floored value as well', async () => {
+        describe('One way mappings', function() {
+            it('maps star rating to floored value as well', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({
                     stars: 5.5,
@@ -357,14 +357,14 @@ describe('files.js', async () => {
                 expect(mappedValues.StarRating._text).to.eql(5);
             });
 
-            it('maps star rating to 0 by default', async () => {
+            it('maps star rating to 0 by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({});
 
                 expect(mappedValues.StarRating._text).to.eql(0);
             });
 
-            it('maps platform based on mapper parameter', async () => {
+            it('maps platform based on mapper parameter', async function() {
                 const mapper = new Mapper('PLATFORM', 'Status', 'en');
                 const mappedValues = mapper.map({});
 
@@ -373,15 +373,15 @@ describe('files.js', async () => {
         });
     });
 
-    describe('xml to json', async () => {
-        it('Maps empty object to empty object', async () => {
+    describe('xml to json', function() {
+        it('Maps empty object to empty object', async function() {
             const mapper = new Mapper('PLATFORM', 'customField', 'en');
             expect(mapper.reverseMap({})).to.eql({});
         });
 
-        describe('Language dependent values', () => {
-            describe('Simple property', () => {
-                it('Maps text to english if set so', async () => {
+        describe('Language dependent values', function() {
+            describe('Simple property', function() {
+                it('Maps text to english if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'en');
                     const result = mapper.reverseMap({
                         Title: {
@@ -392,7 +392,7 @@ describe('files.js', async () => {
                     expect(result.nameJp).to.eql(undefined);
                 });
 
-                it('Maps text to japanese if set so', async () => {
+                it('Maps text to japanese if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'jp');
                     const result = mapper.reverseMap({
                         Title: {
@@ -403,7 +403,7 @@ describe('files.js', async () => {
                     expect(result.nameEn).to.eql(undefined);
                 });
 
-                it('Maps text to english by default', async () => {
+                it('Maps text to english by default', async function() {
                     const mapper = new Mapper(
                         'PLATFORM',
                         'customField',
@@ -418,7 +418,7 @@ describe('files.js', async () => {
                     expect(result.nameJp).to.eql(undefined);
                 });
 
-                it('Does not map to anything if there is no input value', async () => {
+                it('Does not map to anything if there is no input value', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'en');
                     const result = mapper.reverseMap({});
                     expect(result.nameJp).to.eql(undefined);
@@ -426,8 +426,8 @@ describe('files.js', async () => {
                 });
             });
 
-            describe('Array property', () => {
-                it('Maps text to english array if set so', async () => {
+            describe('Array property', function() {
+                it('Maps text to english array if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'en');
                     const result = mapper.reverseMap({
                         Genre: {
@@ -438,7 +438,7 @@ describe('files.js', async () => {
                     expect(result.genresJp).to.eql(undefined);
                 });
 
-                it('Maps text to empty array if text is undefined', async () => {
+                it('Maps text to empty array if text is undefined', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'en');
                     const result = mapper.reverseMap({
                         Genre: {
@@ -449,7 +449,7 @@ describe('files.js', async () => {
                     expect(result.genresJp).to.eql(undefined);
                 });
 
-                it('Maps text to japanese array if set so', async () => {
+                it('Maps text to japanese array if set so', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'jp');
                     const result = mapper.reverseMap({
                         Genre: {
@@ -460,7 +460,7 @@ describe('files.js', async () => {
                     expect(result.genresEn).to.eql(undefined);
                 });
 
-                it('Maps text to english array by default', async () => {
+                it('Maps text to english array by default', async function() {
                     const mapper = new Mapper(
                         'PLATFORM',
                         'customField',
@@ -475,7 +475,7 @@ describe('files.js', async () => {
                     expect(result.genresJp).to.eql(undefined);
                 });
 
-                it('Does not map to anything if there is no input value', async () => {
+                it('Does not map to anything if there is no input value', async function() {
                     const mapper = new Mapper('PLATFORM', 'customField', 'en');
                     const result = mapper.reverseMap({});
                     expect(result.genresEn).to.eql(undefined);
@@ -484,8 +484,8 @@ describe('files.js', async () => {
             });
         });
 
-        describe('Boolean property', () => {
-            it('Maps boolean string to boolean value', async () => {
+        describe('Boolean property', function() {
+            it('Maps boolean string to boolean value', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({
                     Favorite: {
@@ -495,15 +495,15 @@ describe('files.js', async () => {
                 expect(result.favorite).to.eql(true);
             });
 
-            it('Does not map to anything by default', async () => {
+            it('Does not map to anything by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({});
                 expect(result.favorite).to.eql(undefined);
             });
         });
 
-        describe('Date property', () => {
-            it('Maps date with no change', async () => {
+        describe('Date property', function() {
+            it('Maps date with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({
                     ReleaseDate: {
@@ -513,15 +513,15 @@ describe('files.js', async () => {
                 expect(result.releaseDate).to.eql('2019-07-03');
             });
 
-            it('Does not map to anything by default', async () => {
+            it('Does not map to anything by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({});
                 expect(result.releaseDate).to.eql(undefined);
             });
         });
 
-        describe('Integer property', () => {
-            it('Maps integer with no change', async () => {
+        describe('Integer property', function() {
+            it('Maps integer with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({
                     Rating: {
@@ -531,15 +531,15 @@ describe('files.js', async () => {
                 expect(result.rating).to.eql(5);
             });
 
-            it('Does not map to anything by default', async () => {
+            it('Does not map to anything by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({});
                 expect(result.rating).to.eql(undefined);
             });
         });
 
-        describe('Float property', () => {
-            it('Maps float with no change', async () => {
+        describe('Float property', function() {
+            it('Maps float with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({
                     StarRatingFloat: {
@@ -549,15 +549,15 @@ describe('files.js', async () => {
                 expect(result.stars).to.eql(5.5);
             });
 
-            it('Does not map to anything by default', async () => {
+            it('Does not map to anything by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({});
                 expect(result.rating).to.eql(undefined);
             });
         });
 
-        describe('Simple property', () => {
-            it('Maps text with no change', async () => {
+        describe('Simple property', function() {
+            it('Maps text with no change', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({
                     Series: {
@@ -567,7 +567,7 @@ describe('files.js', async () => {
                 expect(result.series).to.eql('5.5 text');
             });
 
-            it('Does not map to anything by default', async () => {
+            it('Does not map to anything by default', async function() {
                 const mapper = new Mapper('PLATFORM', 'customField', 'en');
                 const result = mapper.reverseMap({});
                 expect(result.series).to.eql(undefined);

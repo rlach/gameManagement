@@ -9,7 +9,7 @@ class VndbStrategy extends SiteStrategy {
         super('vndb', settings);
     }
 
-    async fetchGameData(gameId, game) {
+    async fetchGameData(gameId) {
         const vndbId = Number.parseInt(gameId.replace('v', ''));
         const result = await vndb.getVNById(vndbId);
 

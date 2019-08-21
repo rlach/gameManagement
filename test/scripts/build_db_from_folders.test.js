@@ -17,7 +17,7 @@ describe('buildDbFromFolders', function() {
         exeSearchDepth: 1,
     };
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         database = await initDatabase({
             database: 'nedb',
             nedbExtension: '',
@@ -33,11 +33,11 @@ describe('buildDbFromFolders', function() {
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Marks all entries in database as deleted when there are no files', async () => {
+    it('Marks all entries in database as deleted when there are no files', async function() {
         sinon.stub(fs, 'readdirSync').returns([]);
         const updateManySpy = sinon.spy(database.game, 'updateMany');
         await buildDbFromFolders(
@@ -54,7 +54,7 @@ describe('buildDbFromFolders', function() {
         );
     });
 
-    it('Marks as deleted entries in database not found in directory scan', async () => {
+    it('Marks as deleted entries in database not found in directory scan', async function() {
         sinon.stub(fs, 'readdirSync').returns(['dir']);
         const updateManySpy = sinon.spy(database.game, 'updateMany');
         await buildDbFromFolders(
@@ -71,12 +71,12 @@ describe('buildDbFromFolders', function() {
         );
     });
 
-    describe('strategy available', () => {
-        beforeEach(async () => {
+    describe('strategy available', function() {
+        beforeEach(async function() {
             sinon.stub(fs, 'readdirSync').returns(['dir']);
         });
 
-        it('Creates new game with id equal to directory and marked as deleted', async () => {
+        it('Creates new game with id equal to directory and marked as deleted', async function() {
             let strategy = {
                 name: 'dummy',
                 shouldUse: () => true,
@@ -97,7 +97,7 @@ describe('buildDbFromFolders', function() {
             });
         });
 
-        it('If game is not deleted tries to find engine, recognize game type and fetch sources', async () => {
+        it('If game is not deleted tries to find engine, recognize game type and fetch sources', async function() {
             sinon.stub(fs, 'existsSync').returns(true);
             const recognizeGameEngine = sinon.stub(
                 engineRecognizer,
@@ -144,7 +144,7 @@ describe('buildDbFromFolders', function() {
             );
         });
 
-        it('If game data was fetched fills the game with results', async () => {
+        it('If game data was fetched fills the game with results', async function() {
             const gameDetails = {
                 nameEn: 'nameEn',
                 genresEn: 'genresEn',
@@ -207,7 +207,7 @@ describe('buildDbFromFolders', function() {
             sinon.assert.calledOnce(updateExecutableAndDirectory);
         });
 
-        it('If game data was fetched without additional images fetches additional images separately', async () => {
+        it('If game data was fetched without additional images fetches additional images separately', async function() {
             const gameDetails = {
                 nameEn: 'nameEn',
             };

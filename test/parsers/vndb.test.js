@@ -5,16 +5,16 @@ const VndbStrategy = require('../../src/parsers/vndb');
 
 describe('Vndb strategy', function() {
     let vndbStrategy;
-    beforeEach(async () => {
+    beforeEach(async function() {
         vndbStrategy = new VndbStrategy();
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    describe('fetch game data', () => {
-        it('returns empty object when vndb returns empty object', async () => {
+    describe('fetch game data', function() {
+        it('returns empty object when vndb returns empty object', async function() {
             sinon.stub(vndb, 'getVNById').resolves({});
 
             expect(
@@ -22,7 +22,7 @@ describe('Vndb strategy', function() {
             ).to.eql({});
         });
 
-        it('passes vndb object', async () => {
+        it('passes vndb object', async function() {
             sinon.stub(vndb, 'getVNById').resolves({
                 something: 'something',
             });
@@ -34,7 +34,7 @@ describe('Vndb strategy', function() {
             });
         });
 
-        it('parses game id into number', async () => {
+        it('parses game id into number', async function() {
             const getVNByIdStub = sinon.stub(vndb, 'getVNById').resolves({});
 
             expect(
@@ -43,7 +43,7 @@ describe('Vndb strategy', function() {
             sinon.assert.calledWithExactly(getVNByIdStub, 12345);
         });
 
-        it('replaces v in gameId if it exists', async () => {
+        it('replaces v in gameId if it exists', async function() {
             const getVNByIdStub = sinon.stub(vndb, 'getVNById').resolves({});
 
             expect(
@@ -53,7 +53,7 @@ describe('Vndb strategy', function() {
         });
     });
 
-    it('passes vndb object when findGame is called', async () => {
+    it('passes vndb object when findGame is called', async function() {
         const findVNsByNameStub = sinon.stub(vndb, 'findVNsByName').resolves({
             something: 'something',
         });
@@ -64,8 +64,8 @@ describe('Vndb strategy', function() {
         sinon.assert.calledWithExactly(findVNsByNameStub, 'name');
     });
 
-    describe('additional images', () => {
-        it('calls fetchGameData and returns images from there', async () => {
+    describe('additional images', function() {
+        it('calls fetchGameData and returns images from there', async function() {
             const fetchGameDataStub = sinon
                 .stub(vndbStrategy, 'fetchGameData')
                 .resolves({
@@ -79,7 +79,7 @@ describe('Vndb strategy', function() {
             sinon.assert.calledWithExactly(fetchGameDataStub, 'v12345');
         });
 
-        it('returns undefined if fetchGameData returns nothing', async () => {
+        it('returns undefined if fetchGameData returns nothing', async function() {
             const fetchGameDataStub = sinon
                 .stub(vndbStrategy, 'fetchGameData')
                 .resolves({});
@@ -91,31 +91,31 @@ describe('Vndb strategy', function() {
         });
     });
 
-    describe('should use', () => {
-        it('returns true for numbers starting with v', async () => {
+    describe('should use', function() {
+        it('returns true for numbers starting with v', async function() {
             expect(vndbStrategy.shouldUse('v1')).to.eql(true);
             expect(vndbStrategy.shouldUse('v192')).to.eql(true);
             expect(vndbStrategy.shouldUse('v192144')).to.eql(true);
         });
 
-        it('returns false if code does not start with v', async () => {
+        it('returns false if code does not start with v', async function() {
             expect(vndbStrategy.shouldUse('av1')).to.eql(false);
             expect(vndbStrategy.shouldUse('RJ1123213')).to.eql(false);
             expect(vndbStrategy.shouldUse('VJ1123213')).to.eql(false);
             expect(vndbStrategy.shouldUse('d_1231231')).to.eql(false);
         });
 
-        it('returns false if code does not contain number', async () => {
+        it('returns false if code does not contain number', async function() {
             expect(vndbStrategy.shouldUse('v')).to.eql(false);
         });
     });
 
-    describe('extract code', () => {
-        it('returns code if there is exact match', async () => {
+    describe('extract code', function() {
+        it('returns code if there is exact match', async function() {
             expect(vndbStrategy.extractCode('v12345')).to.eql('v12345');
         });
 
-        it('returns code if it is inside text', async () => {
+        it('returns code if it is inside text', async function() {
             expect(vndbStrategy.extractCode('[v12345] text')).to.eql('v12345');
             expect(vndbStrategy.extractCode('text [v12345] text')).to.eql(
                 'v12345'
@@ -134,7 +134,7 @@ describe('Vndb strategy', function() {
             );
         });
 
-        it('returns empty string when there is no match', async () => {
+        it('returns empty string when there is no match', async function() {
             expect(vndbStrategy.extractCode('f12325')).to.eql('');
         });
     });

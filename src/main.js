@@ -7,7 +7,7 @@ const log = require('./util/logger');
 async function main() {
     await vndb.connect();
 
-    let operation = undefined;
+    let operation;
     process.argv.forEach(function(val) {
         const command = val.split('=');
         if (command.length === 2) {

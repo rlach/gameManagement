@@ -154,13 +154,13 @@ class DlsiteStrategy extends SiteStrategy {
         if (extractedCode !== '') {
             this.addToCodeScore(
                 results,
-                settings.advanced.scores.extractedDlsiteCode,
+                this.settings.advanced.scores.extractedDlsiteCode,
                 extractedCode
             );
             if (codes.foundCodes.some(fc => fc.workno === extractedCode)) {
                 this.addToCodeScore(
                     results,
-                    settings.advanced.scores.matchForExtractedDlsiteCode,
+                    this.settings.advanced.scores.matchForExtractedDlsiteCode,
                     extractedCode
                 );
             }

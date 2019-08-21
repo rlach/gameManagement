@@ -8,29 +8,30 @@ const request = require('request-promise');
 const GetchuStrategy = require('../../src/parsers/getchu');
 
 describe('Getchu strategy', function() {
-    const japaneseParseResult = {
-        additionalImages: [
-            'http://getchu.com/sample1.jpg',
-            'http://getchu.com/sample2.jpg',
-        ],
-        descriptionJp: '今日の散歩は大成功でした。',
-        imageUrlJp: 'http://getchu.com/package.jpg',
-        makerJp: 'ゲームの作成者',
-        nameJp: '素晴らしいゲーム',
-        releaseDate: moment('2019-04-26', 'YYYY-MM-DD').format(),
-    };
+    let japaneseParseResult;
 
     let getchuStrategy;
-    beforeEach(async () => {
+    beforeEach(async function() {
+        japaneseParseResult = {
+            additionalImages: [
+                'http://getchu.com/sample1.jpg',
+                'http://getchu.com/sample2.jpg',
+            ],
+            descriptionJp: '今日の散歩は大成功でした。',
+            imageUrlJp: 'http://getchu.com/package.jpg',
+            makerJp: 'ゲームの作成者',
+            nameJp: '素晴らしいゲーム',
+            releaseDate: moment('2019-04-26', 'YYYY-MM-DD').format(),
+        };
         getchuStrategy = new GetchuStrategy();
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    describe('fetch game data', () => {
-        it('returns empty object when source is set as missing', async () => {
+    describe('fetch game data', function() {
+        it('returns empty object when source is set as missing', async function() {
             expect(
                 await getchuStrategy.fetchGameData('123456', {
                     sourceMissingJp: true,
@@ -38,7 +39,7 @@ describe('Getchu strategy', function() {
             ).to.eql({});
         });
 
-        it('marks source as missing when getchu returns empty page', async () => {
+        it('marks source as missing when getchu returns empty page', async function() {
             sinon.stub(request, 'get').resolves('');
 
             expect(await getchuStrategy.fetchGameData('123456')).to.eql({
@@ -46,7 +47,7 @@ describe('Getchu strategy', function() {
             });
         });
 
-        it('returns empty object when could not get data from html', async () => {
+        it('returns empty object when could not get data from html', async function() {
             sinon
                 .stub(request, 'get')
                 .resolves('<!DOCTYPE html><html lang="en"></html>');
@@ -54,13 +55,13 @@ describe('Getchu strategy', function() {
             expect(await getchuStrategy.fetchGameData('123456')).to.eql({});
         });
 
-        it('returns empty object when request fails', async () => {
+        it('returns empty object when request fails', async function() {
             sinon.stub(request, 'get').rejects(new Error('foobar'));
 
             expect(await getchuStrategy.fetchGameData('123456')).to.eql({});
         });
 
-        it('returns japanese data when site returned proper page and vndb returned nothing', async () => {
+        it('returns japanese data when site returned proper page and vndb returned nothing', async function() {
             sinon
                 .stub(request, 'get')
                 .onFirstCall()
@@ -72,7 +73,7 @@ describe('Getchu strategy', function() {
             });
         });
 
-        it('merges japanese and english data when vndb returned', async () => {
+        it('merges japanese and english data when vndb returned', async function() {
             const vndbData = {
                 nameEn: 'vndbTitle',
                 releaseDate: '1901-01-01T00:00:00+02:00',
@@ -100,8 +101,8 @@ describe('Getchu strategy', function() {
             });
         });
 
-        describe('rating score', () => {
-            it('returns score average if reviews are available', async () => {
+        describe('rating score', function() {
+            it('returns score average if reviews are available', async function() {
                 sinon
                     .stub(request, 'get')
                     .onFirstCall()
@@ -122,7 +123,7 @@ describe('Getchu strategy', function() {
                 });
             });
 
-            it('returns score of 0 if reviews are not available', async () => {
+            it('returns score of 0 if reviews are not available', async function() {
                 sinon
                     .stub(request, 'get')
                     .onFirstCall()
@@ -141,8 +142,8 @@ describe('Getchu strategy', function() {
         });
     });
 
-    describe('find game', () => {
-        it('returns codes for games found in search results', async () => {
+    describe('find game', function() {
+        it('returns codes for games found in search results', async function() {
             sinon
                 .stub(request, 'get')
                 .resolves(
@@ -161,15 +162,15 @@ describe('Getchu strategy', function() {
             ]);
         });
 
-        it('returns empty array when there are no search results', async () => {
+        it('returns empty array when there are no search results', async function() {
             sinon.stub(request, 'get').resolves('<html></html>');
 
             expect(await getchuStrategy.findGame('cool game')).to.eql([]);
         });
     });
 
-    describe('get additional images', () => {
-        it('returns images when getchu returned some', async () => {
+    describe('get additional images', function() {
+        it('returns images when getchu returned some', async function() {
             sinon
                 .stub(request, 'get')
                 .onFirstCall()
@@ -181,7 +182,7 @@ describe('Getchu strategy', function() {
             );
         });
 
-        it('returns undefined when site had no image samples', async () => {
+        it('returns undefined when site had no image samples', async function() {
             sinon
                 .stub(request, 'get')
                 .onFirstCall()
@@ -194,19 +195,19 @@ describe('Getchu strategy', function() {
         });
     });
 
-    describe('should use', () => {
-        it('returns true when code is just a number between 6 and 8 digits long', async () => {
+    describe('should use', function() {
+        it('returns true when code is just a number between 6 and 8 digits long', async function() {
             expect(getchuStrategy.shouldUse('123456')).to.eql(true);
             expect(getchuStrategy.shouldUse('1234567')).to.eql(true);
             expect(getchuStrategy.shouldUse('12308978')).to.eql(true);
         });
 
-        it('returns false when code is just a too long or too short number', async () => {
+        it('returns false when code is just a too long or too short number', async function() {
             expect(getchuStrategy.shouldUse('12345')).to.eql(false);
             expect(getchuStrategy.shouldUse('123089789')).to.eql(false);
         });
 
-        it('returns false when code contains other characters', async () => {
+        it('returns false when code contains other characters', async function() {
             expect(getchuStrategy.shouldUse('RJ123456')).to.eql(false);
             expect(getchuStrategy.shouldUse('VJ123456')).to.eql(false);
             expect(getchuStrategy.shouldUse('RE123456')).to.eql(false);
@@ -216,8 +217,8 @@ describe('Getchu strategy', function() {
         });
     });
 
-    describe('extract code', () => {
-        it('returns 6-8 character long number from strings', async () => {
+    describe('extract code', function() {
+        it('returns 6-8 character long number from strings', async function() {
             expect(getchuStrategy.extractCode('123456')).to.eql('123456');
             expect(getchuStrategy.extractCode('Yorozuya [123456]')).to.eql(
                 '123456'
@@ -239,7 +240,7 @@ describe('Getchu strategy', function() {
             );
         });
 
-        it('ignores numbers that are too short', async () => {
+        it('ignores numbers that are too short', async function() {
             expect(getchuStrategy.extractCode('23456')).to.eql('');
             expect(getchuStrategy.extractCode('Yorozuya [23456]')).to.eql('');
             expect(getchuStrategy.extractCode('[12345] Yorozuya')).to.eql('');
@@ -249,7 +250,7 @@ describe('Getchu strategy', function() {
             expect(getchuStrategy.extractCode('(v12346) Yorozuya')).to.eql('');
         });
 
-        it('ignores numbers that are too long', async () => {
+        it('ignores numbers that are too long', async function() {
             expect(getchuStrategy.extractCode('122345687')).to.eql('');
             expect(getchuStrategy.extractCode('Yorozuya [244345634]')).to.eql(
                 ''

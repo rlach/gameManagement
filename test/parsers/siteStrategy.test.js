@@ -5,41 +5,42 @@ const settings = require('../../src/settings-sample');
 
 describe('Site strategy', function() {
     let siteStrategy;
-    const scores = settings.advanced.scores;
-    beforeEach(async () => {
+    let scores;
+    beforeEach(async function() {
+        scores = settings.advanced.scores;
         siteStrategy = new SiteStrategy('dummy', settings);
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('fetch game data returns empty object', async () => {
+    it('fetch game data returns empty object', async function() {
         expect(
             await siteStrategy.fetchGameData('anything', 'anything', 'path')
         ).to.eql({});
     });
 
-    it('returns empty string for extract code', async () => {
+    it('returns empty string for extract code', async function() {
         expect(siteStrategy.extractCode('anything')).to.eql('');
     });
 
-    it('returns empty array for find game', async () => {
+    it('returns empty array for find game', async function() {
         expect(await siteStrategy.findGame('anything')).to.eql([]);
     });
 
-    it('returns undefined for getAdditionalImages', async () => {
+    it('returns undefined for getAdditionalImages', async function() {
         expect(await siteStrategy.getAdditionalImages('anything')).to.eql(
             undefined
         );
     });
 
-    it('should use returns false', async () => {
+    it('should use returns false', async function() {
         expect(await siteStrategy.shouldUse('other1')).to.eql(false);
     });
 
-    describe('scoring codes', () => {
-        it('returns empty array when there are no found codes', () => {
+    describe('scoring codes', function() {
+        it('returns empty array when there are no found codes', async function() {
             expect(
                 siteStrategy.scoreCodes(
                     {
@@ -51,7 +52,7 @@ describe('Site strategy', function() {
             ).to.eql([]);
         });
 
-        it('gives no points to extracted code', () => {
+        it('gives no points to extracted code', async function() {
             expect(
                 siteStrategy.scoreCodes(
                     {
@@ -63,7 +64,7 @@ describe('Site strategy', function() {
             ).to.eql([]);
         });
 
-        it('returns 2 points for the only code found', () => {
+        it('returns 2 points for the only code found', async function() {
             expect(
                 siteStrategy.scoreCodes(
                     {

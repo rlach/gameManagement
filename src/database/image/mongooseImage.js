@@ -19,10 +19,6 @@ function getImage(mongoose) {
             this.Image = mongoose.model('Image', imageSchema);
         }
 
-        async retrieveFromDb(id) {
-            throw new Error('Not implemented');
-        }
-
         async findOne(searchQuery) {
             return this.Image.findOne(searchQuery);
         }

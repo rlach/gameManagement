@@ -1,11 +1,7 @@
 const sinon = require('sinon');
-const fs = require('fs');
 const inquirer = require('inquirer');
 const progress = require('../../src/util/progress');
-const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
-const engineRecognizer = require('../../src/scripts/build_db_from_folders/recognize_game_engine');
-const executables = require('../../src/scripts/build_db_from_folders/find_executable');
 
 const {
     confirmResults,
@@ -25,21 +21,9 @@ describe('buildDbFromFolders', function() {
         strategy: 'dummy',
     };
 
-    const mainPaths = ['main'];
     let progressBarUpdate;
-    let database;
-    let strategies;
-    const searchSettings = {
-        exeSearchDepth: 1,
-    };
 
-    beforeEach(async () => {
-        database = await initDatabase({
-            database: 'nedb',
-            nedbExtension: '',
-        });
-
-        strategies = [];
+    beforeEach(async function() {
         progressBarUpdate = sinon.spy();
         sinon.stub(progress, 'updateName');
         sinon.stub(progress, 'getBar').returns({
@@ -49,24 +33,24 @@ describe('buildDbFromFolders', function() {
         });
     });
 
-    afterEach(async () => {
+    afterEach(async function() {
         sinon.verifyAndRestore();
     });
 
-    it('Throws when results are undefined', () => {
+    it('Throws when results are undefined', function() {
         return expect(
             confirmResults(undefined, 'anything', 5)
         ).to.eventually.be.rejectedWith('No results to confirm');
     });
 
-    it('Throws when the results array is empty', async () => {
+    it('Throws when the results array is empty', async function() {
         return expect(
             confirmResults([], 'anything', 5)
         ).to.eventually.be.rejectedWith('No results to confirm');
     });
 
-    describe('single result', () => {
-        it('Throws when the result was rejected by user', async () => {
+    describe('single result', function() {
+        it('Throws when the result was rejected by user', async function() {
             sinon.stub(inquirer, 'prompt').resolves({
                 same: false,
             });
@@ -75,7 +59,7 @@ describe('buildDbFromFolders', function() {
             ).to.eventually.be.rejectedWith('Best result not accepted');
         });
 
-        it('Accepts result with the name when user accepted', async () => {
+        it('Accepts result with the name when user accepted', async function() {
             const promptStub = sinon.stub(inquirer, 'prompt').resolves({
                 same: true,
             });
@@ -93,7 +77,7 @@ describe('buildDbFromFolders', function() {
             });
         });
 
-        it('Accepts result with only the code when user accepted', async () => {
+        it('Accepts result with only the code when user accepted', async function() {
             const promptStub = sinon.stub(inquirer, 'prompt').resolves({
                 same: true,
             });
@@ -117,8 +101,8 @@ describe('buildDbFromFolders', function() {
         });
     });
 
-    describe('multiple results', () => {
-        it('Throws when all results were rejected by user', async () => {
+    describe('multiple results', function() {
+        it('Throws when all results were rejected by user', async function() {
             sinon.stub(inquirer, 'prompt').resolves({
                 same: 0,
             });
@@ -131,7 +115,7 @@ describe('buildDbFromFolders', function() {
             ).to.eventually.be.rejectedWith('Best result not accepted');
         });
 
-        it('Accepts code with order in the array equal to selected number(starting from 1, not 0)', async () => {
+        it('Accepts code with order in the array equal to selected number(starting from 1, not 0)', async function() {
             const promptStub = sinon.stub(inquirer, 'prompt').resolves({
                 same: 1,
             });
