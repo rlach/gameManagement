@@ -3,25 +3,14 @@ const files = require('../../util/files');
 const log = require('../../util/logger');
 const fs = require('fs');
 
-async function updateExecutableAndDirectory(
-    file,
-    game,
-    searchSettings,
-    database
-) {
-    const executableFile = await findExecutableFile(file, searchSettings);
-    game.forceExecutableUpdate = false;
-    await saveFileAndDirectory(executableFile, game, database);
-}
-
-async function findExecutableFile(file, searchSettings) {
-    let executableFile = {
+async function findExecutableAndDirectory(file, searchSettings) {
+    let result = {
         directory: path.resolve(`${file.path}/${file.name}`),
     };
 
     const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
     if (subFiles.length > 0) {
-        executableFile.directory = path.resolve(
+        result.directory = path.resolve(
             `${file.path}/${file.name}/${subFiles[0]}`
         );
 
@@ -53,24 +42,16 @@ async function findExecutableFile(file, searchSettings) {
             }
 
             log.debug('game exe selected', gameExe);
-            executableFile.file = path.resolve(
+            result.executableFile = path.resolve(
                 `${gameExe.base}/${gameExe.relative}`
             );
         }
     }
 
-    return executableFile;
+    return result;
 }
 
-async function saveFileAndDirectory(target, game, database) {
-    log.debug(`saving link to executable`, target);
-    game.deleted = false;
-    game.directory = target.directory;
-    game.executableFile = target.file;
-    await database.game.save(game);
-}
-
-module.exports = { updateExecutableAndDirectory };
+module.exports = { findExecutableAndDirectory };
 
 function hasProperExtension(fileName, executableExtensions) {
     return (

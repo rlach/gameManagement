@@ -10,7 +10,7 @@ Chai.use(ChaiPromised);
 
 const {
     recognizeGameEngine,
-} = require('../../src/scripts/build_db_from_folders/recognize_game_engine');
+} = require('../../src/scripts/scan_directories/recognize_game_engine');
 
 describe('gameManagement', function() {
     const file = {

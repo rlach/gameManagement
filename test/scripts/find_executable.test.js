@@ -1,28 +1,27 @@
 const sinon = require('sinon');
 const fs = require('fs');
 const files = require('../../src/util/files');
-const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
 const path = require('path');
 
 const {
-    updateExecutableAndDirectory,
-} = require('../../src/scripts/build_db_from_folders/find_executable');
+    findExecutableAndDirectory,
+} = require('../../src/scripts/scan_directories/find_executable');
 
 describe('findExecutable', function() {
-    const searchSettings = { maxSearchDepth: 1 };
+    let searchSettings;
 
     const file = {
         name: 'gameName',
         path: 'gameDirectory',
     };
-    let database;
 
     beforeEach(async function() {
-        database = await initDatabase({
-            database: 'nedb',
-            nedbExtension: '',
-        });
+        searchSettings = {
+            maxSearchDepth: 1,
+            bannedFilenames: [],
+            executableExtensions: [],
+        };
     });
 
     afterEach(async function() {
@@ -31,47 +30,31 @@ describe('findExecutable', function() {
 
     describe('base directory', function() {
         it('returns base directory when there are no subdirectories', async function() {
-            const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns([]);
-            await updateExecutableAndDirectory(
-                file,
-                game,
-                {
-                    maxSearchDepth: 1,
-                },
-                database
-            );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+
+            const result = await findExecutableAndDirectory(file, {
+                maxSearchDepth: 1,
+            });
+            expect(result).to.eql({
                 directory: path.resolve('gameDirectory/gameName'),
             });
         });
 
         it('sets base directory when subdirectory exists', async function() {
             sinon.stub(files, 'findByFilter').returns([]);
-            const game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['versionDirectory']);
-            await updateExecutableAndDirectory(
-                file,
-                game,
-                {
-                    maxSearchDepth: 1,
-                },
-                database
-            );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+            const result = await findExecutableAndDirectory(file, {
+                maxSearchDepth: 1,
+            });
+            expect(result).to.eql({
                 directory: path.resolve(
                     'gameDirectory/gameName/versionDirectory'
                 ),
-                id: '1',
-                deleted: false,
             });
         });
 
         it('sets base directory to first subdirectory from the response list', async function() {
             sinon.stub(files, 'findByFilter').returns([]);
-            const game = await database.game.retrieveFromDb('1');
             sinon
                 .stub(fs, 'readdirSync')
                 .returns([
@@ -79,27 +62,20 @@ describe('findExecutable', function() {
                     'versionDirectory2',
                     'versionDirectory3',
                 ]);
-            await updateExecutableAndDirectory(
+            const result = await findExecutableAndDirectory(
                 file,
-                game,
-                searchSettings,
-                database
+                searchSettings
             );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+            expect(result).to.eql({
                 directory: path.resolve(
                     'gameDirectory/gameName/versionDirectory1'
                 ),
-                id: '1',
-                deleted: false,
             });
         });
     });
 
     describe('executable file', function() {
-        let game;
         beforeEach(async function() {
-            game = await database.game.retrieveFromDb('1');
             sinon.stub(fs, 'readdirSync').returns(['versionDirectory']);
         });
 
@@ -112,20 +88,15 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(
+            const result = await findExecutableAndDirectory(
                 file,
-                game,
-                searchSettings,
-                database
+                searchSettings
             );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+            expect(result).to.eql({
                 executableFile: path.resolve('gameBase/foo.bar'),
                 directory: path.resolve(
                     'gameDirectory/gameName/versionDirectory'
                 ),
-                id: '1',
-                deleted: false,
             });
         });
 
@@ -143,20 +114,15 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(
+            const result = await findExecutableAndDirectory(
                 file,
-                game,
-                searchSettings,
-                database
+                searchSettings
             );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+            expect(result).to.eql({
                 executableFile: path.resolve('gameBase/Game.bar'),
                 directory: path.resolve(
                     'gameDirectory/gameName/versionDirectory'
                 ),
-                id: '1',
-                deleted: false,
             });
         });
 
@@ -174,21 +140,70 @@ describe('findExecutable', function() {
                 },
             ]);
 
-            await updateExecutableAndDirectory(
+            const result = await findExecutableAndDirectory(
                 file,
-                game,
-                searchSettings,
-                database
+                searchSettings
             );
-            const deletedGame = await database.game.findOne({});
-            expect(deletedGame).to.contain({
+            expect(result).to.eql({
                 executableFile: path.resolve('gameBase/foo.exe'),
                 directory: path.resolve(
                     'gameDirectory/gameName/versionDirectory'
                 ),
-                id: '1',
-                deleted: false,
+            });
+        });
+    });
+
+    describe('filters', function() {
+        it('finds only filenames matching executable extensions', async function() {
+            sinon
+                .stub(fs, 'readdirSync')
+                .returns(['banana', 'foo.exe', 'bar.swf']);
+            searchSettings.executableExtensions = ['.exe', '.swf'];
+            stubFindFiles(['banana', 'foo.exe', 'bar.swf']);
+
+            const result = await findExecutableAndDirectory(
+                file,
+                searchSettings
+            );
+            expect(result).to.include({
+                executableFile: path.resolve('basefoo.exe/foo.exe'),
+            });
+        });
+
+        it('finds ignores filenames that match the extension and are on banned list', async function() {
+            sinon
+                .stub(fs, 'readdirSync')
+                .returns(['banana', 'foo.exe', 'bar.swf']);
+            searchSettings.executableExtensions = ['.exe', '.swf'];
+            searchSettings.bannedFilenames = ['foo', 'bar'];
+            stubFindFiles(['banana', 'foo.exe', 'bar.swf', 'yo.exe']);
+
+            const result = await findExecutableAndDirectory(
+                file,
+                searchSettings
+            );
+            expect(result).to.include({
+                executableFile: path.resolve('baseyo.exe/yo.exe'),
             });
         });
     });
 });
+
+function stubFindFiles(filesToMatch) {
+    let filesToMatchMapped = filesToMatch.map(f => ({
+        matcher: f,
+        name: f,
+        file: f,
+        base: `base${f}`,
+        relative: f,
+    }));
+    return sinon.stub(files, 'findByFilter').callsFake((path, callback) => {
+        let result = [];
+        for (let v of filesToMatchMapped) {
+            if (callback(v)) {
+                result.push(v);
+            }
+        }
+        return result;
+    });
+}

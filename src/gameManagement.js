@@ -57,8 +57,11 @@ class GameManagement {
                 case 'launchboxToDb':
                     await this.syncLaunchboxToDb();
                     break;
-                case 'buildDb':
-                    await this.buildDatabaseFromFolders();
+                case 'scanDirectories':
+                    await this.scanDirectories();
+                    break;
+                case 'downloadSources':
+                    await this.downloadSources();
                     break;
                 case 'dbToLaunchbox':
                     await this.convertDatabaseToLaunchbox();
@@ -77,7 +80,8 @@ class GameManagement {
                     await this.getPossibleCodes();
                     await this.organizeDirectories();
                     await this.syncLaunchboxToDb();
-                    await this.buildDatabaseFromFolders();
+                    await this.scanDirectories();
+                    await this.downloadSources();
                     await this.convertDatabaseToLaunchbox();
                     await this.downloadImages();
             }
@@ -116,8 +120,8 @@ class GameManagement {
         );
     }
 
-    async buildDatabaseFromFolders() {
-        await scripts.buildDbFromFolders(
+    async scanDirectories() {
+        await scripts.scanDirectories(
             this.strategies,
             this.database,
             this.settings.paths.main,
@@ -127,6 +131,10 @@ class GameManagement {
                 executableExtensions: this.settings.executableExtensions,
             }
         );
+    }
+
+    async downloadSources() {
+        await scripts.downloadSources(this.strategies, this.database);
     }
 
     async convertDatabaseToLaunchbox() {
@@ -174,15 +182,19 @@ async function askForOperation() {
                     value: 'launchboxToDb',
                 },
                 {
-                    name: ' 4) build/update database from organized games',
-                    value: 'buildDb',
+                    name: ' 4) scan directories for file changes',
+                    value: 'scanDirectories',
                 },
                 {
-                    name: ' 5) convert database to launchbox xml',
+                    name: ' 5) download sources',
+                    value: 'downloadSources',
+                },
+                {
+                    name: ' 6) convert database to launchbox xml',
                     value: 'dbToLaunchbox',
                 },
                 {
-                    name: ' 6) download images',
+                    name: ' 7) download images',
                     value: 'downloadImages',
                 },
                 new inquirer.Separator('= Helper tools ='),
