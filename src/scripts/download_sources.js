@@ -47,12 +47,7 @@ async function downloadSource(game, strategies, database, progressBar) {
 
 async function updateAdditionalImages(game, strategy, database) {
     game.forceAdditionalImagesUpdate = false;
-    Object.assign(
-        game,
-        removeUndefined({
-            additionalImages: await strategy.getAdditionalImages(game.id),
-        })
-    );
+    game.additionalImages = await strategy.getAdditionalImages(game.id);
     await addAdditionalImagesToDb(game, game.additionalImages, database);
     await database.game.save(game);
 }
