@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const log = require('../util/logger');
 const matcher = require('matcher');
+const { removeUndefined } = require('../util/objects');
 
 inquirer.registerPrompt(
     'checkbox-plus',
@@ -35,8 +36,8 @@ async function setForceUpdate(database) {
             message:
                 'Select filters for which games to force refresh(no filers = all games, all filters connected by OR)',
             choices: [
-                new inquirer.Separator('= Other (overwrites other choices) ='),
-                { name: 'select concrete games', value: 'game' },
+                new inquirer.Separator('= By games ='),
+                { name: 'select games...', value: 'game' },
                 new inquirer.Separator('= By source page ='),
                 { name: 'dlsite', value: 'dlsite' },
                 { name: 'getchu', value: 'getchu' },
@@ -50,8 +51,6 @@ async function setForceUpdate(database) {
 
     let searchQuery = {};
 
-    log.debug('answers', answers);
-
     if (answers.filters.some(f => f === 'game')) {
         const allGames = await database.game.find({});
         const choices = allGames.map(g => ({
@@ -59,7 +58,6 @@ async function setForceUpdate(database) {
             value: g.id,
         }));
 
-        log.info('chosen game');
         Object.assign(
             answers,
             await inquirer.prompt({
@@ -85,47 +83,56 @@ async function setForceUpdate(database) {
         if (answers.games.length === 0) {
             log.info('No games selected');
             return;
-        } else {
-            searchQuery.id = { $in: answers.games };
-        }
-
-        log.info('Games selected', answers.games);
-    } else {
-        const sources = answers.filters.filter(element =>
-            ['dlsite', 'getchu', 'dmm'].includes(element)
-        );
-        const idFilters = answers.filters.filter(element =>
-            ['VJ', 'RJ'].includes(element)
-        );
-        if (idFilters.length > 0 || sources.length > 0) {
-            searchQuery['$or'] = [];
-        }
-
-        if (sources.length > 0) {
-            searchQuery.$or.push({ source: { $in: sources } });
-        }
-
-        if (idFilters.length > 0) {
-            const expression = `^(${idFilters.join('|')})`;
-            const regex = RegExp(expression);
-            searchQuery.$or.push({ id: { $regex: regex } });
         }
     }
 
-    log.debug('query', JSON.stringify(searchQuery));
+    const sourceFilters = answers.filters.filter(element =>
+        ['dlsite', 'getchu', 'dmm'].includes(element)
+    );
+    const idFilters = answers.filters.filter(element =>
+        ['VJ', 'RJ'].includes(element)
+    );
+    const gamesFilter = answers.games ? answers.games : [];
 
-    const updateQuery = {
-        forceSourceUpdate: answers.fields.includes('source'),
-        forceExecutableUpdate: answers.fields.includes('executable'),
-        forceAdditionalImagesUpdate: answers.fields.includes(
+    const searchQueries = [];
+
+    if (sourceFilters.length > 0) {
+        searchQueries.push({ source: { $in: sourceFilters } });
+    }
+
+    if (idFilters.length > 0) {
+        const expression = `^(${idFilters.join('|')})`;
+        const regex = RegExp(expression);
+        searchQueries.push({ id: { $regex: regex } });
+    }
+
+    if (gamesFilter.length > 0) {
+        searchQueries.push({ id: { $in: answers.games } });
+    }
+
+    if (searchQueries.length === 1) {
+        searchQuery = searchQueries[0];
+    } else if (searchQueries.length > 1) {
+        searchQuery.$or = searchQueries;
+    }
+
+    const updateQuery = removeUndefined({
+        forceSourceUpdate: trueIfContains(answers.fields, 'source'),
+        forceExecutableUpdate: trueIfContains(answers.fields, 'executable'),
+        forceAdditionalImagesUpdate: trueIfContains(
+            answers.fields,
             'additionalImages'
         ),
-    };
+    });
 
     const result = await database.game.updateMany(searchQuery, {
         $set: updateQuery,
     });
     log.info('Result: ', result);
+}
+
+function trueIfContains(fields, field) {
+    return fields.includes(field) ? true : undefined;
 }
 
 module.exports = setForceUpdate;
