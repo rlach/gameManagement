@@ -11,7 +11,124 @@ This project is NOT endorsed by or in any way supported by Launchbox developers.
 
 ## Main utility
 
-Description incoming
+Hisho86 can be used to scan selected folder(s) for games and send them as a single platform to Launchbox. The Launchbox platform will be created if it doesn't exist. You can then use Launchbox as normal, and next time you perform sync changes you made will be kept, while new games etc. will be added.
+
+The result:
+
+[screenshots here]
+
+## Using the program
+
+### Configuration
+
+Launch the `.exe` file and `settings.json` file will be created in the same directory. Edit it with your favorite text editor to setup your folders. All folders you set there need to exist already.
+
+This is the section that needs to be edited:
+
+```yaml
+sample here
+```
+
+You can use relative paths starting with a dot. For example `./sample` will be the subdirectory where you ran the .exe. It's best to just use full paths starting with drive letter if you don't know what to do.
+
+You also should set the name of Launchbox Platform you want to use. You can also check other settings and change them if you wish.
+
+Once you are happy with your settings run the application again.
+
+### Synchronisation process
+
+When you run application you will be met with list of options which you can perform. Usually you will want to schoose `Sync everything` option. This performs the following (in order):
+
+1. Tries to find what games are in your unorganized folder
+2. Organizes folders automatically or semi-automatically into your target sort folder
+3. Scans your main folders in search of executable files, checks if games were deleted, recognizes game engine
+4. Downloads metadata for games from vndb and store sites
+5. Saves the details into Launchbox platform
+6. Downloads the boxes, screenshots and backdrops for the games
+
+The process can take from few seconds to few hours depending on how many new games you added, how many images there are to download, how fast your network is etc.
+
+Don't worry, you can close the application at any time - it will not perform most of slow operations once it completed them once, so it will pretty much pick up where it stopped.
+
+#### Folder organization
+
+Hisho86 forces your main folders to be organized as follows:
+
+```text
+> main directory
+    > GAME_CODE
+        > GAME_VERSION1
+            game.exe
+            other game files
+        > GAME_VERSION2
+            version2.exe
+            other version2 files
+    > GAME_CODE2
+        > GAME_VERSION
+            game.exe
+            game files
+```
+
+Game codes should ids assigned by storefronts and/or vndb. Supported storefronts are:
+
+-   DLsite - sample codes: `RJ123456`, `VJ123456`, `RE123456`
+-   Getchu - sample codes: `123456`, `12345678`
+-   VNDB - sample codes: `v1`, `v123456`
+-   DMM - sample codes: `d_12345`, `next_12345`, `a_something12345`
+
+##### Manual organization
+
+If you want to organize directories manually use your favorite storefront, find the game there and copy the relevant code from page URL.
+
+The Game version folders can be named anything except for the word `DELETED`. If you have folder with this name it will be treated as deleted game.
+
+Directly under game version folder should be the executable file. If it's deeper the game will still be added to launchbox but your .exe file won't be found and you will have to set it manually in launchbox when trying to run the game.
+
+For example this would be proper setup:
+
+```text
+> My doujin games
+    > RE258506
+        > Touhou Shoujo: Tale of Beautiful Memories [ver 1.0] (The N Main Shop)
+            (game files here)
+```
+
+And it would create entry in Launchbox for game found in https://www.dlsite.com/eng-touch/work/=/product_id/RE258506.html
+
+If your game is from patreon etc. and is not sold anywhere you can use codes starting with word other and followed by number, for example `other1`. They will be added to your library, but only name will be filled in.
+
+##### Automatic organization
+
+If you have sizeable amount of games and they are not organized in proper manner you can use help of Hisho86. When run Hisho86 will try to find the game on all sources based on folder filename.
+
+For example if your game is in folder named `Touhou Shoujo: Tale of Beautiful Memories [ver 1.0] (The N Main Shop)` Hisho86 will remove tags in [] and () brackets and most probably will find the game on DLSITE.
+
+Then Hisho will try to score the results when comparing to original filename and select best match. In the case of this example name Hisho86 would decide code `RE258506` is best match.
+
+Depending on how close found name is to the folder name one of 3 things will happen:
+
+1. Game will be automatically moved to proper folder
+2. You will be asked which of the results is actually right (ordered from what Hisho86 thinks is the best)
+3. It will automatically be rejected
+
+This behaviour depends on the score game got and following settings:
+
+```text
+    "organizeDirectories": {
+        "shouldAsk": true,
+        "maxResultsToSuggest": 6,
+        "minimumScoreToAsk": 2,
+        "minimumScoreToAccept": 6
+    },
+```
+
+If should ask is set to `false` Hisho86 will only choose games that have score of 6+. You can also adjust score limits and how many games will Hisho86 suggest when it asks.
+
+With test of over 2000 folders with different game names and settings as above Hisho86 had about 100 questions for me, could not find 300 games(that's what you get when you call folders with your games `a`) and from 1600 games it determined automatically only 15 were mismatches. Your results might vary.
+
+As for search results performed by Hisho86 they will be stored in folder with the game in file !foundCodes.txt. You can set minimum score to accept to 1000, should ask to false and Hisho86 will only save those results in game folders. Then you can use that data to help you decide, if you rather don't want to risk Hisho86 making a mistake.
+
+Although I suggest just going for that - worst case scenario you'll spot mistakes easily. See box of a comic book or game you never saw? Yeah, probably a mistake. Just move it into proper folder manually.
 
 ## Optional utilities
 
