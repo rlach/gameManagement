@@ -152,4 +152,158 @@ describe('DMM strategy', function() {
             });
         });
     });
+
+    describe('find game', function() {
+        it('returns empty array when both sources returned no codes', async function() {
+            sinon.stub(request, 'get');
+
+            const result = await dmmStrategy.findGame('title');
+            expect(result).to.eql([]);
+        });
+
+        it('returns results from doujin when only it returned results', async function() {
+            const doujinSearch = fs
+                .readFileSync('./test/parsers/sites/dmm-doujin-search.html')
+                .toString();
+
+            sinon
+                .stub(request, 'get')
+                .onFirstCall()
+                .resolves(doujinSearch);
+
+            const result = await dmmStrategy.findGame('title');
+            expect(result).to.eql([
+                {
+                    workno: 'd_12345',
+                    work_name: 'Title',
+                },
+            ]);
+        });
+
+        it('returns results from pro when only it returned results', async function() {
+            const doujinSearch = fs
+                .readFileSync('./test/parsers/sites/dmm-doujin-search.html')
+                .toString();
+
+            const proSearch = fs
+                .readFileSync('./test/parsers/sites/dmm-pro-search.html')
+                .toString();
+
+            sinon
+                .stub(request, 'get')
+                .onFirstCall()
+                .resolves(doujinSearch)
+                .onSecondCall()
+                .resolves(proSearch);
+
+            const result = await dmmStrategy.findGame('title');
+            expect(result).to.eql([
+                {
+                    workno: 'd_12345',
+                    work_name: 'Title',
+                },
+                {
+                    workno: 'hobc_0199',
+                    work_name: 'Title Pro',
+                },
+            ]);
+        });
+
+        it('returns results from both sites when they returned results', async function() {
+            const proSearch = fs
+                .readFileSync('./test/parsers/sites/dmm-pro-search.html')
+                .toString();
+
+            sinon
+                .stub(request, 'get')
+                .onSecondCall()
+                .resolves(proSearch);
+
+            const result = await dmmStrategy.findGame('title');
+            expect(result).to.eql([
+                {
+                    workno: 'hobc_0199',
+                    work_name: 'Title Pro',
+                },
+            ]);
+        });
+    });
+
+    describe('extract code', function() {
+        it('extracts d_ codes', async function() {
+            expect(dmmStrategy.extractCode('what [d_1]')).to.eql('d_1');
+            expect(dmmStrategy.extractCode('foo (d_1234)')).to.eql('d_1234');
+            expect(dmmStrategy.extractCode('d_1234567 foobar')).to.eql(
+                'd_1234567'
+            );
+        });
+
+        it('extracts d_word codes', async function() {
+            expect(
+                dmmStrategy.extractCode('very d_something1 hard to find')
+            ).to.eql('d_something1');
+            expect(dmmStrategy.extractCode('!d_foo1234mon')).to.eql(
+                'd_foo1234'
+            );
+            expect(dmmStrategy.extractCode('test d_bar1234567 test')).to.eql(
+                'd_bar1234567'
+            );
+        });
+
+        it('extracts word_ codes', async function() {
+            expect(dmmStrategy.extractCode('[next_1] next')).to.eql('next_1');
+            expect(dmmStrategy.extractCode('(company) foo_1234')).to.eql(
+                'foo_1234'
+            );
+            expect(dmmStrategy.extractCode('bar bar_1234567 bar')).to.eql(
+                'bar_1234567'
+            );
+        });
+
+        it('fails on codes related to other games', async function() {
+            expect(dmmStrategy.extractCode('other1')).to.eql('');
+            expect(dmmStrategy.extractCode('v1')).to.eql('');
+            expect(dmmStrategy.extractCode('RJ123456')).to.eql('');
+            expect(dmmStrategy.extractCode('RE123456')).to.eql('');
+            expect(dmmStrategy.extractCode('VJ123456')).to.eql('');
+            expect(dmmStrategy.extractCode('123456')).to.eql('');
+        });
+    });
+
+    describe('should use', function() {
+        it('matches d_ codes', async function() {
+            expect(dmmStrategy.shouldUse('d_1')).to.eql(true);
+            expect(dmmStrategy.shouldUse('d_1234')).to.eql(true);
+            expect(dmmStrategy.shouldUse('d_1234567')).to.eql(true);
+        });
+
+        it('matches d_word codes', async function() {
+            expect(dmmStrategy.shouldUse('d_something1')).to.eql(true);
+            expect(dmmStrategy.shouldUse('d_foo1234')).to.eql(true);
+            expect(dmmStrategy.shouldUse('d_bar1234567')).to.eql(true);
+        });
+
+        it('matches word_codes', async function() {
+            expect(dmmStrategy.shouldUse('next_1')).to.eql(true);
+            expect(dmmStrategy.shouldUse('foo_1234')).to.eql(true);
+            expect(dmmStrategy.shouldUse('bar_1234567')).to.eql(true);
+        });
+
+        it('rejects on codes related to other games', async function() {
+            expect(dmmStrategy.shouldUse('other1')).to.eql(false);
+            expect(dmmStrategy.shouldUse('v1')).to.eql(false);
+            expect(dmmStrategy.shouldUse('RJ123456')).to.eql(false);
+            expect(dmmStrategy.shouldUse('RE123456')).to.eql(false);
+            expect(dmmStrategy.shouldUse('VJ123456')).to.eql(false);
+            expect(dmmStrategy.shouldUse('123456')).to.eql(false);
+        });
+    });
+
+    it('returns additional images from getSite', async function() {
+        sinon.stub(dmmStrategy, 'getSite').returns({
+            additionalImages: ['a1', 'a2'],
+        });
+        const result = await dmmStrategy.getAdditionalImages('d_12345');
+        expect(result).to.eql(['a1', 'a2']);
+    });
 });

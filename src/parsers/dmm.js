@@ -15,7 +15,7 @@ class DmmStrategy extends SiteStrategy {
 
     async fetchGameData(gameId, game) {
         const sourceMissing = game ? game.sourceMissingJp : undefined;
-        const jpn = await getSite(gameId, sourceMissing);
+        const jpn = await this.getSite(gameId, sourceMissing);
         let eng;
 
         if (jpn && jpn.nameJp) {
@@ -45,12 +45,51 @@ class DmmStrategy extends SiteStrategy {
     }
 
     async getAdditionalImages(id) {
-        const site = await getSite(id);
+        const site = await this.getSite(id);
         return site.additionalImages;
     }
 
+    async getSite(id, sourceMissing) {
+        if (sourceMissing) {
+            return undefined;
+        }
+        let uri;
+        let method;
+        if (id.match(/d_\d+/)) {
+            uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
+            method = getDoujinMetadata;
+        } else if (id.match(/d_[a-z]+\d+/)) {
+            uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`;
+            method = getMonoGameMetadata;
+        } else {
+            uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
+            method = getProMetadata;
+        }
+
+        try {
+            let reply = await request.get({
+                method: 'GET',
+                uri: uri,
+            });
+            return method(parseSite(reply));
+        } catch (e) {
+            log.debug(`Error getting ${id} from ${this.name}`, {
+                name: e.name,
+                statusCode: e.statusCode,
+                message: e.message,
+            });
+            if (e.statusCode === 404) {
+                return {
+                    sourceMissingJp: true,
+                };
+            } else {
+                return undefined;
+            }
+        }
+    }
+
     shouldUse(gameId) {
-        return gameId.match(DMM_ID_REGEX);
+        return !!gameId.match(/^[a-z]+_[a-z]*\d+$/gi);
     }
 }
 
@@ -96,7 +135,7 @@ async function getProResults(name) {
         .filter((i, e) =>
             query(e)
                 .attr('href')
-                .includes('ref=search&amp;i3')
+                .includes('ref=search')
         )
         .map((i, e) => ({
             workno: query(e)
@@ -108,45 +147,6 @@ async function getProResults(name) {
                 .trim(),
         }))
         .get();
-}
-
-async function getSite(id, sourceMissing) {
-    if (sourceMissing) {
-        return undefined;
-    }
-    let uri;
-    let method;
-    if (id.match(/d_\d+/)) {
-        uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
-        method = getDoujinMetadata;
-    } else if (id.match(/d_[a-z]+\d+/)) {
-        uri = `https://www.dmm.co.jp/mono/doujin/-/detail/=/cid=${id}/`;
-        method = getMonoGameMetadata;
-    } else {
-        uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
-        method = getProMetadata;
-    }
-
-    try {
-        let reply = await request.get({
-            method: 'GET',
-            uri: uri,
-        });
-        return method(parseSite(reply));
-    } catch (e) {
-        log.debug(`Error getting ${id} from ${this.name}`, {
-            name: e.name,
-            statusCode: e.statusCode,
-            message: e.message,
-        });
-        if (e.statusCode === 404) {
-            return {
-                sourceMissingJp: true,
-            };
-        } else {
-            return undefined;
-        }
-    }
 }
 
 function getDoujinMetadata(query) {
