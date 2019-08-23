@@ -34,7 +34,7 @@ async function scanDirectories(database, mainPaths, searchSettings) {
         return scanDirectory(file, database, progressBar, searchSettings);
     });
 
-    progress.updateName(progressBar, operation);
+    progress.updateName(operation);
     progressBar.stop();
 }
 

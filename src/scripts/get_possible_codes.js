@@ -13,7 +13,7 @@ async function getPossibleCodes(strategies, unsortedGamesPath) {
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
-        progress.updateName(progressBar, `${operation} [${file}]`);
+        progress.updateName(`${operation} [${file}]`);
         const foundCodesPath = `${unsortedGamesPath}/${file}/!foundCodes.txt`;
 
         if (fs.existsSync(foundCodesPath)) {
@@ -49,7 +49,7 @@ async function getPossibleCodes(strategies, unsortedGamesPath) {
         }
         progressBar.update(index + 1);
     }
-    progress.updateName(progressBar, `${operation}`);
+    progress.updateName(`${operation}`);
     progressBar.stop();
     log.debug('Finished parsing');
 }

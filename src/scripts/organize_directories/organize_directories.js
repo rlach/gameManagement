@@ -14,7 +14,7 @@ async function organizeDirectories(strategies, settings) {
 
     progressBar.start(foundFiles.length, 0);
     for (const [index, file] of foundFiles.entries()) {
-        progress.updateName(progressBar, `${operation} [${file}]`);
+        progress.updateName(`${operation} [${file}]`);
         progressBar.update(index + 1);
         const foundFilesPath = `${settings.paths.unsortedGames}/${file}/!foundCodes.txt`;
         if (!fs.existsSync(foundFilesPath)) {
@@ -91,7 +91,7 @@ async function organizeDirectories(strategies, settings) {
             log.debug('Error getting proper file codes', e);
         }
     }
-    progress.updateName(progressBar, operation);
+    progress.updateName(operation);
     progressBar.stop();
 }
 

@@ -5,7 +5,7 @@ const format =
 
 const bar = new cliProgress.Bar(
     {
-        format: `progressbar`,
+        format: `Progress ${format}`,
         align: 'right',
     },
     cliProgress.Presets.shades_classic
@@ -13,13 +13,13 @@ const bar = new cliProgress.Bar(
 
 function getBar(operation) {
     if (operation) {
-        updateName(bar, operation);
+        updateName(operation);
     }
     return bar;
 }
 
-function updateName(progressBar, name) {
-    progressBar.format = `${name} ${format}`;
+function updateName(name) {
+    bar.format = `${name} ${format}`;
 }
 
 module.exports = { getBar, updateName };

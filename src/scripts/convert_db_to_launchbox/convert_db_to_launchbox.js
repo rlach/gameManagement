@@ -115,7 +115,7 @@ async function convertDbToLaunchbox(
     files.createMissingLaunchboxDirectories(launchboxPath, launchboxPlatform);
     fs.writeFileSync(LAUNCHBOX_PLATFORM_XML, xml);
 
-    progress.updateName(progressBar, operation);
+    progress.updateName(operation);
     progressBar.stop();
 }
 

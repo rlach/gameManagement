@@ -20,7 +20,7 @@ async function downloadSources(strategies, database) {
         return downloadSource(game, strategies, database, progressBar);
     });
 
-    progress.updateName(progressBar, operation);
+    progress.updateName(operation);
     progressBar.stop();
 }
 
