@@ -17,7 +17,10 @@ async function main() {
         }
     });
 
-    const gameManagement = new GameManagement(settings, operation);
+    const gameManagement = new GameManagement(
+        settings.getSettings(),
+        operation
+    );
     await gameManagement.main();
 }
 

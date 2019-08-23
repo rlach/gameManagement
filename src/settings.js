@@ -1,15 +1,19 @@
 const fs = require('fs');
+const sample = require('./settings-sample');
 
-let settings;
-
-if (!settings) {
-    settings = require('./settings-sample');
-    if (fs.existsSync('./settings.json')) {
-        const readSettings = JSON.parse(
-            fs.readFileSync('./settings.json').toString()
-        );
-        Object.assign(settings, readSettings);
+class Settings {
+    getSettings() {
+        if (!this.settings) {
+            this.settings = JSON.parse(JSON.stringify(sample));
+            if (fs.existsSync('./settings.json')) {
+                const readSettings = JSON.parse(
+                    fs.readFileSync('./settings.json').toString()
+                );
+                Object.assign(this.settings, readSettings);
+            }
+        }
+        return this.settings;
     }
 }
 
-module.exports = settings;
+module.exports = new Settings();

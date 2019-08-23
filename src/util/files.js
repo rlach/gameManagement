@@ -26,32 +26,23 @@ class Files {
     }
 
     createMissingLaunchboxDirectories(launchboxPath, platformName) {
-        this.createMissingDirectory(`${launchboxPath}/Data`);
-        this.createMissingDirectory(`${launchboxPath}/Data/Platforms`);
+        const paths = [
+            `${launchboxPath}/Data/Platforms`,
+            `${launchboxPath}/Images/${platformName}/${constants.boxFrontPath}/Hisho86`,
+            `${launchboxPath}/Images/${platformName}/${constants.screenshotPath}/Hisho86`,
+            `${launchboxPath}/Images/${platformName}/${constants.backgroundPath}/Hisho86`,
+        ];
 
-        const imagesPath = `${launchboxPath}/Images`;
+        paths.forEach(p => this.createMissingDirectoriesForPath(p));
+    }
 
-        this.createMissingDirectory(imagesPath);
-        this.createMissingDirectory(`${imagesPath}/${platformName}`);
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.boxFrontPath}`
-        );
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.screenshotPath}`
-        );
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.backgroundPath}`
-        );
-
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.boxFrontPath}/Hisho86`
-        );
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.screenshotPath}/Hisho86`
-        );
-        this.createMissingDirectory(
-            `${imagesPath}/${platformName}/${constants.backgroundPath}/Hisho86`
-        );
+    createMissingDirectoriesForPath(path) {
+        const splitPath = path.split('/').filter(p => p !== '');
+        let currentPath = '';
+        splitPath.forEach(pathPart => {
+            currentPath = currentPath + pathPart + '/';
+            this.createMissingDirectory(currentPath);
+        });
     }
 
     createMissingDirectory(path) {
