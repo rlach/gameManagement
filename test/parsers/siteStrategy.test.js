@@ -5,9 +5,7 @@ const settings = require('../../src/settings-sample');
 
 describe('Site strategy', function() {
     let siteStrategy;
-    let scores;
     beforeEach(async function() {
-        scores = settings.advanced.scores;
         siteStrategy = new SiteStrategy('dummy', settings);
     });
 
@@ -64,7 +62,7 @@ describe('Site strategy', function() {
             ).to.eql([]);
         });
 
-        it('returns 2 points for the only code found', async function() {
+        it('returns points for being the only code found', async function() {
             expect(
                 siteStrategy.scoreCodes(
                     {
@@ -82,7 +80,7 @@ describe('Site strategy', function() {
                 {
                     code: 1,
                     name: 'other',
-                    score: scores.onlyOneResultExists + scores.resultExists,
+                    score: 2,
                     strategy: 'dummy',
                 },
             ]);

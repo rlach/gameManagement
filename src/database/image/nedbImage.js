@@ -20,10 +20,6 @@ function getImage(db) {
             }
         }
 
-        async updateMany(searchQuery, updatePayload) {
-            return db.update(searchQuery, updatePayload, { multi: true });
-        }
-
         async find(searchQuery) {
             return db.find(searchQuery);
         }

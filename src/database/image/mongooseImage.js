@@ -32,10 +32,6 @@ function getImage(mongoose) {
             }
         }
 
-        async updateMany(searchQuery, updatePayload) {
-            return this.Image.updateMany(searchQuery, updatePayload).exec();
-        }
-
         async find(searchQuery) {
             return this.Image.find(searchQuery).exec();
         }

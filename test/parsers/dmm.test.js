@@ -9,7 +9,13 @@ const vndb = require('../../src/util/vndb');
 describe('DMM strategy', function() {
     let dmmStrategy;
     beforeEach(async function() {
-        dmmStrategy = new DmmStrategy();
+        const settings = {
+            advanced: {
+                scores: {},
+            },
+        };
+
+        dmmStrategy = new DmmStrategy(settings);
     });
 
     afterEach(async function() {

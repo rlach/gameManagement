@@ -11,6 +11,15 @@ const STRATEGY_NAME = 'dlsite';
 class DlsiteStrategy extends SiteStrategy {
     constructor(settings) {
         super(STRATEGY_NAME, settings);
+
+        this.scoreManager.addExtractedCodeRule(
+            this.settings.advanced.scores.extractedDlsiteCode,
+            code => code !== ''
+        );
+        this.scoreManager.addExtractedCodeRule(
+            this.settings.advanced.scores.matchForExtractedDlsiteCode,
+            (code, foundCodes) => foundCodes.some(fc => fc.workno === code)
+        );
     }
 
     async fetchGameData(gameId, game) {
@@ -144,34 +153,6 @@ class DlsiteStrategy extends SiteStrategy {
             gameId.startsWith('RE') ||
             gameId.startsWith('VJ')
         );
-    }
-
-    scoreCodes(codes, originalFilename) {
-        const results = super.scoreCodes(codes, originalFilename);
-        const extractedCode = codes.extractedCode;
-
-        // Points for extracted code and extracted code matching found result
-        if (extractedCode !== '') {
-            this.addToCodeScore(
-                results,
-                this.settings.advanced.scores.extractedDlsiteCode,
-                extractedCode
-            );
-            if (codes.foundCodes.some(fc => fc.workno === extractedCode)) {
-                this.addToCodeScore(
-                    results,
-                    this.settings.advanced.scores.matchForExtractedDlsiteCode,
-                    extractedCode
-                );
-            }
-        }
-
-        return results;
-    }
-
-    addToCodeScore(bossCodes, CODE_WEIGHT, code, name) {
-        const improvedCode = code.replace('RE', 'RJ');
-        super.addToCodeScore(bossCodes, CODE_WEIGHT, improvedCode, name);
     }
 }
 

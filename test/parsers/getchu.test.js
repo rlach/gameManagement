@@ -23,7 +23,14 @@ describe('Getchu strategy', function() {
             nameJp: '素晴らしいゲーム',
             releaseDate: moment('2019-04-26', 'YYYY-MM-DD').format(),
         };
-        getchuStrategy = new GetchuStrategy();
+
+        const settings = {
+            advanced: {
+                scores: {},
+            },
+        };
+
+        getchuStrategy = new GetchuStrategy(settings);
     });
 
     afterEach(async function() {

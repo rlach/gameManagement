@@ -7,6 +7,7 @@ const DlsiteStrategy = require('../../src/parsers/dlsite');
 const fs = require('fs');
 const vndb = require('../../src/util/vndb');
 const moment = require('moment');
+const sampleSettings = require('../../src/settings-sample');
 
 Chai.use(ChaiPromised);
 
@@ -40,7 +41,13 @@ describe('Dlsite strategy', function() {
             tagsJp: ['Tag', 'Tag 2'],
         };
 
-        dlsiteStrategy = new DlsiteStrategy();
+        const settings = {
+            advanced: {
+                scores: sampleSettings.advanced.scores,
+            },
+        };
+
+        dlsiteStrategy = new DlsiteStrategy(settings);
     });
 
     afterEach(async function() {
@@ -464,6 +471,48 @@ describe('Dlsite strategy', function() {
                     'anything'
                 )
             ).to.eql([]);
+        });
+
+        it('returns points for being extracted', function() {
+            expect(
+                dlsiteStrategy.scoreCodes(
+                    {
+                        extractedCode: 'RJ12345',
+                        foundCodes: [],
+                    },
+                    'anything'
+                )
+            ).to.eql([
+                {
+                    code: 'RJ12345',
+                    score: 3,
+                    strategy: 'dlsite',
+                },
+            ]);
+        });
+
+        it('returns points for being extracted and matching found code and being found', function() {
+            expect(
+                dlsiteStrategy.scoreCodes(
+                    {
+                        extractedCode: 'RJ12345',
+                        foundCodes: [
+                            {
+                                workno: 'RJ12345',
+                                work_name: 'other',
+                            },
+                        ],
+                    },
+                    'anything'
+                )
+            ).to.eql([
+                {
+                    code: 'RJ12345',
+                    score: 8,
+                    name: 'other',
+                    strategy: 'dlsite',
+                },
+            ]);
         });
     });
 });

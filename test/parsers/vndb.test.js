@@ -6,7 +6,13 @@ const VndbStrategy = require('../../src/parsers/vndb');
 describe('Vndb strategy', function() {
     let vndbStrategy;
     beforeEach(async function() {
-        vndbStrategy = new VndbStrategy();
+        const settings = {
+            advanced: {
+                scores: {},
+            },
+        };
+
+        vndbStrategy = new VndbStrategy(settings);
     });
 
     afterEach(async function() {

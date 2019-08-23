@@ -6,7 +6,13 @@ const OtherStrategy = require('../../src/parsers/other');
 describe('Other strategy', function() {
     let otherStrategy;
     beforeEach(async function() {
-        otherStrategy = new OtherStrategy();
+        const settings = {
+            advanced: {
+                scores: {},
+            },
+        };
+
+        otherStrategy = new OtherStrategy(settings);
     });
 
     afterEach(async function() {
