@@ -121,16 +121,11 @@ class GameManagement {
     }
 
     async scanDirectories() {
-        await scripts.scanDirectories(
-            this.strategies,
-            this.database,
-            this.settings.paths.main,
-            {
-                maxSearchDepth: this.settings.exeSearchDepth,
-                bannedFilenames: this.settings.bannedFilenames,
-                executableExtensions: this.settings.executableExtensions,
-            }
-        );
+        await scripts.scanDirectories(this.database, this.settings.paths.main, {
+            maxSearchDepth: this.settings.exeSearchDepth,
+            bannedFilenames: this.settings.bannedFilenames,
+            executableExtensions: this.settings.executableExtensions,
+        });
     }
 
     async downloadSources() {
