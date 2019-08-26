@@ -66,13 +66,13 @@ async function updateSources(game, strategy, database) {
         await addImageToDb(game, mainImageUrl, 'box', database);
     }
     Object.assign(game, removeUndefined(gameData));
-    await database.game.save(game);
 
     if (game.additionalImages) {
         await addAdditionalImagesToDb(game, game.additionalImages, database);
     } else {
-        await updateAdditionalImages(game, strategy, database);
+        game.forceAdditionalImagesUpdate = true;
     }
+    await database.game.save(game);
 }
 
 function selectStrategy(gameId, strategies) {
@@ -103,6 +103,7 @@ async function addAdditionalImagesToDb(game, additionalImages, database) {
 async function addImageToDb(game, imageUri, type, database) {
     let imageEntry = await database.image.findOne({
         gameId: game.id,
+        type,
         uri: imageUri,
     });
     if (!imageEntry) {

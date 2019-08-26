@@ -378,7 +378,7 @@ describe('Dlsite strategy', function() {
 
         it('returns array of images generated based on pages amount when calling for RJ', async function() {
             const pagesAmount = 38;
-            sinon
+            const getStub = sinon
                 .stub(request, 'get')
                 .resolves(
                     `<html><body><td id="page">1/${pagesAmount}</td><img src="//dlsite.com/smp1.jpg" class="target_type" /></body></html>`
@@ -390,11 +390,16 @@ describe('Dlsite strategy', function() {
             expect(result[pagesAmount - 1]).to.equal(
                 `http://dlsite.com/smp${pagesAmount}.jpg`
             );
+            sinon.assert.calledWithExactly(getStub, {
+                method: 'GET',
+                uri:
+                    'https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/RJ123456.html',
+            });
         });
 
         it('returns array of images generated based on pages amount when calling for RE', async function() {
             const pagesAmount = 38;
-            sinon
+            const getStub = sinon
                 .stub(request, 'get')
                 .resolves(
                     `<html><body><td id="page">1/${pagesAmount}</td><img src="//dlsite.com/smp1.jpg" class="target_type" /></body></html>`
@@ -406,13 +411,18 @@ describe('Dlsite strategy', function() {
             expect(result[pagesAmount - 1]).to.equal(
                 `http://dlsite.com/smp${pagesAmount}.jpg`
             );
+            sinon.assert.calledWithExactly(getStub, {
+                method: 'GET',
+                uri:
+                    'https://www.dlsite.com/ecchi-eng/popup/=/file/smp1/product_id/RE123456.html',
+            });
         });
 
         it('returns all images from VJ page', async function() {
             const site = fs.readFileSync(
                 './test/parsers/sites/dlsite-additional-images.html'
             );
-            sinon.stub(request, 'get').resolves(site);
+            const getStub = sinon.stub(request, 'get').resolves(site);
 
             const result = await dlsiteStrategy.getAdditionalImages('VJ123456');
             expect(result).to.eql([
@@ -420,6 +430,11 @@ describe('Dlsite strategy', function() {
                 'http://dlsite.com/smpa2.jpg',
                 'http://dlsite.com/smpa3.jpg',
             ]);
+            sinon.assert.calledWithExactly(getStub, {
+                method: 'GET',
+                uri:
+                    'https://www.dlsite.com/pro/popup/=/file/smp1/product_id/VJ123456.html',
+            });
         });
     });
 

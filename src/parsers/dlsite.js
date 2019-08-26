@@ -95,7 +95,7 @@ class DlsiteStrategy extends SiteStrategy {
             } else if (id.startsWith('VJ')) {
                 url = `https://www.dlsite.com/pro/popup/=/file/smp1/product_id/${id}.html`;
             } else if (id.startsWith('RJ')) {
-                `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
+                url = `https://www.dlsite.com/maniax/popup/=/file/smp1/product_id/${id}.html`;
             } else {
                 return undefined;
             }

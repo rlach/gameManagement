@@ -1,5 +1,6 @@
 const fs = require('fs');
 const sample = require('./settings-sample');
+const { removeUndefined } = require('./util/objects');
 
 class Settings {
     getSettings() {
@@ -9,7 +10,7 @@ class Settings {
                 const readSettings = JSON.parse(
                     fs.readFileSync('./settings.json').toString()
                 );
-                Object.assign(this.settings, readSettings);
+                Object.assign(this.settings, removeUndefined(readSettings));
             }
         }
         return this.settings;

@@ -224,7 +224,7 @@ describe('downloadSources', function() {
             expect(game).to.deep.include(expectedGame);
 
             const images = await database.image.find({});
-            expect(images.length).to.eql(2);
+            expect(images.length).to.eql(3);
 
             const boxImage = images.find(i => i.type === 'box');
             expect(boxImage).to.include({
@@ -242,6 +242,15 @@ describe('downloadSources', function() {
                 launchboxId: game.launchboxId,
                 status: 'toDownload',
                 type: 'screenshot',
+            });
+
+            const backgroundImage = images.find(i => i.type === 'background');
+            expect(backgroundImage).to.include({
+                gameId: '123',
+                filename: `${game.launchboxId}.${game.additionalImages[0]}`,
+                launchboxId: game.launchboxId,
+                status: 'toDownload',
+                type: 'background',
             });
 
             sinon.assert.calledOnce(fetchGameData);
@@ -294,14 +303,24 @@ describe('downloadSources', function() {
             expect(game).to.deep.include(expectedGame);
 
             const images = await database.image.find({});
-            expect(images.length).to.eql(1);
+            expect(images.length).to.eql(2);
 
-            expect(images[0]).to.include({
+            const screenshotImage = images.find(i => i.type === 'screenshot');
+            expect(screenshotImage).to.include({
                 gameId: '123',
                 filename: `${game.launchboxId}.${game.additionalImages[0]}`,
                 launchboxId: game.launchboxId,
                 status: 'toDownload',
                 type: 'screenshot',
+            });
+
+            const backgroundImage = images.find(i => i.type === 'background');
+            expect(backgroundImage).to.include({
+                gameId: '123',
+                filename: `${game.launchboxId}.${game.additionalImages[0]}`,
+                launchboxId: game.launchboxId,
+                status: 'toDownload',
+                type: 'background',
             });
 
             sinon.assert.calledOnce(fetchGameData);
