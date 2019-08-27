@@ -1,4 +1,5 @@
 module.exports = {
+    selfTest: require('./self_test'),
     scanDirectories: require('./scan_directories/scan_directories'),
     downloadSources: require('./download_sources'),
     convertDbToLaunchbox: require('./convert_db_to_launchbox/convert_db_to_launchbox'),

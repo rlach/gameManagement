@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const ScoreManager = require('../util/score_manager');
+const jsonDiff = require('json-diff');
 
 class SiteStrategy {
     constructor(name, settings) {
@@ -83,6 +84,29 @@ class SiteStrategy {
 
     shouldUse(gameId) {
         return false;
+    }
+
+    async selfTest() {
+        return {
+            strategy: this.name,
+            gameData: {
+                passes: true,
+                diff: '',
+            },
+            additionalImages: {
+                passes: true,
+                diff: '',
+            },
+        };
+    }
+
+    test(actual, expected) {
+        const result = jsonDiff.diffString(actual, expected);
+
+        return {
+            passes: result.length === 0,
+            diff: result,
+        };
     }
 }
 
