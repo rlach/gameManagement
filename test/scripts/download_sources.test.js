@@ -116,6 +116,73 @@ describe('downloadSources', function() {
             sinon.assert.calledOnce(getAdditionalImagesSpy);
         });
 
+        it('After forceAdditionalImagesUpdate the new images are added to download and additionalImages in the game are updated', async function() {
+            let strategy = {
+                name: 'dummy',
+                shouldUse: () => true,
+                fetchGameData: async () => {},
+                getAdditionalImages: async () => [
+                    'I-am-not-alone.jpg',
+                    'We-are-siblings.png',
+                ],
+            };
+            const fetchGameDataSpy = sinon.spy(strategy, 'fetchGameData');
+            const getAdditionalImagesSpy = sinon.spy(
+                strategy,
+                'getAdditionalImages'
+            );
+
+            game.nameJp = 'I am downloaded';
+            game.additionalImages = ['Only-one.jpg'];
+            game.sourceMissingEn = true;
+            game.forceAdditionalImagesUpdate = true;
+            await database.game.save(game);
+            await downloadSources([strategy], database);
+            sinon.assert.calledOnce(progressBarUpdate);
+            sinon.assert.notCalled(fetchGameDataSpy);
+            sinon.assert.calledOnce(getAdditionalImagesSpy);
+
+            const updatedGame = await database.game.findOne({});
+            expect(updatedGame.additionalImages).to.eql([
+                'I-am-not-alone.jpg',
+                'We-are-siblings.png',
+            ]);
+
+            const imagesToDownload = await database.image.find({});
+
+            expect(imagesToDownload).to.have.length(3);
+
+            const backgroundImage = imagesToDownload.find(
+                i => i.type === 'background'
+            );
+            expect(backgroundImage).to.contain({
+                gameId: '123',
+                status: 'toDownload',
+                type: 'background',
+                uri: 'We-are-siblings.png',
+            });
+
+            const fistScreenshot = imagesToDownload.find(
+                i => i.uri === 'I-am-not-alone.jpg'
+            );
+            expect(fistScreenshot).to.contain({
+                gameId: '123',
+                status: 'toDownload',
+                type: 'screenshot',
+                uri: 'I-am-not-alone.jpg',
+            });
+
+            const secondScreenshot = imagesToDownload.find(
+                i => i.uri === 'We-are-siblings.png' && i.type === 'screenshot'
+            );
+            expect(secondScreenshot).to.contain({
+                gameId: '123',
+                status: 'toDownload',
+                type: 'screenshot',
+                uri: 'We-are-siblings.png',
+            });
+        });
+
         it('It downloads sources if game has forceSourcesUpdate flag even if sources are already downloaded', async function() {
             let strategy = {
                 name: 'dummy',
