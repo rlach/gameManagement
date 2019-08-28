@@ -91,6 +91,137 @@ class DmmStrategy extends SiteStrategy {
     shouldUse(gameId) {
         return !!gameId.match(/^[a-z]+_[a-z]*\d+$/gi);
     }
+
+    /* istanbul ignore next */
+    async selfTest() {
+        const [
+            fetchDoujinGameData,
+            fetchMonoGameData,
+            fetchProGameData,
+        ] = await Promise.all([
+            this.getSite('d_047261'),
+            this.getSite('d_aisoft2638'),
+            this.getSite('next_0219'),
+        ]);
+
+        const expectedDoujinGameData = {
+            nameJp: '壊され姉妹',
+            genresJp: [
+                '辱め',
+                '輪姦',
+                '異物挿入',
+                '近親相姦',
+                '強姦',
+                'アドベンチャー',
+            ],
+            imageUrlJp:
+                'https://doujin-assets.dmm.co.jp/digital/game/d_047261/d_047261pr.jpg',
+            additionalImages: [
+                'https://doujin-assets.dmm.co.jp/digital/game/d_047261/d_047261jp-001.jpg',
+                'https://doujin-assets.dmm.co.jp/digital/game/d_047261/d_047261jp-002.jpg',
+                'https://doujin-assets.dmm.co.jp/digital/game/d_047261/d_047261jp-003.jpg',
+            ],
+            descriptionJp:
+                '＊＊～ストーリー～＊＊\n\n\n突然の、母親の事故死。\n\nその日を境に、秋津川姉妹の運命は大きく変わる。\n\n\n\n「これからのオレの性欲処理は、当然娘のお前たちがすることになる。  \n  \n  お前らのどっちをオレの肉便器にするかだが…\n\n  それを、お前に決めさせてやる。」\n\n\n\n母の葬儀の晩に突きつけられた、義父からの理不尽な要求。\n姉のすみれは、葛藤の末に運命の選択をする。\n\n\nそれからの\n\n義父の欲望のままに犯される、恥辱の日々は始まりに過ぎず…\n\n\n様々な男たちとも複雑に絡み合い、\n\n\n壊れて、いく…。\n\n\n壊して…いく…。\n\n\n\n＊＊～概要～＊＊\n\n【システム・形式】\n・ライブメーカーで製作しました、画像サイズ:800×600  のオリジナル姉妹凌辱ドロドロAVGです。\n・選択次第で結末が変わる、マルチエンディング形式。  エンディング数:  全14種。\n\n【CG】\n・基本CG 44枚（内エッチCG:  31枚、ほか  13枚）。\n\n【立絵】\n・立ち絵  約400枚超。\n\n【閲覧】\n・CGモード搭載:  差分約1，100枚超の内、厳選した 426枚収録。\n・回想モード搭載:  Hシーン33個（回想モードでは分割し、56シーン収録）\n\n【CV】\n・女性フルボイス、淫語無修正。\n\n  「秋津川  すみれ」  CV:椎那  天\n  「秋津川  れんげ」  CV:貴坂  理緒\n  「藤代  きらら」    CV:大山  チロル\n\n\n※物語の流れ上、少々残虐な表現や排泄等の描写がございます。苦手な方は特にご注意下さい。\n※演出で画像を動かしているため、少々動作が重くなることがあります。体験版で必ずご確認下さい。',
+            releaseDate: '2012-04-01T10:00:00+02:00',
+            series: undefined,
+            tagsJp: ['アドベンチャー(姉妹凌辱ドロドロAVG)'],
+            makerJp: 'こんでんちゅ☆みるく',
+            video: undefined,
+            communityStars: 3.5,
+            communityStarVotes: 2,
+        };
+
+        const expectedMonoGameData = {
+            nameJp: 'えれめんつ！',
+            genresJp: [
+                'イラスト・CG集',
+                'オリジナル',
+                '辱め',
+                '触手',
+                '寝取り・寝取られ・NTR',
+                'RPG',
+                'フェラ',
+                'アナル',
+                '逆レイプ',
+            ],
+            imageUrlJp:
+                'https://pics.dmm.co.jp/mono/doujin/d_aisoft2638/d_aisoft2638pl.jpg',
+            additionalImages: [
+                'https://pics.dmm.co.jp/mono/doujin/d_aisoft2638/d_aisoft2638js-001.jpg',
+                'https://pics.dmm.co.jp/mono/doujin/d_aisoft2638/d_aisoft2638js-002.jpg',
+                'https://pics.dmm.co.jp/mono/doujin/d_aisoft2638/d_aisoft2638js-003.jpg',
+                'https://pics.dmm.co.jp/mono/doujin/d_aisoft2638/d_aisoft2638js-004.jpg',
+            ],
+            descriptionJp:
+                '8人の精霊達の力を借りて島中を駆け巡れ！\nにばれらの第一弾は完全フリーシナリオRPG！\n\n外界から隔離された孤島・フェラメンツ。\nだがあと5日で沈没してしまうと告げられた。\nこの5日の間にどう過ごすのか？\n主人公は5日後の船で脱出する事が決まっているので、バッドエンドはありません。\nフリーシナリオなので強制イベントの類もありません。\nプレーによっては島を救う事も、街の人と一緒に島を出る事も。\n全てはプレイヤー次第。\n\n■敵は全て女の子の姿をした「どーぶつ」が全34匹\n■パートナーは個性的な8人の精霊達\n■街の住人4人とのロマンス\n\n基本CG 250枚（差分込 500枚以上）\nテキスト総数1MB以上（Hシーンのみ）\nHイベント総数100以上\nとにかくてんこ盛りの内容でお送りいたします。\n\n■■システム\n解説や能力の上がりやすいイージーモードの他にも\n常時ダッシュ、斜め移動、立ち絵オンオフ機能、メッセージログ、メッセージスキップ、\n音量調節、引き継ぎ、アルバムモードなどの機能も完備。\n基本的にこのゲームに「詰まる」といった要素はありません。\n\n\n■■全イベントCG集を同梱\nどのようなエンドでもいいので最後までプレーをするとパスワードが表示されます。\nそのパスワードを入力する事で、同梱のCG集を解凍する事ができます。\n\n■■■■■\n本作はライト感覚で楽しめますが、以下の要素が若干含まれておりますのでご注意ください。\n行動によっては回避も可能です。\n\n陵辱、触手、粘液、アナル、逆レイプ、寝取られ、産卵（今回はテキストのみです）\n\n対応OS\nWindows2000 / WindowsXP / WindowsVista / Windows7\n「コンビニ受取」対象商品です。詳しくはこちらをご覧ください。',
+            releaseDate: '2012-11-16T00:00:00+01:00',
+            series: undefined,
+            tagsJp: [
+                '漫画・アニメパロディ',
+                'ゲームパロディ',
+                'オリジナル',
+                'パロディその他',
+            ],
+            makerJp: 'にばれら',
+            communityStars: 5,
+            communityStarVotes: 1,
+        };
+
+        const expectedProGameData = {
+            nameJp: '［黒獣外伝］エルフ村の姦落 〜恥辱と快楽の宴〜',
+            genresJp: [
+                '催眠',
+                '寝取られ（NTR）',
+                '人妻',
+                '3DCG',
+                '鬼畜',
+                '孕ませ',
+                'シミュレーション',
+                '痴漢',
+                'アニメーション',
+                '触手',
+                'RPG',
+                '学園もの',
+                '巨乳',
+                'セット商品',
+            ],
+            imageUrlJp:
+                'https://pics.dmm.co.jp/digital/pcgame/next_0219/next_0219pl.jpg',
+            additionalImages: [
+                'https://pics.dmm.co.jp/digital/pcgame/next_0219/next_0219jp-001.jpg',
+                'https://pics.dmm.co.jp/digital/pcgame/next_0219/next_0219jp-002.jpg',
+                'https://pics.dmm.co.jp/digital/pcgame/next_0219/next_0219jp-003.jpg',
+                'https://pics.dmm.co.jp/digital/pcgame/next_0219/next_0219jp-004.jpg',
+            ],
+            descriptionJp:
+                'セレヌス大陸西方のエオス平原に「奉仕国家」が建国された時期――荒くれ傭兵団の団長である「モーガン」は、襲撃した村で極上の獲物に出会う。――領主の奥方であり、高貴なハイエルフ「アンナ」。――若き未亡人であり、稀少なダークエルフ「グレース」。モーガンは、 美しい人妻エルフを自分達の快楽奴隷にすることを決め、彼女達の大切なものを脅迫の材料にして、無理矢理従わせる。人妻エルフ達の毅然としながらも悲愴感あふれる表情に股間を熱くしながらその気高い体と心を恥辱と快楽にまみれさせるため、様々な方法を画策していくのであった。終わらない性の宴が今ここに始まる！王国蹂躙・奉仕強制AVG『 黒獣 』シリーズはこちら！！',
+            releaseDate: '2016-10-28T00:00:00+02:00',
+            series: '黒獣',
+            tagsJp: ['人妻エルフ恥辱快感籠絡AVG'],
+            makerJp: 'HERENCIA',
+            communityStars: 4.33,
+            communityStarVotes: 9,
+        };
+
+        return [
+            super.test(
+                'get doujin game data',
+                fetchDoujinGameData,
+                expectedDoujinGameData
+            ),
+            super.test(
+                'get mono game data',
+                fetchMonoGameData,
+                expectedMonoGameData
+            ),
+            super.test(
+                'get pro game data',
+                fetchProGameData,
+                expectedProGameData
+            ),
+        ];
+    }
 }
 
 module.exports = DmmStrategy;

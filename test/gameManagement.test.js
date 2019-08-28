@@ -89,6 +89,13 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(downloadSources);
         });
 
+        it('calls selfTest when selfTest', async function() {
+            const selfTest = sandbox.stub(scripts, 'selfTest');
+            const gameManagement = new GameManagement(settings, 'selfTest');
+            await gameManagement.main();
+            sinon.assert.calledOnce(selfTest);
+        });
+
         it('calls downloadImages when downloadImages', async function() {
             const downloadImages = sandbox.stub(scripts, 'downloadImages');
             const gameManagement = new GameManagement(
@@ -157,6 +164,7 @@ describe('gameManagement', function() {
             );
             const scanDirectories = sandbox.stub(scripts, 'scanDirectories');
             const downloadSources = sandbox.stub(scripts, 'downloadSources');
+            const selfTest = sandbox.stub(scripts, 'selfTest');
             const convertDbToLaunchbox = sandbox.stub(
                 scripts,
                 'convertDbToLaunchbox'
@@ -171,6 +179,7 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(syncLaunchboxToDb);
             sinon.assert.calledOnce(scanDirectories);
             sinon.assert.calledOnce(downloadSources);
+            sinon.assert.calledOnce(selfTest);
             sinon.assert.calledOnce(convertDbToLaunchbox);
 
             sinon.assert.notCalled(setForceUpdate);

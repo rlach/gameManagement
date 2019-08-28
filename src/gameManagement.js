@@ -75,12 +75,16 @@ class GameManagement {
                 case 'setForceUpdate':
                     await scripts.setForceUpdate(this.database);
                     break;
+                case 'selfTest':
+                    await this.selfTest();
+                    break;
                 case 'syncAll':
                 default:
                     await this.getPossibleCodes();
                     await this.organizeDirectories();
                     await this.syncLaunchboxToDb();
                     await this.scanDirectories();
+                    await this.selfTest();
                     await this.downloadSources();
                     await this.convertDatabaseToLaunchbox();
                     await this.downloadImages();
@@ -126,6 +130,10 @@ class GameManagement {
             bannedFilenames: this.settings.bannedFilenames,
             executableExtensions: this.settings.executableExtensions,
         });
+    }
+
+    async selfTest() {
+        await scripts.selfTest(this.strategies);
     }
 
     async downloadSources() {
@@ -181,15 +189,19 @@ async function askForOperation() {
                     value: 'scanDirectories',
                 },
                 {
-                    name: ' 5) download sources',
+                    name: ' 5) self test',
+                    value: 'selfTest',
+                },
+                {
+                    name: ' 6) download sources',
                     value: 'downloadSources',
                 },
                 {
-                    name: ' 6) convert database to launchbox xml',
+                    name: ' 7) convert database to launchbox xml',
                     value: 'dbToLaunchbox',
                 },
                 {
-                    name: ' 7) download images',
+                    name: ' 8) download images',
                     value: 'downloadImages',
                 },
                 new inquirer.Separator('= Helper tools ='),
