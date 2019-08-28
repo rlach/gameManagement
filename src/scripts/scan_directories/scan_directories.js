@@ -5,6 +5,9 @@ const engineRecognizer = require('./recognize_game_engine');
 const progress = require('../../util/progress');
 const eachLimit = require('async/eachLimit');
 const { removeUndefined } = require('../../util/objects');
+const { promisify } = require('util');
+const regedit = require('regedit');
+const asyncRegistryPutValue = promisify(regedit.putValue);
 
 const operation = 'Scanning directories';
 
@@ -72,6 +75,19 @@ async function scanDirectory(file, database, progressBar, searchSettings) {
         if (game.engine) {
             await database.game.save(game);
         }
+    }
+
+    if (game.executableFile && process.platform === 'win32') {
+        const valuesToPut = {
+            'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers': {
+                [game.executableFile]: {
+                    value: '~HIGHDPIAWARE',
+                    type: 'REG_SZ',
+                },
+            },
+        };
+
+        await asyncRegistryPutValue(valuesToPut);
     }
 
     progressBar.increment();
