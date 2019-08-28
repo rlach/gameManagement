@@ -1,12 +1,11 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const SiteStrategy = require('../../src/parsers/siteStrategy');
-const settings = require('../../src/settings-sample');
 
 describe('Site strategy', function() {
     let siteStrategy;
     beforeEach(async function() {
-        siteStrategy = new SiteStrategy('dummy', settings);
+        siteStrategy = new SiteStrategy('dummy');
     });
 
     afterEach(async function() {

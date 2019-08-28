@@ -1,5 +1,4 @@
 const GameManagement = require('../src/gameManagement');
-const settingsSample = require('../src/settings-sample');
 const scripts = require('../src/scripts');
 const inquirer = require('inquirer');
 
@@ -11,7 +10,6 @@ describe('gameManagement', function() {
     let settings;
     before(async function() {
         settings = {};
-        Object.assign(settings, settingsSample);
         Object.assign(settings, {
             database: {
                 database: 'nedb',
@@ -34,11 +32,7 @@ describe('gameManagement', function() {
         const gameManagement = new GameManagement(settings);
         await gameManagement.main();
         sinon.assert.calledOnce(existsSync);
-        sinon.assert.calledWithExactly(
-            writeFileSync,
-            './settings.json',
-            JSON.stringify(settingsSample, null, 4)
-        );
+        sinon.assert.calledWithExactly(writeFileSync, './settings.json', '');
     });
 
     describe('with operation given', function() {

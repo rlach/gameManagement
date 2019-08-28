@@ -1,0 +1,145 @@
+{
+    // ====== Important settings ======
+    // Those settings should be configured by all users
+
+    // Name of Launchbox platform. Be sure to use different name from your existing platforms
+    launchboxPlatform: WINDOWS
+
+    // Important paths. They all have to exist.
+    paths: {
+        // Path to your launchbox installation. This is the folder where launchbox.exe is.
+        launchbox: ./sample/launchbox
+        // List of all folders where you keep your games. One folder per line.
+        main: [
+            ./sample/games/dlsite
+            ./sample/games/getchu
+        ]
+
+        // Folder where you keep your unsorted games
+        unsortedGames: ./sample/games/unsorted
+        // Folder where your unsorted games be moved automatically if they are recognized
+        targetSortFolder: ./sample/games/dlsite
+
+        // Where to keep backup of platform.xml. Dot means current folder and should be good in most cases
+        backup: .
+    },
+
+// =====================================================================================================================
+
+    // ======= Fine tuning ======
+    // Those settings can be useful for users who don't like some of the behaviors of the program. You can use them to
+    // disable features you don't like or change how some things are handled.
+
+    // The lower number the faster search is but lower chance the .exe will be found. It's counted from game directory
+    exeSearchDepth: 2
+
+    // File extensions that should be detected as executable. One extension by line.
+    executableExtensions: [
+        .exe
+        .swf
+    ]
+
+    // If filename contains any of the words below it won't be used as game executable. One ban per line.
+    // Useful if program detects config utilities etc as the game.
+    bannedFilenames: [
+        セーブデータ場所設定ツール
+        ファイル破損チェックツール
+        unins
+        conf
+        setup
+        setting
+        inst
+        signup
+        check
+        update
+        alpharomdie
+        セーブデータフォルダを開く
+        unity
+        アンインストール
+        設定
+        delfile
+        結合ナビ
+        acmp.exe
+        courier.exe
+        courier_i.exe
+        opensave
+    ]
+
+    // Where to store gameId: SortTitle, Source, Status or CustomField
+    externalIdField: SortTitle
+
+    // Which language to use for your launchbox entries: en or jp
+    // If wanted language is missing the other one will be used.
+    // If you change something in launchbox it will be assumed you used your preferred language.
+    preferredLanguage: en
+
+    // Sometimes images for english and japanese source are a bit different. This defines which ones to use.
+    // If images for preferred language are missing program will try to download the other ones.
+    preferredImageSource: en
+
+    // Whenever to download images for your games
+    downloadImages: true
+
+    // If this is set to true data from launchbox will be synced only if it was changed. This increases sync speed
+    // Might miss some data if launchbox doesn't update the date. Change it only if you're losing data changed in launchbox
+    // on sync.
+    onlyUpdateNewer: true
+
+    // All settings in this section are related to automatic organization of unorganized directories
+    // Organizer tries to find best matching game on one of supported websites and if match is good enough it moves
+    // the game to proper folder. If score is not good enough it will ask user for confirmation. Settings before
+    // define when all of that happens.
+    organizeDirectories: {
+        // If any found game reached this score move it automatically to sorted games.
+        // If you set this to impossible number and shouldAsk to true program will always ask you if match is right
+        // If you set this to impossible number and shouldAsk to false program will never move your games around automatically
+        minimumScoreToAccept: 6
+        // If no game reached minimumScoreToAccept but there are some that reached minimumScoreToAsk you will be asked
+        // if any of the games is proper match.
+        minimumScoreToAsk: 2
+        // You can disable asking completely if you set shouldAsk to false. If so only automatic matches will be taken.
+        shouldAsk: true
+        // In case there are many games that might be proper and none reached minimumScoreToAccept this many best matches
+        // will be shown to you
+        maxResultsToSuggest: 6,
+
+        // Values in this section defined how many points game gets for different rules
+        scores: {
+            // Free points for being found on some site
+            resultExists: 1
+            // Additional points for being the only result found
+            onlyOneResultExists: 1
+            // Only for dlsite - points for code being in original filename
+            extractedDlsiteCode: 3
+            // Only for dlsite - points for code being both found and in original filename
+            matchForExtractedDlsiteCode: 3
+            // Found game matches folder name exactly
+            exactMatch: 3
+            // Found game matches folder name exactly if we remove spaces from it
+            noSpaceExactMatch: 3
+            //TODO: rename rules below
+            noSpaceSimilarMatch: 2
+            noSpaceSimilarMatchSecondSide: 2,
+            similarMatch: 2,
+            similarMatchSecondSide: 2,
+        },
+    },
+
+// =====================================================================================================================
+
+    // ======= Developer settings =====
+    // Ignore if you are not developer
+
+    // Bunyan log level
+    logLevel: info
+
+    // You can use mongodb for permanent storage and easier querying of data in development
+    database: {
+        // nedb or mongodb
+        database: nedb
+        // Extension for files created by nedb. Leave empty for in-memory storage(for tests). Used only if nedb is used.
+        nedbExtension: .db
+        // Connection uri for mongodb database. Used only when mongodb is used
+        mongoUri: mongodb://localhost/test
+    },
+}

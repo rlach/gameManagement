@@ -3,10 +3,10 @@ const log = require('./util/logger');
 const scripts = require('./scripts');
 const fs = require('fs');
 const parserStrategies = require('./parsers');
-const settingsSample = require('./settings-sample');
 const { initDatabase } = require('./database/database');
 const sleep = require('./util/sleep');
 const Mapper = require('./util/mapper');
+const Joi = require('@hapi/joi');
 
 class GameManagement {
     constructor(settings, operation) {
@@ -20,24 +20,39 @@ class GameManagement {
     }
 
     async main() {
-        this.database = await initDatabase(this.settings.database);
-        this.mapper = new Mapper(
-            this.settings.launchboxPlatform,
-            this.settings.externalIdField,
-            this.settings.preferredLanguage
-        );
-
         try {
-            if (!fs.existsSync('./settings.json')) {
-                fs.writeFileSync(
-                    './settings.json',
-                    JSON.stringify(settingsSample, null, 4)
+            const schema = Joi.object()
+                .keys({
+                    launchboxPlatform: Joi.string().required(),
+                    paths: Joi.object()
+                        .keys({
+                            launchbox: Joi.string().uri({
+                                allowRelative: true,
+                            }),
+                        })
+                        .unknown(true),
+                })
+                .unknown(true);
+            const result = schema.validate(this.settings).error;
+            log.info('Validation result', result);
+
+            if (!fs.existsSync('./config/local.hjson')) {
+                fs.copyFileSync(
+                    './config/default.hjson',
+                    './config/local.hjson'
                 );
                 log.info(
-                    'Settings file created. Please update it to your settings and run script again.'
+                    `File config/local.hjson was created for you. Please update settings in there and run the program again.`
                 );
                 return;
             }
+
+            this.database = await initDatabase(this.settings.database);
+            this.mapper = new Mapper(
+                this.settings.launchboxPlatform,
+                this.settings.externalIdField,
+                this.settings.preferredLanguage
+            );
 
             let answer = { operation: this.operation };
 

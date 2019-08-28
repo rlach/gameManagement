@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 const GameManagement = require('./gameManagement');
 const vndb = require('./util/vndb');
-const settings = require('./settings');
+const config = require('config');
 const log = require('./util/logger');
 
 async function main() {
@@ -17,10 +17,7 @@ async function main() {
         }
     });
 
-    const gameManagement = new GameManagement(
-        settings.getSettings(),
-        operation
-    );
+    const gameManagement = new GameManagement(config, operation);
     await gameManagement.main();
 }
 

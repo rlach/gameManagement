@@ -7,7 +7,6 @@ const DlsiteStrategy = require('../../src/parsers/dlsite');
 const fs = require('fs');
 const vndb = require('../../src/util/vndb');
 const moment = require('moment');
-const sampleSettings = require('../../src/settings-sample');
 
 Chai.use(ChaiPromised);
 
@@ -41,11 +40,7 @@ describe('Dlsite strategy', function() {
             tagsJp: ['Tag', 'Tag 2'],
         };
 
-        const settings = {
-            advanced: {
-                scores: sampleSettings.advanced.scores,
-            },
-        };
+        const settings = {};
 
         dlsiteStrategy = new DlsiteStrategy(settings);
     });
