@@ -87,23 +87,15 @@ class SiteStrategy {
     }
 
     async selfTest() {
-        return {
-            strategy: this.name,
-            gameData: {
-                passes: true,
-                diff: '',
-            },
-            additionalImages: {
-                passes: true,
-                diff: '',
-            },
-        };
+        return [];
     }
 
-    test(actual, expected) {
+    test(description, actual, expected) {
         const result = jsonDiff.diffString(actual, expected);
 
         return {
+            strategy: this.name,
+            description,
             passes: result.length === 0,
             diff: result,
         };

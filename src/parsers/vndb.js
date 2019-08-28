@@ -35,12 +35,9 @@ class VndbStrategy extends SiteStrategy {
         return !!gameId.match(VNDB_ID_REGEX);
     }
 
+    /* istanbul ignore next */
     async selfTest() {
-        const fetchGameData = await this.fetchGameData('1');
-        const getAdditionalImages = await this.getAdditionalImages('1');
-
-        log.info('fetchGameData', fetchGameData);
-        log.info('getAdditionalImages', getAdditionalImages);
+        const fetchGameData = this.fetchGameData('1');
 
         const expectedGameData = {
             nameEn: 'Minna de Nyan Nyan',
@@ -104,27 +101,8 @@ class VndbStrategy extends SiteStrategy {
             makerEn: 'Yamikumo-Communications',
             makerJp: '闇雲通信',
         };
-        const expectedAdditionalImages = [
-            'https://s2.vndb.org/sf/07/5707.jpg',
-            'https://s2.vndb.org/sf/08/5708.jpg',
-            'https://s2.vndb.org/sf/09/5709.jpg',
-            'https://s2.vndb.org/sf/10/5710.jpg',
-            'https://s2.vndb.org/sf/11/5711.jpg',
-            'https://s2.vndb.org/sf/12/5712.jpg',
-            'https://s2.vndb.org/sf/13/5713.jpg',
-            'https://s2.vndb.org/sf/14/5714.jpg',
-            'https://s2.vndb.org/sf/15/5715.jpg',
-            'https://s2.vndb.org/sf/16/5716.jpg',
-        ];
 
-        return {
-            strategy: this.name,
-            gameData: super.test(fetchGameData, expectedGameData),
-            additionalImages: super.test(
-                getAdditionalImages,
-                expectedAdditionalImages
-            ),
-        };
+        return [super.test('get game data', fetchGameData, expectedGameData)];
     }
 }
 
