@@ -45,6 +45,8 @@ async function setForceUpdate(database) {
                 new inquirer.Separator('= By game ID ='),
                 { name: 'starting with VJ', value: 'VJ' },
                 { name: 'starting with RJ', value: 'RJ' },
+                new inquirer.Separator('= Other ='),
+                { name: 'No additional images', value: 'additionalImages' },
             ],
         })
     );
@@ -94,6 +96,10 @@ async function setForceUpdate(database) {
     );
     const gamesFilter = answers.games ? answers.games : [];
 
+    const additionalImagesFilter = answers.filters.filter(
+        f => f === 'additionalImages'
+    );
+
     const searchQueries = [];
 
     if (sourceFilters.length > 0) {
@@ -108,6 +114,15 @@ async function setForceUpdate(database) {
 
     if (gamesFilter.length > 0) {
         searchQueries.push({ id: { $in: answers.games } });
+    }
+
+    if (additionalImagesFilter.length > 0) {
+        searchQueries.push({
+            additionalImages: [],
+        });
+        searchQueries.push({
+            additionalImages: { $exists: false },
+        });
     }
 
     if (searchQueries.length === 1) {

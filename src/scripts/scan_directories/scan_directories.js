@@ -5,9 +5,7 @@ const engineRecognizer = require('./recognize_game_engine');
 const progress = require('../../util/progress');
 const eachLimit = require('async/eachLimit');
 const { removeUndefined } = require('../../util/objects');
-const { promisify } = require('util');
 const regedit = require('regedit');
-const asyncRegistryPutValue = promisify(regedit.putValue);
 
 const operation = 'Scanning directories';
 
@@ -39,6 +37,58 @@ async function scanDirectories(database, mainPaths, searchSettings) {
 
     progress.updateName(operation);
     progressBar.stop();
+
+    if (process.platform === 'win32') {
+        const gamesWithExecutableFile = await database.game.find({
+            executableFile: {
+                $exists: true,
+            },
+        });
+
+        const existingKeys = await getRegistryKeys();
+
+        let values = {};
+
+        gamesWithExecutableFile.forEach(game => {
+            if (existingKeys[game.executableFile] === undefined) {
+                values[game.executableFile] = {
+                    value: '~ GDIDPISCALING DPIUNAWARE',
+                    type: 'REG_SZ',
+                };
+            }
+        });
+
+        await putRegistryKeys(values);
+    }
+}
+
+async function getRegistryKeys() {
+    return new Promise(resolve => {
+        regedit
+            .list([
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
+            ])
+            .on('data', function(entry) {
+                resolve(entry.data.values);
+            });
+    });
+}
+
+async function putRegistryKeys(values) {
+    return new Promise((resolve, reject) => {
+        regedit.putValue(
+            {
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers': values,
+            },
+            function(err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            }
+        );
+    });
 }
 
 async function scanDirectory(file, database, progressBar, searchSettings) {
@@ -75,19 +125,6 @@ async function scanDirectory(file, database, progressBar, searchSettings) {
         if (game.engine) {
             await database.game.save(game);
         }
-    }
-
-    if (game.executableFile && process.platform === 'win32') {
-        const valuesToPut = {
-            'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers': {
-                [game.executableFile]: {
-                    value: '~HIGHDPIAWARE',
-                    type: 'REG_SZ',
-                },
-            },
-        };
-
-        await asyncRegistryPutValue(valuesToPut);
     }
 
     progressBar.increment();
