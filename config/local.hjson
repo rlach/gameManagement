@@ -13,7 +13,6 @@
         main: [
             ./sample/games/dlsite
             ./sample/games/getchu
-            ./sample/games/dmm
         ]
 
         // Folder where you keep your unsorted games
@@ -22,8 +21,12 @@
         targetSortFolder: ./sample/games/dlsite
 
         // Where to keep backup of platform.xml. Dot means current folder and should be good in most cases
-        backup: ./sample
+        backup: .
     },
+
+    // If this is enabled program will change high DPI settings for every found executable file to System (enhanced)
+    // It won't change already existing settings if set manually
+    updateDpi: true
 
 // =====================================================================================================================
 
@@ -94,7 +97,7 @@
         // If any found game reached this score move it automatically to sorted games.
         // If you set this to impossible number and shouldAsk to true program will always ask you if match is right
         // If you set this to impossible number and shouldAsk to false program will never move your games around automatically
-        minimumScoreToAccept: 1000
+        minimumScoreToAccept: 6
         // If no game reached minimumScoreToAccept but there are some that reached minimumScoreToAsk you will be asked
         // if any of the games is proper match.
         minimumScoreToAsk: 2
@@ -102,7 +105,7 @@
         shouldAsk: true
         // In case there are many games that might be proper and none reached minimumScoreToAccept this many best matches
         // will be shown to you
-        maxResultsToSuggest: 6,
+        maxResultsToSuggest: 6
 
         // Values in this section defined how many points game gets for different rules
         scores: {
@@ -118,11 +121,14 @@
             exactMatch: 3
             // Found game matches folder name exactly if we remove spaces from it
             noSpaceExactMatch: 3
-            //TODO: rename rules below
+            // Original folder name includes found game
+            originalIncludesMatch: 2
+            // Found game includes original folder name
+            matchIncludesOriginal: 2
+            // Original folder name includes found game after removing spaces
             noSpaceOriginalIncludesMatch: 2
-            noSpaceMatchIncludesOriginal: 2,
-            originalIncludesMatch: 2,
-            matchIncludesOriginal: 2,
+            // Found game includes original folder name after removing spaces
+            noSpaceMatchIncludesOriginal: 2
         },
     },
 
@@ -132,7 +138,7 @@
     // Ignore if you are not developer
 
     // Bunyan log level
-    logLevel: debug
+    logLevel: info
 
     // You can use mongodb for permanent storage and easier querying of data in development
     database: {

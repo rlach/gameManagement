@@ -7,7 +7,7 @@ describe('Other strategy', function() {
     let otherStrategy;
     beforeEach(async function() {
         const settings = {
-            advanced: {
+            organizeDirectories: {
                 scores: {},
             },
         };

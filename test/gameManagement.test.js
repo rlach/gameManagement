@@ -1,6 +1,7 @@
 const GameManagement = require('../src/gameManagement');
 const scripts = require('../src/scripts');
 const inquirer = require('inquirer');
+const config = require('../src/util/settings');
 
 const sinon = require('sinon');
 const fs = require('fs');
@@ -8,9 +9,14 @@ const fs = require('fs');
 describe('gameManagement', function() {
     let sandbox;
     let settings;
+    let validateSettingsSpy;
     before(async function() {
         settings = {};
         Object.assign(settings, {
+            paths: {},
+            organizeDirectories: {
+                scores: {},
+            },
             database: {
                 database: 'nedb',
                 nedbExtension: '',
@@ -20,19 +26,25 @@ describe('gameManagement', function() {
 
     beforeEach(async function() {
         sandbox = sinon.createSandbox();
+        validateSettingsSpy = sandbox.stub(config, 'validate');
     });
 
     afterEach(async function() {
         sandbox.verifyAndRestore();
     });
 
-    it('creates settings.json based on sample when it does NOT exist and returns', async function() {
+    it('creates local.hjson based on sample when it does NOT exist and returns', async function() {
         const existsSync = sandbox.stub(fs, 'existsSync').returns(false);
-        const writeFileSync = sandbox.stub(fs, 'writeFileSync');
+        const copyFileSync = sandbox.stub(fs, 'copyFileSync');
         const gameManagement = new GameManagement(settings);
         await gameManagement.main();
         sinon.assert.calledOnce(existsSync);
-        sinon.assert.calledWithExactly(writeFileSync, './settings.json', '');
+        sinon.assert.calledOnce(validateSettingsSpy);
+        sinon.assert.calledWithExactly(
+            copyFileSync,
+            './config/default.hjson',
+            './config/local.hjson'
+        );
     });
 
     describe('with operation given', function() {

@@ -7,7 +7,7 @@ describe('Vndb strategy', function() {
     let vndbStrategy;
     beforeEach(async function() {
         const settings = {
-            advanced: {
+            organizeDirectories: {
                 scores: {},
             },
         };

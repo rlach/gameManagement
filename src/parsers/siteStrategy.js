@@ -88,6 +88,7 @@ class SiteStrategy {
         return false;
     }
 
+    /* istanbul ignore next */
     async selfTest() {
         return [];
     }

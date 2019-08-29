@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 const log = require('./logger');
 
-const schema = Joi.object()
+const settingsSchema = Joi.object()
     .keys({
         launchboxPlatform: Joi.string().required(),
         paths: Joi.object().keys({
@@ -126,16 +126,14 @@ const schema = Joi.object()
     .unknown(true);
 
 function validate(settings) {
-    const result = schema.validate(settings).error;
+    const result = settingsSchema.validate(settings).error;
     if (result) {
         log.info(
             `There were problems with configuration file: ${result.message}\nDetails:`
         );
-        if (result.details) {
-            result.details.forEach(d => {
-                log.info(d.message);
-            });
-        }
+        result.details.forEach(d => {
+            log.info(d.message);
+        });
         log.info('Fix the issues and run program again');
         process.exit(1);
     }

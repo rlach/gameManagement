@@ -40,7 +40,22 @@ describe('Dlsite strategy', function() {
             tagsJp: ['Tag', 'Tag 2'],
         };
 
-        const settings = {};
+        const settings = {
+            organizeDirectories: {
+                scores: {
+                    resultExists: 1,
+                    onlyOneResultExists: 1,
+                    extractedDlsiteCode: 3,
+                    matchForExtractedDlsiteCode: 3,
+                    exactMatch: 3,
+                    noSpaceExactMatch: 3,
+                    originalIncludesMatch: 2,
+                    matchIncludesOriginal: 2,
+                    noSpaceOriginalIncludesMatch: 2,
+                    noSpaceMatchIncludesOriginal: 2,
+                },
+            },
+        };
 
         dlsiteStrategy = new DlsiteStrategy(settings);
     });

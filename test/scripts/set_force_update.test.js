@@ -80,6 +80,30 @@ describe('scanDirectories', function() {
             );
         });
 
+        it('Updates games without additional images when additionalImages filter is selected', async function() {
+            inquirerStub.onSecondCall().resolves({
+                filters: ['additionalImages'],
+            });
+
+            await setForceUpdate(database);
+
+            sinon.assert.calledTwice(inquirerStub);
+            sinon.assert.calledWithExactly(
+                updateManySpy,
+                {
+                    $or: [
+                        { additionalImages: [] },
+                        { additionalImages: { $exists: false } },
+                    ],
+                },
+                {
+                    $set: {
+                        forceSourceUpdate: true,
+                    },
+                }
+            );
+        });
+
         it('Updates selected field on all games starting with selected startsWith filter', async function() {
             inquirerStub.onSecondCall().resolves({
                 filters: ['VJ'],
