@@ -1,11 +1,27 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const SiteStrategy = require('../../src/parsers/siteStrategy');
-const settings = require('../../src/settings-sample');
 
 describe('Site strategy', function() {
     let siteStrategy;
     beforeEach(async function() {
+        const settings = {
+            organizeDirectories: {
+                scores: {
+                    resultExists: 1,
+                    onlyOneResultExists: 1,
+                    extractedDlsiteCode: 3,
+                    matchForExtractedDlsiteCode: 3,
+                    exactMatch: 3,
+                    noSpaceExactMatch: 3,
+                    originalIncludesMatch: 2,
+                    matchIncludesOriginal: 2,
+                    noSpaceOriginalIncludesMatch: 2,
+                    noSpaceMatchIncludesOriginal: 2,
+                },
+            },
+        };
+
         siteStrategy = new SiteStrategy('dummy', settings);
     });
 
@@ -35,6 +51,31 @@ describe('Site strategy', function() {
 
     it('should use returns false', async function() {
         expect(await siteStrategy.shouldUse('other1')).to.eql(false);
+    });
+
+    describe('test expected sites', function() {
+        it('maps diff to test result', async function() {
+            expect(
+                siteStrategy.test('test', { foo: 'bar' }, { bar: 'bar' })
+            ).to.eql({
+                description: 'test',
+                diff:
+                    ' {\n\u001b[31m-  foo: "bar"\u001b[39m\n\u001b[32m+  bar: "bar"\u001b[39m\n }\n',
+                passes: false,
+                strategy: 'dummy',
+            });
+        });
+
+        it('maps success to test result', async function() {
+            expect(
+                siteStrategy.test('test', { foo: 'bar' }, { foo: 'bar' })
+            ).to.eql({
+                description: 'test',
+                diff: '',
+                passes: true,
+                strategy: 'dummy',
+            });
+        });
     });
 
     describe('scoring codes', function() {

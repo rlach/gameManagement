@@ -13,11 +13,12 @@ class DlsiteStrategy extends SiteStrategy {
         super(STRATEGY_NAME, settings);
 
         this.scoreManager.addExtractedCodeRule(
-            this.settings.advanced.scores.extractedDlsiteCode,
+            this.settings.organizeDirectories.scores.extractedDlsiteCode,
             code => code !== ''
         );
         this.scoreManager.addExtractedCodeRule(
-            this.settings.advanced.scores.matchForExtractedDlsiteCode,
+            this.settings.organizeDirectories.scores
+                .matchForExtractedDlsiteCode,
             (code, foundCodes) => foundCodes.some(fc => fc.workno === code)
         );
     }

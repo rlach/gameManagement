@@ -8,25 +8,25 @@ class SiteStrategy {
         this.settings = settings;
         const scoreManager = new ScoreManager();
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.resultExists,
+            this.settings.organizeDirectories.scores.resultExists,
             () => {
                 return true;
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.onlyOneResultExists,
+            this.settings.organizeDirectories.scores.onlyOneResultExists,
             (names, foundCodes) => {
                 return foundCodes.length === 1;
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.exactMatch,
+            this.settings.organizeDirectories.scores.exactMatch,
             names => {
                 return names.lowerCaseFoundName === names.strippedOriginal;
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.similarMatch,
+            this.settings.organizeDirectories.scores.matchIncludesOriginal,
             names => {
                 return names.lowerCaseFoundName.includes(
                     names.strippedOriginal
@@ -34,27 +34,29 @@ class SiteStrategy {
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.similarMatchSecondSide,
+            this.settings.organizeDirectories.scores.originalIncludesMatch,
             names => {
-                return names.lowerCaseFoundName.includes(
-                    names.strippedOriginal
+                return names.strippedOriginal.includes(
+                    names.lowerCaseFoundName
                 );
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.noSpaceExactMatch,
+            this.settings.organizeDirectories.scores.noSpaceExactMatch,
             names => {
                 return names.noSpacesFoundName === names.noSpacesOriginal;
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.noSpaceSimilarMatch,
+            this.settings.organizeDirectories.scores
+                .noSpaceMatchIncludesOriginal,
             names => {
                 return names.noSpacesFoundName.includes(names.noSpacesOriginal);
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.advanced.scores.noSpaceSimilarMatchSecondSide,
+            this.settings.organizeDirectories.scores
+                .noSpaceIncludesContainsMatch,
             names => {
                 return names.noSpacesOriginal.includes(names.noSpacesFoundName);
             }
@@ -86,6 +88,7 @@ class SiteStrategy {
         return false;
     }
 
+    /* istanbul ignore next */
     async selfTest() {
         return [];
     }

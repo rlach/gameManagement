@@ -97,6 +97,7 @@ class GetchuStrategy extends SiteStrategy {
             imageUrlJp: 'http://getchu.com/brandnew/671747/c671747package.jpg',
             additionalImages: [
                 'http://getchu.com/brandnew/671747/c671747sample1.jpg',
+                'http://getchu.com/brandnew/671747/c671747sample2.jpg',
             ],
         };
 

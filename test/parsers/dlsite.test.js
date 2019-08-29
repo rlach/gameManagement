@@ -7,7 +7,6 @@ const DlsiteStrategy = require('../../src/parsers/dlsite');
 const fs = require('fs');
 const vndb = require('../../src/util/vndb');
 const moment = require('moment');
-const sampleSettings = require('../../src/settings-sample');
 
 Chai.use(ChaiPromised);
 
@@ -42,8 +41,19 @@ describe('Dlsite strategy', function() {
         };
 
         const settings = {
-            advanced: {
-                scores: sampleSettings.advanced.scores,
+            organizeDirectories: {
+                scores: {
+                    resultExists: 1,
+                    onlyOneResultExists: 1,
+                    extractedDlsiteCode: 3,
+                    matchForExtractedDlsiteCode: 3,
+                    exactMatch: 3,
+                    noSpaceExactMatch: 3,
+                    originalIncludesMatch: 2,
+                    matchIncludesOriginal: 2,
+                    noSpaceOriginalIncludesMatch: 2,
+                    noSpaceMatchIncludesOriginal: 2,
+                },
             },
         };
 

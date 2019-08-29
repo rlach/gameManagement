@@ -2,12 +2,12 @@ const bunyan = require('bunyan'),
     bformat = require('bunyan-format'),
     formatOut = bformat({ outputMode: 'short' });
 
-const settings = require('../settings');
+const config = require('config');
 
 const log = bunyan.createLogger({
     name: 'app',
     stream: formatOut,
-    level: settings.logLevel,
+    level: config.get('logLevel'),
 });
 
 module.exports = log;

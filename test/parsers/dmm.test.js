@@ -10,7 +10,7 @@ describe('DMM strategy', function() {
     let dmmStrategy;
     beforeEach(async function() {
         const settings = {
-            advanced: {
+            organizeDirectories: {
                 scores: {},
             },
         };

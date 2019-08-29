@@ -338,6 +338,102 @@ describe('downloadSources', function() {
             sinon.assert.calledOnce(selfTestStub);
         });
 
+        it('If matching image exists in database updates it to toDownload', async function() {
+            const gameDetails = {
+                nameEn: 'nameEn',
+                genresEn: 'genresEn',
+                imageUrlEn: 'imageUrlEn',
+                descriptionEn: 'descriptionEn',
+                tagsEn: ['tagEn1', 'tagEn2'],
+                makerEn: 'makerEn',
+                nameJp: 'nameJp',
+                genresJp: 'genresJp',
+                imageUrlJp: 'imageUrlJp',
+                additionalImages: ['1'],
+                descriptionJp: 'descriptionJp',
+                releaseDate: 'releaseDate',
+                series: 'series',
+                tagsJp: ['tagJp1', 'tagJp2'],
+                makerJp: 'makerJp',
+                video: 'video',
+                communityStars: 4,
+                communityStarVotes: 9128,
+            };
+
+            const recognizeGameEngine = sinon.stub(
+                engineRecognizer,
+                'recognizeGameEngine'
+            );
+            let strategy = {
+                name: 'dummy',
+                shouldUse: () => true,
+                fetchGameData: async () => {
+                    return gameDetails;
+                },
+            };
+            const fetchGameData = sinon.spy(strategy, 'fetchGameData');
+
+            await downloadSources([strategy], database);
+
+            await database.game.updateMany(
+                {},
+                { $set: { forceSourceUpdate: true } }
+            );
+            await database.image.updateMany(
+                {},
+                { $set: { status: 'downloaded' } }
+            );
+            const updatedImages = await database.image.find({});
+            expect(updatedImages[0].status).to.eql('downloaded');
+
+            await downloadSources([strategy], database);
+
+            const game = await database.game.findOne({});
+
+            const expectedGame = {
+                forceSourceUpdate: false,
+                id: '123',
+                source: 'dummy',
+            };
+            Object.assign(expectedGame, gameDetails);
+
+            expect(game).to.deep.include(expectedGame);
+
+            const images = await database.image.find({});
+            expect(images.length).to.eql(3);
+
+            const boxImage = images.find(i => i.type === 'box');
+            expect(boxImage).to.include({
+                gameId: '123',
+                filename: `${game.launchboxId}.${game.imageUrlJp}`,
+                launchboxId: game.launchboxId,
+                status: 'toDownload',
+                type: 'box',
+            });
+
+            const screenshotImage = images.find(i => i.type === 'screenshot');
+            expect(screenshotImage).to.include({
+                gameId: '123',
+                filename: `${game.launchboxId}.${game.additionalImages[0]}`,
+                launchboxId: game.launchboxId,
+                status: 'toDownload',
+                type: 'screenshot',
+            });
+
+            const backgroundImage = images.find(i => i.type === 'background');
+            expect(backgroundImage).to.include({
+                gameId: '123',
+                filename: `${game.launchboxId}.${game.additionalImages[0]}`,
+                launchboxId: game.launchboxId,
+                status: 'toDownload',
+                type: 'background',
+            });
+
+            sinon.assert.calledTwice(fetchGameData);
+            sinon.assert.notCalled(recognizeGameEngine);
+            sinon.assert.calledTwice(selfTestStub);
+        });
+
         it('If game data was fetched without additional images fetches additional images separately', async function() {
             const gameDetails = {
                 nameEn: 'nameEn',

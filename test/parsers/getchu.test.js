@@ -25,7 +25,7 @@ describe('Getchu strategy', function() {
         };
 
         const settings = {
-            advanced: {
+            organizeDirectories: {
                 scores: {},
             },
         };
