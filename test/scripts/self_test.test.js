@@ -1,13 +1,20 @@
 const sinon = require('sinon');
 const inquirer = require('inquirer');
+const progress = require('./../../src/util/progress');
 
-const selfTest = require('../../src/scripts/self_test');
+const selfTest = require('../../src/scripts/self_test').selfTest;
 
-describe('downloadSources', function() {
+describe('selfTest', function() {
     let strategy;
     let selfTestStub;
 
     beforeEach(async function() {
+        sinon.stub(progress, 'getBar').returns({
+            start: sinon.spy(),
+            increment: sinon.spy(),
+            stop: sinon.spy(),
+        });
+
         strategy = {
             selfTest: () => [],
         };

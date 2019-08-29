@@ -69,6 +69,9 @@ class GameManagement {
                 case 'downloadImages':
                     await this.downloadImages();
                     break;
+                case 'updateDpiSettings':
+                    await this.updateDpiSettings();
+                    break;
                 case 'findDuplicates':
                     scripts.findPossibleDuplicates(this.settings.paths.main);
                     break;
@@ -84,7 +87,7 @@ class GameManagement {
                     await this.organizeDirectories();
                     await this.syncLaunchboxToDb();
                     await this.scanDirectories();
-                    await this.selfTest();
+                    await this.updateDpiSettings();
                     await this.downloadSources();
                     await this.convertDatabaseToLaunchbox();
                     await this.downloadImages();
@@ -130,6 +133,10 @@ class GameManagement {
             bannedFilenames: this.settings.bannedFilenames,
             executableExtensions: this.settings.executableExtensions,
         });
+    }
+
+    async updateDpiSettings() {
+        await scripts.updateDpiSettings(this.database, this.settings.updateDpi);
     }
 
     async selfTest() {
@@ -189,8 +196,8 @@ async function askForOperation() {
                     value: 'scanDirectories',
                 },
                 {
-                    name: ' 5) self test',
-                    value: 'selfTest',
+                    name: ' 5) update dpi settings',
+                    value: 'updateDpiSettings',
                 },
                 {
                     name: ' 6) download sources',
@@ -205,6 +212,10 @@ async function askForOperation() {
                     value: 'downloadImages',
                 },
                 new inquirer.Separator('= Helper tools ='),
+                {
+                    name: 'Perform self test',
+                    value: 'selfTest',
+                },
                 {
                     name: 'Find possible duplicates in organized games',
                     value: 'findDuplicates',
