@@ -29,9 +29,9 @@ async function updateDpiSettings(database, shouldUpdateDpi) {
             });
 
             if (Object.keys(values).length > 0) {
-                progressBar.start(values.length, 0);
+                progressBar.start(Object.keys(values).length, 0);
                 await regedit.putValue(dpiSettingsKey, values);
-                progressBar.update(values.length);
+                progressBar.update(Object.keys(values).length);
                 progressBar.stop();
             }
         }

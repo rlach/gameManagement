@@ -5,34 +5,14 @@ const settingsSchema = Joi.object()
     .keys({
         launchboxPlatform: Joi.string().required(),
         paths: Joi.object().keys({
-            launchbox: Joi.string()
-                .uri({
-                    allowRelative: true,
-                })
-                .required(),
+            launchbox: Joi.string().required(),
             main: Joi.array()
                 .min(1)
-                .items(
-                    Joi.string().uri({
-                        allowRelative: true,
-                    })
-                )
+                .items(Joi.string())
                 .required(),
-            unsortedGames: Joi.string()
-                .uri({
-                    allowRelative: true,
-                })
-                .required(),
-            targetSortFolder: Joi.string()
-                .uri({
-                    allowRelative: true,
-                })
-                .required(),
-            backup: Joi.string()
-                .uri({
-                    allowRelative: true,
-                })
-                .required(),
+            unsortedGames: Joi.string().required(),
+            targetSortFolder: Joi.string().required(),
+            backup: Joi.string().required(),
         }),
         updateDpi: Joi.boolean().required(),
         exeSearchDepth: Joi.number()
