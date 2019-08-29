@@ -22,10 +22,18 @@ async function downloadImage(launchboxPath, platformName, image) {
     files.createMissingDirectory(targetPath);
 
     if (!fs.existsSync(`${targetPath}/${image.filename}`)) {
-        await download.image({
+        const options = {
             url: image.uri,
             dest: `${targetPath}/${image.filename}`,
-        });
+        };
+
+        if (image.uri.includes('getchu')) {
+            options.headers = {
+                Referer: `http://www.getchu.com/soft.phtml?id=${image.gameId}`,
+            };
+        }
+
+        await download.image(options);
     }
 }
 

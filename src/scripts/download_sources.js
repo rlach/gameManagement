@@ -71,7 +71,7 @@ async function updateSources(game, strategy, database) {
     }
     Object.assign(game, removeUndefined(gameData));
 
-    if (game.additionalImages) {
+    if (game.additionalImages && game.additionalImages.length > 0) {
         await addAdditionalImagesToDb(game, game.additionalImages, database);
     } else {
         game.forceAdditionalImagesUpdate = true;
