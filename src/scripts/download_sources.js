@@ -6,8 +6,6 @@ const selfTest = require('./self_test');
 const operation = 'Downloading sources';
 
 async function downloadSources(strategies, database) {
-    const progressBar = progress.getBar(operation);
-
     const games = await database.game.find({
         deleted: { $ne: true },
         $or: [
@@ -20,6 +18,7 @@ async function downloadSources(strategies, database) {
         await selfTest.selfTest(strategies);
     }
 
+    const progressBar = progress.getBar(operation);
     progressBar.start(games.length, 0);
     await eachLimit(games, 5, async game => {
         return downloadSource(game, strategies, database, progressBar);

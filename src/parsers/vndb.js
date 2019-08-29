@@ -37,7 +37,7 @@ class VndbStrategy extends SiteStrategy {
 
     /* istanbul ignore next */
     async selfTest() {
-        const fetchGameData = this.fetchGameData('1');
+        const fetchGameData = await this.fetchGameData('1');
 
         const expectedGameData = {
             nameEn: 'Minna de Nyan Nyan',
