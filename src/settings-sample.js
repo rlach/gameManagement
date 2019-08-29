@@ -2,6 +2,7 @@ module.exports = {
     logLevel: 'info',
     externalIdField: 'SortTitle', //Suggested: SortTitle, Source, Status or CustomField
     downloadImages: true,
+    updateDpi: true,
     launchboxPlatform: 'WINDOWS',
     preferredLanguage: 'en',
     preferredImageSource: 'en',
