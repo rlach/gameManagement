@@ -119,10 +119,10 @@
             // Found game matches folder name exactly if we remove spaces from it
             noSpaceExactMatch: 3
             //TODO: rename rules below
-            noSpaceSimilarMatch: 2
-            noSpaceSimilarMatchSecondSide: 2,
-            similarMatch: 2,
-            similarMatchSecondSide: 2,
+            noSpaceOriginalIncludesMatch: 2
+            noSpaceMatchIncludesOriginal: 2,
+            originalIncludesMatch: 2,
+            matchIncludesOriginal: 2,
         },
     },
 

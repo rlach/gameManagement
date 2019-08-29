@@ -26,7 +26,7 @@ class SiteStrategy {
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.organizeDirectories.scores.similarMatch,
+            this.settings.organizeDirectories.scores.matchIncludesOriginal,
             names => {
                 return names.lowerCaseFoundName.includes(
                     names.strippedOriginal
@@ -34,10 +34,10 @@ class SiteStrategy {
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.organizeDirectories.scores.similarMatchSecondSide,
+            this.settings.organizeDirectories.scores.originalIncludesMatch,
             names => {
-                return names.lowerCaseFoundName.includes(
-                    names.strippedOriginal
+                return names.strippedOriginal.includes(
+                    names.lowerCaseFoundName
                 );
             }
         );
@@ -48,14 +48,15 @@ class SiteStrategy {
             }
         );
         scoreManager.addFoundCodesRule(
-            this.settings.organizeDirectories.scores.noSpaceSimilarMatch,
+            this.settings.organizeDirectories.scores
+                .noSpaceMatchIncludesOriginal,
             names => {
                 return names.noSpacesFoundName.includes(names.noSpacesOriginal);
             }
         );
         scoreManager.addFoundCodesRule(
             this.settings.organizeDirectories.scores
-                .noSpaceSimilarMatchSecondSide,
+                .noSpaceIncludesContainsMatch,
             names => {
                 return names.noSpacesOriginal.includes(names.noSpacesFoundName);
             }

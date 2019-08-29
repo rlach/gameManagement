@@ -105,7 +105,7 @@
         shouldAsk: true
         // In case there are many games that might be proper and none reached minimumScoreToAccept this many best matches
         // will be shown to you
-        maxResultsToSuggest: 6,
+        maxResultsToSuggest: 6
 
         // Values in this section defined how many points game gets for different rules
         scores: {
@@ -121,11 +121,14 @@
             exactMatch: 3
             // Found game matches folder name exactly if we remove spaces from it
             noSpaceExactMatch: 3
-            //TODO: rename rules below
-            noSpaceSimilarMatch: 2
-            noSpaceSimilarMatchSecondSide: 2,
-            similarMatch: 2,
-            similarMatchSecondSide: 2,
+            // Original folder name includes found game
+            originalIncludesMatch: 2
+            // Found game includes original folder name
+            matchIncludesOriginal: 2
+            // Original folder name includes found game after removing spaces
+            noSpaceOriginalIncludesMatch: 2
+            // Found game includes original folder name after removing spaces
+            noSpaceMatchIncludesOriginal: 2
         },
     },
 

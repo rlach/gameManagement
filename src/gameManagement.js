@@ -6,7 +6,7 @@ const parserStrategies = require('./parsers');
 const { initDatabase } = require('./database/database');
 const sleep = require('./util/sleep');
 const Mapper = require('./util/mapper');
-const Joi = require('@hapi/joi');
+const settings = require('./util/settings');
 
 class GameManagement {
     constructor(settings, operation) {
@@ -21,20 +21,7 @@ class GameManagement {
 
     async main() {
         try {
-            const schema = Joi.object()
-                .keys({
-                    launchboxPlatform: Joi.string().required(),
-                    paths: Joi.object()
-                        .keys({
-                            launchbox: Joi.string().uri({
-                                allowRelative: true,
-                            }),
-                        })
-                        .unknown(true),
-                })
-                .unknown(true);
-            const result = schema.validate(this.settings).error;
-            log.info('Validation result', result);
+            settings.validate(this.settings);
 
             if (!fs.existsSync('./config/local.hjson')) {
                 fs.copyFileSync(
