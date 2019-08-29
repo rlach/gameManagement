@@ -4,6 +4,7 @@ const { initDatabase } = require('../../src/database/database');
 const { expect } = require('chai');
 const engineRecognizer = require('../../src/scripts/scan_directories/recognize_game_engine');
 
+const selfTest = require('../../src/scripts/self_test');
 const downloadSources = require('../../src/scripts/download_sources');
 
 describe('downloadSources', function() {
@@ -13,8 +14,10 @@ describe('downloadSources', function() {
     const searchSettings = {
         exeSearchDepth: 1,
     };
+    let selfTestStub;
 
     beforeEach(async function() {
+        selfTestStub = sinon.stub(selfTest, 'selfTest');
         database = await initDatabase({
             database: 'nedb',
             nedbExtension: '',
@@ -36,6 +39,7 @@ describe('downloadSources', function() {
     it('Does not download any sources when database is empty', async function() {
         await downloadSources([], database);
         sinon.assert.notCalled(progressBarUpdate);
+        sinon.assert.notCalled(selfTestStub);
     });
 
     it('Does not download any sources when database contains only deleted games', async function() {
@@ -44,6 +48,7 @@ describe('downloadSources', function() {
         await database.game.save(game);
         await downloadSources([], database);
         sinon.assert.notCalled(progressBarUpdate);
+        sinon.assert.notCalled(selfTestStub);
     });
 
     it('Does not download any sources when database contains not-deleted game but all sources are missing', async function() {
@@ -53,6 +58,7 @@ describe('downloadSources', function() {
         await database.game.save(game);
         await downloadSources([], database);
         sinon.assert.notCalled(progressBarUpdate);
+        sinon.assert.notCalled(selfTestStub);
     });
 
     it('Tries to download sources when game is not deleted and only one source is missing', async function() {
@@ -61,6 +67,7 @@ describe('downloadSources', function() {
         await database.game.save(game);
         await downloadSources([], database);
         sinon.assert.calledOnce(progressBarUpdate);
+        sinon.assert.calledOnce(selfTestStub);
     });
 
     it('Does not download sources when matching strategy is not found', async function() {
@@ -69,6 +76,7 @@ describe('downloadSources', function() {
         sinon.assert.calledOnce(progressBarUpdate);
         const gameAfterUpdate = await database.game.findOne({});
         expect(game).to.eql(gameAfterUpdate);
+        sinon.assert.calledOnce(selfTestStub);
     });
 
     describe('strategy available', function() {
@@ -91,6 +99,7 @@ describe('downloadSources', function() {
             await downloadSources([strategy], database);
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.notCalled(fetchGameDataSpy);
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('It downloads additional images if game has forceAdditionalImagesUpdate flag even if sources are already downloaded', async function() {
@@ -114,6 +123,7 @@ describe('downloadSources', function() {
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.notCalled(fetchGameDataSpy);
             sinon.assert.calledOnce(getAdditionalImagesSpy);
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('After forceAdditionalImagesUpdate the new images are added to download and additionalImages in the game are updated', async function() {
@@ -181,6 +191,7 @@ describe('downloadSources', function() {
                 type: 'screenshot',
                 uri: 'We-are-siblings.png',
             });
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('It downloads sources if game has forceSourcesUpdate flag even if sources are already downloaded', async function() {
@@ -208,6 +219,7 @@ describe('downloadSources', function() {
             sinon.assert.calledOnce(progressBarUpdate);
             sinon.assert.calledOnce(fetchGameDataSpy);
             sinon.assert.calledOnce(getAdditionalImagesSpy);
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('If game is not deleted fetches sources', async function() {
@@ -240,6 +252,7 @@ describe('downloadSources', function() {
             expect(images).to.eql([]);
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.notCalled(recognizeGameEngine);
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('If game data was fetched fills the game with results', async function() {
@@ -322,6 +335,7 @@ describe('downloadSources', function() {
 
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.notCalled(recognizeGameEngine);
+            sinon.assert.calledOnce(selfTestStub);
         });
 
         it('If game data was fetched without additional images fetches additional images separately', async function() {
@@ -393,6 +407,7 @@ describe('downloadSources', function() {
             sinon.assert.calledOnce(fetchGameData);
             sinon.assert.calledOnce(getAdditionalImages);
             sinon.assert.notCalled(recognizeGameEngine);
+            sinon.assert.calledOnce(selfTestStub);
         });
     });
 });

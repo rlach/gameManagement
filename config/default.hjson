@@ -24,6 +24,10 @@
         backup: .
     },
 
+    // If this is enabled program will change high DPI settings for every found executable file to System (enhanced)
+    // It won't change already existing settings if set manually
+    updateDpi: true
+
 // =====================================================================================================================
 
     // ======= Fine tuning ======

@@ -1,6 +1,7 @@
 const { removeUndefined } = require('../util/objects');
 const progress = require('../util/progress');
 const eachLimit = require('async/eachLimit');
+const selfTest = require('./self_test');
 
 const operation = 'Downloading sources';
 
@@ -14,6 +15,10 @@ async function downloadSources(strategies, database) {
             { sourceMissingEn: { $ne: true } },
         ],
     });
+
+    if (games.length > 0) {
+        await selfTest.selfTest(strategies);
+    }
 
     progressBar.start(games.length, 0);
     await eachLimit(games, 5, async game => {

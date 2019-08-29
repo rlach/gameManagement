@@ -110,6 +110,19 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(scanDirectories);
         });
 
+        it('calls updateDpiSettings when updateDpiSettings', async function() {
+            const updateDpiSettings = sandbox.stub(
+                scripts,
+                'updateDpiSettings'
+            );
+            const gameManagement = new GameManagement(
+                settings,
+                'updateDpiSettings'
+            );
+            await gameManagement.main();
+            sinon.assert.calledOnce(updateDpiSettings);
+        });
+
         it('calls convertDbToLaunchbox when dbToLaunchbox', async function() {
             const convertDbToLaunchbox = sandbox.stub(
                 scripts,
@@ -157,6 +170,7 @@ describe('gameManagement', function() {
                 'syncLaunchboxToDb'
             );
             const scanDirectories = sandbox.stub(scripts, 'scanDirectories');
+            const updateDpi = sandbox.stub(scripts, 'updateDpiSettings');
             const downloadSources = sandbox.stub(scripts, 'downloadSources');
             const selfTest = sandbox.stub(scripts, 'selfTest');
             const convertDbToLaunchbox = sandbox.stub(
@@ -172,10 +186,11 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(organizeDirectories);
             sinon.assert.calledOnce(syncLaunchboxToDb);
             sinon.assert.calledOnce(scanDirectories);
+            sinon.assert.calledOnce(updateDpi);
             sinon.assert.calledOnce(downloadSources);
-            sinon.assert.calledOnce(selfTest);
             sinon.assert.calledOnce(convertDbToLaunchbox);
 
+            sinon.assert.notCalled(selfTest);
             sinon.assert.notCalled(setForceUpdate);
         });
     });
