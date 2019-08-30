@@ -1,11 +1,12 @@
 const progress = require('../util/progress');
 const regedit = require('../util/regedit');
+const { DPI_SETTINGS } = require('../string_constants');
 
 const dpiSettingsKey =
     'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers';
 
-async function updateDpiSettings(database, shouldUpdateDpi) {
-    if (shouldUpdateDpi && process.platform === 'win32') {
+async function updateDpiSettings(database, settings, forceUpdate = false) {
+    if (settings.updateDpi && process.platform === 'win32') {
         const progressBar = progress.getBar('Update dpi settings');
 
         const gamesWithExecutableFile = await database.game.find({
@@ -20,9 +21,12 @@ async function updateDpiSettings(database, shouldUpdateDpi) {
             let values = {};
 
             gamesWithExecutableFile.forEach(game => {
-                if (existingKeys[game.executableFile] === undefined) {
+                if (
+                    forceUpdate ||
+                    existingKeys[game.executableFile] === undefined
+                ) {
                     values[game.executableFile] = {
-                        value: '~ GDIDPISCALING DPIUNAWARE',
+                        value: getDpiValue(game.engine, settings.overrides),
                         type: 'REG_SZ',
                     };
                 }
@@ -35,6 +39,18 @@ async function updateDpiSettings(database, shouldUpdateDpi) {
                 progressBar.stop();
             }
         }
+    }
+}
+
+function getDpiValue(engine, overrides) {
+    switch (overrides[engine]) {
+        case 1:
+            return DPI_SETTINGS.APPLICATION;
+        case 2:
+            return DPI_SETTINGS.SYSTEM;
+        case 3:
+        default:
+            return DPI_SETTINGS.SYSTEM_ENHANCED;
     }
 }
 

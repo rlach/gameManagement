@@ -74,6 +74,9 @@ class GameManagement {
                 case 'updateDpiSettings':
                     await this.updateDpiSettings();
                     break;
+                case 'forceDpiUpdate':
+                    await this.forceUpdateDpiSettings();
+                    break;
                 case 'findDuplicates':
                     scripts.findPossibleDuplicates(this.settings.paths.main);
                     break;
@@ -138,7 +141,11 @@ class GameManagement {
     }
 
     async updateDpiSettings() {
-        await scripts.updateDpiSettings(this.database, this.settings.updateDpi);
+        await scripts.updateDpiSettings(this.database, this.settings.dpi);
+    }
+
+    async forceUpdateDpiSettings() {
+        await scripts.updateDpiSettings(this.database, this.settings.dpi, true);
     }
 
     async selfTest() {
@@ -225,6 +232,10 @@ async function askForOperation() {
                 {
                     name: 'Mark games for force update of selected fields',
                     value: 'setForceUpdate',
+                },
+                {
+                    name: 'Force dpi settings update',
+                    value: 'forceDpiUpdate',
                 },
             ],
             default: 0,

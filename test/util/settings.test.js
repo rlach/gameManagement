@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const settings = require('../../src/util/settings');
 
-describe('files.js', function() {
+describe('settings.js', function() {
     let exitStub;
     beforeEach(async function() {
         exitStub = sinon.stub(process, 'exit');
@@ -26,7 +26,12 @@ describe('files.js', function() {
                 targetSortFolder: './sample/games/dlsite',
                 backup: '.',
             },
-            updateDpi: true,
+            dpi: {
+                updateDpi: true,
+                overrides: {
+                    something: 1,
+                },
+            },
             exeSearchDepth: 2,
             executableExtensions: ['.exe'],
             bannedFilenames: ['セーブデータ場所設定ツール'],

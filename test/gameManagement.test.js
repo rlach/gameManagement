@@ -135,6 +135,19 @@ describe('gameManagement', function() {
             sinon.assert.calledOnce(updateDpiSettings);
         });
 
+        it('calls updateDpiSettings when forceDpiUpdate', async function() {
+            const updateDpiSettings = sandbox.stub(
+                scripts,
+                'updateDpiSettings'
+            );
+            const gameManagement = new GameManagement(
+                settings,
+                'forceDpiUpdate'
+            );
+            await gameManagement.main();
+            sinon.assert.calledOnce(updateDpiSettings);
+        });
+
         it('calls convertDbToLaunchbox when dbToLaunchbox', async function() {
             const convertDbToLaunchbox = sandbox.stub(
                 scripts,

@@ -24,9 +24,22 @@
         backup: .
     },
 
-    // If this is enabled program will change high DPI settings for every found executable file to System (enhanced)
-    // It won't change already existing settings if set manually
-    updateDpi: true
+    dpi: {
+        // If this is enabled program will change high DPI settings for every found executable file to System (enhanced)
+        // It won't change already previously set dpi settings for games unless you run forceDpiUpdate script.
+        updateDpi: true
+
+        // Some engines do not work well with System (enhanced). Those engines can be listed here along with setting you
+        // want to use instead of System(enhanced). On left side write name of the engine as seen in additional fields of
+        // launchbox, on right side write a number that shows what kind of dpi settings you want for that engine
+        // 1 - dpi settings set to Application
+        // 2 - dpi settings set to System
+        // 3 - dpi settings set to System (enhanced)
+        // Note that this will not overwrite previously set dpi settings for games unless you run forceDpiUpdate script.
+        overrides: {
+            rpgMakerMv: 1
+        },
+    },
 
 // =====================================================================================================================
 

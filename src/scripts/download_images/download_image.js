@@ -1,20 +1,20 @@
 const download = require('image-downloader');
 const fs = require('fs');
-const constants = require('../../string_constants');
+const { IMAGE_PATHS } = require('../../string_constants');
 const files = require('../../util/files');
 
 async function downloadImage(launchboxPath, platformName, image) {
     let imageTypePath;
     switch (image.type) {
         case 'background':
-            imageTypePath = constants.backgroundPath;
+            imageTypePath = IMAGE_PATHS.BACKGROUND;
             break;
         case 'box':
-            imageTypePath = constants.boxFrontPath;
+            imageTypePath = IMAGE_PATHS.PACKAGE;
             break;
         case 'screenshot':
         default:
-            imageTypePath = constants.screenshotPath;
+            imageTypePath = IMAGE_PATHS.SCREENSHOT;
             break;
     }
 

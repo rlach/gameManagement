@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const fs = require('fs');
 const find = require('fs-find');
 const asyncFind = promisify(find);
-const constants = require('../string_constants');
+const { IMAGE_PATHS } = require('../string_constants');
 
 class Files {
     /* istanbul ignore next */
@@ -28,9 +28,9 @@ class Files {
     createMissingLaunchboxDirectories(launchboxPath, platformName) {
         const paths = [
             `${launchboxPath}/Data/Platforms`,
-            `${launchboxPath}/Images/${platformName}/${constants.boxFrontPath}/Hisho86`,
-            `${launchboxPath}/Images/${platformName}/${constants.screenshotPath}/Hisho86`,
-            `${launchboxPath}/Images/${platformName}/${constants.backgroundPath}/Hisho86`,
+            `${launchboxPath}/Images/${platformName}/${IMAGE_PATHS.PACKAGE}/Hisho86`,
+            `${launchboxPath}/Images/${platformName}/${IMAGE_PATHS.SCREENSHOT}/Hisho86`,
+            `${launchboxPath}/Images/${platformName}/${IMAGE_PATHS.BACKGROUND}/Hisho86`,
         ];
 
         paths.forEach(p => this.createMissingDirectoriesForPath(p));

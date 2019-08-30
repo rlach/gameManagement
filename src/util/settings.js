@@ -14,7 +14,20 @@ const settingsSchema = Joi.object()
             targetSortFolder: Joi.string().required(),
             backup: Joi.string().required(),
         }),
-        updateDpi: Joi.boolean().required(),
+        dpi: Joi.object()
+            .required()
+            .keys({
+                updateDpi: Joi.boolean().required(),
+                overrides: Joi.object()
+                    .required()
+                    .pattern(
+                        Joi.string(),
+                        Joi.number()
+                            .min(1)
+                            .max(3)
+                            .integer()
+                    ),
+            }),
         exeSearchDepth: Joi.number()
             .min(1)
             .required(),

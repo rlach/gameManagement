@@ -54,7 +54,10 @@ describe('updateDpiSettings', function() {
 
         it('does not do anything when no games have exe files', async function() {
             const findSpy = sinon.spy(database.game, 'find');
-            await updateDpiSettings(database, true);
+            await updateDpiSettings(database, {
+                updateDpi: true,
+                overrides: {},
+            });
             sinon.assert.calledOnce(findSpy);
             sinon.assert.notCalled(listSpy);
         });
@@ -67,7 +70,10 @@ describe('updateDpiSettings', function() {
                     executableFile: 'abc.exe',
                 },
             ]);
-            await updateDpiSettings(database, true);
+            await updateDpiSettings(database, {
+                updateDpi: true,
+                overrides: {},
+            });
             sinon.assert.calledOnce(findSpy);
             sinon.assert.calledWithExactly(
                 listSpy,
@@ -85,6 +91,52 @@ describe('updateDpiSettings', function() {
             );
         });
 
+        it('overrides dpi settings for game based on engine', async function() {
+            listSpy.returns({});
+            const findSpy = sinon.stub(database.game, 'find').returns([
+                {
+                    engine: 'overriddenEngineApplication',
+                    id: '1',
+                    executableFile: 'abc.exe',
+                },
+                {
+                    engine: 'overriddenEngineSystem',
+                    id: '2',
+                    executableFile: 'abcd.exe',
+                },
+                {
+                    engine: 'overriddenEngineSystemEnhanced',
+                    id: '3',
+                    executableFile: 'abcde.exe',
+                },
+            ]);
+            await updateDpiSettings(database, {
+                updateDpi: true,
+                overrides: {
+                    overriddenEngineApplication: 1,
+                    overriddenEngineSystem: 2,
+                    overriddenEngineSystemEnhanced: 3,
+                },
+            });
+            sinon.assert.calledOnce(findSpy);
+            sinon.assert.calledWithExactly(
+                listSpy,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
+            );
+            sinon.assert.calledWithExactly(
+                putValueSpy,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
+                {
+                    'abc.exe': { type: 'REG_SZ', value: '~ HIGHDPIAWARE' },
+                    'abcd.exe': { type: 'REG_SZ', value: '~ DPIUNAWARE' },
+                    'abcde.exe': {
+                        type: 'REG_SZ',
+                        value: '~ GDIDPISCALING DPIUNAWARE',
+                    },
+                }
+            );
+        });
+
         it('does not update if all games have dpi settings', async function() {
             listSpy.returns({
                 'abc.exe': 'whatever',
@@ -95,13 +147,49 @@ describe('updateDpiSettings', function() {
                     executableFile: 'abc.exe',
                 },
             ]);
-            await updateDpiSettings(database, true);
+            await updateDpiSettings(database, {
+                updateDpi: true,
+                overrides: {},
+            });
             sinon.assert.calledOnce(findSpy);
             sinon.assert.calledWithExactly(
                 listSpy,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
             );
             sinon.assert.notCalled(putValueSpy);
+        });
+
+        it('updates game even if it has dpi settings if force update is enabled', async function() {
+            listSpy.returns({
+                'abc.exe': 'whatever',
+            });
+            const findSpy = sinon.stub(database.game, 'find').returns([
+                {
+                    engine: 'overridden',
+                    id: '1',
+                    executableFile: 'abc.exe',
+                },
+            ]);
+            await updateDpiSettings(
+                database,
+                {
+                    updateDpi: true,
+                    overrides: {
+                        overridden: 2,
+                    },
+                },
+                true
+            );
+            sinon.assert.calledOnce(findSpy);
+            sinon.assert.calledWithExactly(
+                listSpy,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
+            );
+            sinon.assert.calledWithExactly(
+                putValueSpy,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
+                { 'abc.exe': { type: 'REG_SZ', value: '~ DPIUNAWARE' } }
+            );
         });
     });
 });
