@@ -56,11 +56,15 @@ describe('Site strategy', function() {
     describe('test expected sites', function() {
         it('maps diff to test result', async function() {
             expect(
-                siteStrategy.test('test', { foo: 'bar' }, { bar: 'bar' })
+                siteStrategy.test(
+                    'test',
+                    { foo: 'fetched this' },
+                    { foo: 'was this' }
+                )
             ).to.eql({
                 description: 'test',
                 diff:
-                    ' {\n\u001b[31m-  foo: "bar"\u001b[39m\n\u001b[32m+  bar: "bar"\u001b[39m\n }\n',
+                    ' {\n\u001b[31m-  foo: "was this"\u001b[39m\n\u001b[32m+  foo: "fetched this"\u001b[39m\n }\n',
                 passes: false,
                 strategy: 'dummy',
             });

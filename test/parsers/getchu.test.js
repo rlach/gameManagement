@@ -14,11 +14,11 @@ describe('Getchu strategy', function() {
     beforeEach(async function() {
         japaneseParseResult = {
             additionalImages: [
-                'http://getchu.com/sample1.jpg',
-                'http://getchu.com/sample2.jpg',
+                'http://image.getchu.com/sample1.jpg',
+                'http://image.getchu.com/sample2.jpg',
             ],
             descriptionJp: '今日の散歩は大成功でした。',
-            imageUrlJp: 'http://getchu.com/package.jpg',
+            imageUrlJp: 'http://image.getchu.com/package.jpg',
             makerJp: 'ゲームの作成者',
             nameJp: '素晴らしいゲーム',
             releaseDate: moment('2019-04-26', 'YYYY-MM-DD').format(),
