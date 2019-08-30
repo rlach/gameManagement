@@ -94,7 +94,7 @@ class SiteStrategy {
     }
 
     test(description, actual, expected) {
-        const result = jsonDiff.diffString(actual, expected);
+        const result = jsonDiff.diffString(expected, actual);
 
         return {
             strategy: this.name,
