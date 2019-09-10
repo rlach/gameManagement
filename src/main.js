@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 const GameManagement = require('./gameManagement');
 const vndb = require('./util/vndb');
-const config = require('config');
+const config = require('../node_modules/config');
 const log = require('./util/logger');
 
 async function main() {

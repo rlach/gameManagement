@@ -80,6 +80,53 @@ describe('Site strategy', function() {
                 strategy: 'dummy',
             });
         });
+
+        it('known arrays are equal even if order is different', async function() {
+            expect(
+                siteStrategy.test(
+                    'test',
+                    {
+                        tagsEn: ['elem1', 'elem2'],
+                        tagsJp: ['elem1', 'elem2'],
+                        genresEn: ['elem1', 'elem2'],
+                        genresJp: ['elem1', 'elem2'],
+                        additionalImages: ['elem1', 'elem2'],
+                    },
+                    {
+                        tagsEn: ['elem2', 'elem1'],
+                        tagsJp: ['elem2', 'elem1'],
+                        genresEn: ['elem2', 'elem1'],
+                        genresJp: ['elem2', 'elem1'],
+                        additionalImages: ['elem2', 'elem1'],
+                    }
+                )
+            ).to.eql({
+                description: 'test',
+                diff: '',
+                passes: true,
+                strategy: 'dummy',
+            });
+        });
+
+        it('unknown arrays return diff when order of items is different', async function() {
+            expect(
+                siteStrategy.test(
+                    'test',
+                    {
+                        arr: ['elem1', 'elem2'],
+                    },
+                    {
+                        arr: ['elem2', 'elem1'],
+                    }
+                )
+            ).to.eql({
+                description: 'test',
+                diff:
+                    ' {\n   arr: [\n\u001b[32m+    "elem1"\u001b[39m\n     "elem2"\n\u001b[31m-    "elem1"\u001b[39m\n   ]\n }\n',
+                passes: false,
+                strategy: 'dummy',
+            });
+        });
     });
 
     describe('scoring codes', function() {
