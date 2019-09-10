@@ -94,7 +94,10 @@ class SiteStrategy {
     }
 
     test(description, actual, expected) {
-        const result = jsonDiff.diffString(expected, actual);
+        let orderedActual = orderArrays(actual);
+        let orderedExpected = orderArrays(expected);
+
+        const result = jsonDiff.diffString(orderedExpected, orderedActual);
 
         return {
             strategy: this.name,
@@ -103,6 +106,24 @@ class SiteStrategy {
             diff: result,
         };
     }
+}
+
+function orderArrays(game) {
+    const result = {
+        ...game,
+    };
+
+    result.tagsEn = game.tagsEn ? game.tagsEn.sort() : undefined;
+    result.tagsJp = game.tagsJp ? game.tagsJp.sort() : undefined;
+
+    result.genresEn = game.genresEn ? game.genresEn.sort() : undefined;
+    result.genresJp = game.genresJp ? game.genresJp.sort() : undefined;
+
+    result.additionalImages = game.additionalImages
+        ? game.additionalImages.sort()
+        : undefined;
+
+    return result;
 }
 
 module.exports = SiteStrategy;
