@@ -6,7 +6,7 @@ const progress = require('../../util/progress');
 const files = require('../../util/files');
 const { ensureArray } = require('../../util/objects');
 
-const operation = 'Converting database to launchbox';
+const operation = 'Database => launchbox';
 
 async function convertDbToLaunchbox(
     launchboxPath,

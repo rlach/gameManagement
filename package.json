@@ -6,7 +6,7 @@
         "coveralls": "nyc --all npm test && nyc report --reporter=text-lcov | coveralls",
         "lint": "eslint src/**/*.js test/**/*.js",
         "build": "npm run prepare-assets && pkg package.json -t node10-win-x64,node10-linux --out-path dist",
-        "prepare-assets": "rm -rf dist && mkdir dist && mkdir dist/config && cp config/default.hjson dist/config"
+        "prepare-assets": "rm -rf dist && mkdir dist && mkdir dist\\config && cp config/default.hjson dist/config"
     },
     "name": "Hisho86",
     "version": "1.0.0",

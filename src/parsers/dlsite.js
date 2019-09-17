@@ -179,7 +179,7 @@ class DlsiteStrategy extends SiteStrategy {
             nameJp: '錬精術士コレットのHな搾精物語～精液を集める錬精術士～',
             descriptionJp:
                 '現在のバージョンは【ver1.14】です。\r\n\r\n■あせろら5周年記念!\r\n　1ヶ月限定　30%OFF　セール実施します!\r\n　また、5周年記念としまして、『素敵なプレゼント企画』も実施中です!!\r\n　ページ下部に企画の詳細がございますのでぜひご覧ください!!\r\n\r\n※今回は音楽やドットも新規で制作しております!\r\n　よりスケベになったドットH等にご期待下さいませ!!',
-            genresJp: ['道具/異物', '淫乱', '羞恥', '恥辱', '輪姦', '異種姦'],
+            genresJp: ['道具/異物', '淫乱', '羞恥/恥辱', '輪姦', '異種姦'],
             tagsJp: [
                 '18禁',
                 'ロールプレイング',
@@ -204,10 +204,9 @@ class DlsiteStrategy extends SiteStrategy {
             descriptionEn:
                 '* ver1.14\r\n\r\n* Story\r\n\r\nDeep in the mountains lived two peaceful girls.\r\nOne was the mysterious girl, known as Priscilla the Alchemist,\r\nand her student who she had found and raised called Colette.\r\n\r\nPriscilla had invented her own form of alchemy that used cum,\r\nand had been living a lazy life while sharing her teachings with Colette.\r\n\r\nHowever, an unexpected visitor came by one day, \r\nand Priscilla had decided to leave the mountain.\r\n\r\nNow, Colette must finally live on her own.\r\n\r\nThough Colette had the skills to be a professional alchemist,\r\nshe still had some reservations about cum collecting.\r\n\r\nPriscilla decided to give one final lesson to help Colette, \r\nand Colette was able to experience her "first time".\r\n\r\nHaving made her first cum collection and success in alchemy, \r\nPriscilla was able to let Colette leave the nest and go off into \r\nthe world on her own.\r\n\r\nColette the Cum Collecting Alchemist-\r\nShe will go on a journey where she will make new connections,\r\nhelp those in need, and end up in various incidents.\r\n\r\nHer grand adventure begins!\r\n\r\n\r\n* System:\r\n- Alchemy\r\nBy combining materials and [cum], you can create new items!\r\nYou can use the cum that your comrades collect as well, so collect \r\nlots of cum and gather various materials!\r\n\r\n- Control up to 3 Characters!\r\nChoose characters from the guild and take them on your journey!\r\n\r\n- Hornyness level\r\nWhen the Hornyness amount is high, you can perform more intense \r\nsexual interactions. It increases as you use skills and get sexually harassed.\r\n\r\n- Lewdness level\r\nThis time the Lewdness has S & M amounts, that increases through sex.\r\nThe higher the amount, the more sexually promiscuous she becomes.\r\nWhen the Lewdness and Hornyness reach a certain point she...!?\r\nThen the S or M amount reaches a certain point she...!?\r\n\r\n- Karma level\r\nKarma goes up/down when she does good or bad things.\r\nIf she does good things, the meter doesn\'t increase, and sometimes goes down.\r\nHowever, if she does lots of bad things the meter increases and...!?\r\n\r\n- Pleading system\r\nThis system allows her to plead for cum! \r\nIt applies to the sub-characters as well, and use this command to collect\r\nlots and lots of cum!\r\n\r\n- Fetish system\r\nThe girls each have their preferred sexual activities. \r\nBy repeating a certain sex act, it can awaken a fetish within her and...!?\r\n\r\n- Mid-battle sex\r\nIf captured during battle, she will be violated. \r\nThough her health will decrease after being violated, she can also obtain cum.\r\nGoing out of your way to get violated and obtain cum is also a viable technique!\r\n\r\n- Approval system\r\nThe sub-character girls have an approval rating meter.\r\nThough hiring them costs money, when their approval rating reaches MAX,\r\nyou no longer have to pay to hire them.\r\n* In addition, when the approval rating increases...!?\r\n\r\n\r\n* We have created new pixel and music material for this work!\r\nEnjoy even more lewd pixel H!',
             genresEn: [
-                'Foreign Object',
-                'Naughty',
-                'Ashamed',
-                'Humiliation',
+                'Foreign Objects',
+                'Naughty/Lewd',
+                'Shame/Humiliation',
                 'Gangbang',
                 'Interspecies Sex',
             ],

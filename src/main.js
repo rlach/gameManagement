@@ -3,6 +3,7 @@ const GameManagement = require('./gameManagement');
 const vndb = require('./util/vndb');
 const config = require('../node_modules/config');
 const log = require('./util/logger');
+const inquirer = require('inquirer');
 
 async function main() {
     await vndb.connect();
@@ -19,6 +20,14 @@ async function main() {
 
     const gameManagement = new GameManagement(config, operation);
     await gameManagement.main();
+
+    await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'whatever',
+            message: 'Press enter to continue',
+        },
+    ]);
 }
 
 main()

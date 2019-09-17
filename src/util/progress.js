@@ -1,14 +1,15 @@
 const cliProgress = require('cli-progress');
 
 const format =
-    '[{bar}] {percentage}% | ETA: {eta_formatted} | Duration: {duration_formatted} | {value}/{total}';
+    '{percentage}% (ETA: {eta_formatted} | DUR: {duration_formatted}) {value}/{total}';
 
 const bar = new cliProgress.Bar(
     {
         format: `Progress ${format}`,
+        barsize: 20,
         align: 'right',
     },
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.legacy
 );
 
 function getBar(operation) {

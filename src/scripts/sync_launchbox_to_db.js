@@ -70,7 +70,7 @@ function isOlder(launchboxDate, dbGameDate) {
 }
 
 function startProgressBar(gameAmount) {
-    const progressBar = progress.getBar('Syncing launchbox to database');
+    const progressBar = progress.getBar('Launchbox => database');
     progressBar.start(gameAmount, 0);
     return progressBar;
 }
