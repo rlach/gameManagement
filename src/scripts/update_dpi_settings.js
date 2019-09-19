@@ -18,25 +18,35 @@ async function updateDpiSettings(database, settings, forceUpdate = false) {
             });
 
             if (gamesWithExecutableFile.length > 0) {
-                const existingKeys = await regedit.list(dpiSettingsKey);
+                const registryKeys = await regedit.list(dpiSettingsKey);
 
-                let values = {};
+                let values = [];
 
-                gamesWithExecutableFile.forEach(game => {
+                for (const game of gamesWithExecutableFile) {
                     if (
                         forceUpdate ||
-                        existingKeys[game.executableFile] === undefined
+                        registryKeys[game.executableFile.toLowerCase()] ===
+                            undefined
                     ) {
-                        values[game.executableFile] = {
+                        values.push({
+                            name: game.executableFile,
                             value: getDpiValue(game.engine, settings.overrides),
                             type: 'REG_SZ',
-                        };
+                        });
                     }
-                });
+                }
 
-                if (Object.keys(values).length > 0) {
+                if (values.length > 0) {
                     progressBar.start(Object.keys(values).length, 0);
-                    await regedit.putValue(dpiSettingsKey, values);
+                    for (const value of values) {
+                        await regedit.set(
+                            dpiSettingsKey,
+                            value.name,
+                            value.value,
+                            value.type
+                        );
+                        progressBar.increment();
+                    }
                     progressBar.update(Object.keys(values).length);
                     progressBar.stop();
                 }

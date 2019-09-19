@@ -182,6 +182,7 @@ async function askForOperation() {
     return inquirer.prompt([
         {
             type: 'list',
+            pageSize: 20,
             name: 'operation',
             message: 'What operation do you want to perform?',
             choices: [

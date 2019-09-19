@@ -1,34 +1,16 @@
 /* istanbul ignore file */
-const regedit = require('regedit');
+const { Registry } = require('rage-edit');
 
 async function list(key) {
-    return new Promise((resolve, reject) => {
-        regedit
-            .list([[key]])
-            .on('data', function(entry) {
-                resolve(entry.data.values);
-            })
-            .on('error', function(error) {
-                reject(error);
-            });
-    });
+    return (await Registry.get(key)).$values;
 }
 
-async function putValue(key, values) {
-    return new Promise((resolve, reject) => {
-        regedit.putValue(
-            {
-                [key]: values,
-            },
-            function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            }
-        );
-    });
+async function has(key, name) {
+    return Registry.has(key, name);
 }
 
-module.exports = { list, putValue };
+async function set(key, name, value, type) {
+    return Registry.set(key, name, value, type);
+}
+
+module.exports = { has, set, list };
