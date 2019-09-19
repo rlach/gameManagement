@@ -20,6 +20,7 @@ describe('updateDpiSettings', function() {
         sinon.stub(progress, 'getBar').returns({
             start: sinon.spy(),
             update: progressBarUpdate,
+            increment: sinon.spy(),
             stop: sinon.spy(),
         });
     });
@@ -44,12 +45,12 @@ describe('updateDpiSettings', function() {
 
     describe('on windows when enabled', function() {
         let listSpy;
-        let putValueSpy;
+        let setSpy;
 
         beforeEach(async function() {
             sinon.stub(process, 'platform').value('win32');
             listSpy = sinon.stub(regedit, 'list');
-            putValueSpy = sinon.stub(regedit, 'putValue');
+            setSpy = sinon.stub(regedit, 'set');
         });
 
         it('does not do anything when no games have exe files', async function() {
@@ -80,14 +81,11 @@ describe('updateDpiSettings', function() {
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
             );
             sinon.assert.calledWithExactly(
-                putValueSpy,
+                setSpy,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
-                {
-                    'abc.exe': {
-                        type: 'REG_SZ',
-                        value: '~ GDIDPISCALING DPIUNAWARE',
-                    },
-                }
+                'abc.exe',
+                '~ GDIDPISCALING DPIUNAWARE',
+                'REG_SZ'
             );
         });
 
@@ -123,17 +121,27 @@ describe('updateDpiSettings', function() {
                 listSpy,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
             );
+            sinon.assert.calledThrice(setSpy);
             sinon.assert.calledWithExactly(
-                putValueSpy,
+                setSpy.firstCall,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
-                {
-                    'abc.exe': { type: 'REG_SZ', value: '~ HIGHDPIAWARE' },
-                    'abcd.exe': { type: 'REG_SZ', value: '~ DPIUNAWARE' },
-                    'abcde.exe': {
-                        type: 'REG_SZ',
-                        value: '~ GDIDPISCALING DPIUNAWARE',
-                    },
-                }
+                'abc.exe',
+                '~ HIGHDPIAWARE',
+                'REG_SZ'
+            );
+            sinon.assert.calledWithExactly(
+                setSpy.secondCall,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
+                'abcd.exe',
+                '~ DPIUNAWARE',
+                'REG_SZ'
+            );
+            sinon.assert.calledWithExactly(
+                setSpy.thirdCall,
+                'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
+                'abcde.exe',
+                '~ GDIDPISCALING DPIUNAWARE',
+                'REG_SZ'
             );
         });
 
@@ -156,7 +164,7 @@ describe('updateDpiSettings', function() {
                 listSpy,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
             );
-            sinon.assert.notCalled(putValueSpy);
+            sinon.assert.notCalled(setSpy);
         });
 
         it('updates game even if it has dpi settings if force update is enabled', async function() {
@@ -186,9 +194,11 @@ describe('updateDpiSettings', function() {
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers'
             );
             sinon.assert.calledWithExactly(
-                putValueSpy,
+                setSpy,
                 'HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers',
-                { 'abc.exe': { type: 'REG_SZ', value: '~ DPIUNAWARE' } }
+                'abc.exe',
+                '~ DPIUNAWARE',
+                'REG_SZ'
             );
         });
     });
