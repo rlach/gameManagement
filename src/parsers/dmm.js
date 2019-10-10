@@ -239,15 +239,21 @@ async function getDoujinResults(name) {
 
     const query = parseSite(reply);
     return query('.tileListTtl__txt a')
-        .map((i, e) => ({
-            workno: query(e)
+        .map((i, e) => {
+            const matchedId = query(e)
                 .attr('href')
-                .match(DMM_ID_REGEX)[0],
-            work_name: query(e)
-                .text()
-                .trim(),
-        }))
-        .get();
+                .match(DMM_ID_REGEX);
+            return matchedId
+                ? {
+                      workno: matchedId[0],
+                      work_name: query(e)
+                          .text()
+                          .trim(),
+                  }
+                : null;
+        })
+        .get()
+        .filter(e => e !== null);
 }
 
 async function getProResults(name) {
@@ -268,16 +274,22 @@ async function getProResults(name) {
                 .attr('href')
                 .includes('ref=search')
         )
-        .map((i, e) => ({
-            workno: query(e)
+        .map((i, e) => {
+            const matchedId = query(e)
                 .attr('href')
-                .match(DMM_ID_REGEX)[0],
-            work_name: query(e)
-                .find('img')
-                .attr('alt')
-                .trim(),
-        }))
-        .get();
+                .match(DMM_ID_REGEX);
+            return matchedId
+                ? {
+                      workno: matchedId[0],
+                      work_name: query(e)
+                          .find('img')
+                          .attr('alt')
+                          .trim(),
+                  }
+                : null;
+        })
+        .get()
+        .filter(e => e !== null);
 }
 
 function getDoujinMetadata(query) {
