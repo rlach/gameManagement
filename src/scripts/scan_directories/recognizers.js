@@ -137,9 +137,6 @@ const recognizers = [
     new Recognizer('C4', {
         equals: ['c4.exe', 'xex.exe'],
     }),
-    new Recognizer('Caramel', {
-        endsWith: ['.bin'],
-    }),
     new Recognizer('SystemC@CandySoft', {
         endsWith: ['.fpk'],
     }),
