@@ -2,6 +2,7 @@ const log = require('../util/logger');
 const eachLimit = require('async/eachLimit');
 const inquirer = require('inquirer');
 const progress = require('../util/progress');
+const fs = require('fs');
 
 async function selfTest(strategies) {
     const progressBar = progress.getBar('Self test');
@@ -30,18 +31,46 @@ async function selfTest(strategies) {
                 'Seems like either data on the sites changed or the design of the sites changed. Please review the difference and decide what to do.'
             );
 
-            const response = await inquirer.prompt({
-                type: 'confirm',
-                name: 'continue',
-                default: false,
-                message: 'Do you want to perform sync anyway?',
-            });
+            const response = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'continue',
+                    default: false,
+                    message: 'Do you want to perform sync anyway?',
+                },
+                {
+                    type: 'confirm',
+                    name: 'save',
+                    default: false,
+                    when: answers => {
+                        return answers.continue;
+                    },
+                    message: 'Do you want to save new version as expected?',
+                },
+            ]);
 
             if (!response.continue) {
                 log.info(
                     'Please check if there is new version of Hisho available at https://github.com/rlach/gameManagement. If not please report issue with the differences above.'
                 );
                 process.exit();
+            }
+
+            if (response.save) {
+                const selfTestFile = JSON.parse(
+                    fs.readFileSync('config/default.json').toString()
+                );
+                results.forEach(r => {
+                    if (!selfTestFile[r.strategy]) {
+                        selfTestFile[r.strategy] = {};
+                    }
+                    selfTestFile[r.strategy][r.fieldName] = r.actual;
+                });
+
+                fs.writeFileSync(
+                    'config/default.json',
+                    JSON.stringify(selfTestFile, null, 4)
+                );
             }
         }
     }
