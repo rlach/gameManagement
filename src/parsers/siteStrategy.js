@@ -93,9 +93,9 @@ class SiteStrategy {
         return [];
     }
 
-    test(description, actual, expected) {
-        let orderedActual = orderArrays(actual);
-        let orderedExpected = orderArrays(expected);
+    test(description, actual, expected, fieldName) {
+        let orderedActual = orderArrays(JSON.parse(JSON.stringify(actual)));
+        let orderedExpected = orderArrays(JSON.parse(JSON.stringify(expected)));
 
         const result = jsonDiff.diffString(orderedExpected, orderedActual);
 
@@ -104,6 +104,8 @@ class SiteStrategy {
             description,
             passes: result.length === 0,
             diff: result,
+            fieldName,
+            actual,
         };
     }
 }
