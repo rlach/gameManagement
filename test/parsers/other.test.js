@@ -20,33 +20,7 @@ describe('Other strategy', function() {
     });
 
     describe('fetch game data', function() {
-        it('returns empty object when given game has no subfiles', async function() {
-            sinon.stub(fs, 'readdirSync').returns([]);
-            expect(
-                await otherStrategy.fetchGameData(
-                    'anything',
-                    'anything',
-                    'path'
-                )
-            ).to.eql({});
-        });
-
-        it('returns empty object when given game has no subdirectories', async function() {
-            sinon.stub(fs, 'readdirSync').returns([
-                {
-                    isDirectory: () => false,
-                },
-            ]);
-            expect(
-                await otherStrategy.fetchGameData(
-                    'anything',
-                    'anything',
-                    'path'
-                )
-            ).to.eql({});
-        });
-
-        it('returns name of first subdirectory found', async function() {
+        it('returns name of final element of the path given', async function() {
             sinon.stub(fs, 'readdirSync').returns([
                 {
                     isDirectory: () => true,
@@ -57,10 +31,10 @@ describe('Other strategy', function() {
                 await otherStrategy.fetchGameData(
                     'anything',
                     'anything',
-                    'path'
+                    '/foo/bar/path/gamename'
                 )
             ).to.eql({
-                nameEn: 'foobar',
+                nameEn: 'gamename',
             });
         });
     });

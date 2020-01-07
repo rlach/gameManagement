@@ -76,6 +76,9 @@ describe('scanDirectories', function() {
 
         it('If game is not deleted tries to find executable', async function() {
             sinon.stub(fs, 'existsSync').returns(true);
+            sinon.stub(fs, 'lstatSync').returns({
+                isDirectory: () => true,
+            });
             const recognizeGameEngine = sinon.stub(
                 engineRecognizer,
                 'recognizeGameEngine'
@@ -104,6 +107,9 @@ describe('scanDirectories', function() {
 
         it('If game has executable tries to recognize game engine', async function() {
             sinon.stub(fs, 'existsSync').returns(true);
+            sinon.stub(fs, 'lstatSync').returns({
+                isDirectory: () => true,
+            });
             const recognizeGameEngine = sinon.stub(
                 engineRecognizer,
                 'recognizeGameEngine'
@@ -137,6 +143,9 @@ describe('scanDirectories', function() {
             await database.game.save(originalGame);
 
             sinon.stub(fs, 'existsSync').returns(true);
+            sinon.stub(fs, 'lstatSync').returns({
+                isDirectory: () => true,
+            });
             const recognizeGameEngine = sinon.stub(
                 engineRecognizer,
                 'recognizeGameEngine'

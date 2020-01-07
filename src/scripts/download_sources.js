@@ -6,7 +6,7 @@ const selfTest = require('./self_test');
 const operation = 'Downloading sources';
 
 async function downloadSources(strategies, database) {
-    const games = await database.game.find({
+    let games = await database.game.find({
         deleted: { $ne: true },
         $or: [
             { sourceMissingJp: { $ne: true } },
@@ -14,8 +14,28 @@ async function downloadSources(strategies, database) {
         ],
     });
 
+    games = games.filter(
+        g =>
+            !hasSourcesDownloaded(g) ||
+            g.forceSourceUpdate ||
+            g.forceAdditionalImagesUpdate
+    );
+
     if (games.length > 0) {
-        await selfTest.selfTest(strategies);
+        const sources = games.map(g => {
+            if (g.source) {
+                return g.source;
+            } else {
+                const strategy = selectStrategy(g.id, strategies);
+                return strategy ? strategy.name : undefined;
+            }
+        });
+
+        const strategiesToTest = strategies.filter(s =>
+            sources.some(source => source === s.name)
+        );
+
+        await selfTest.selfTest(strategiesToTest);
     }
 
     const progressBar = progress.getBar(operation);

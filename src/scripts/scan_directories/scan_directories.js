@@ -78,11 +78,12 @@ async function scanDirectory(file, database, progressBar, searchSettings) {
 }
 
 function isDeleted(file) {
-    if (!fs.existsSync(`${file.path}/${file.name}`)) {
+    const filePath = `${file.path}/${file.name}`;
+    if (!fs.existsSync(filePath) || !fs.lstatSync(filePath).isDirectory()) {
         return true;
     }
 
-    const subFiles = fs.readdirSync(`${file.path}/${file.name}`);
+    const subFiles = fs.readdirSync(filePath);
     return subFiles.length === 0 || subFiles.some(f => f === 'DELETED');
 }
 
