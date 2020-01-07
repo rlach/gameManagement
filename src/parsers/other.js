@@ -1,5 +1,5 @@
-const fs = require('fs');
 const SiteStrategy = require('./siteStrategy');
+const { removeTagsAndMetadata } = require('../util/files');
 
 const OTHER_ID_REGEX = new RegExp(/^other\d+$/gi);
 
@@ -9,15 +9,11 @@ class OtherStrategy extends SiteStrategy {
     }
 
     async fetchGameData(_a, _b, path) {
-        const subdirectory = fs
-            .readdirSync(path, { withFileTypes: true })
-            .find(dirent => dirent.isDirectory());
+        const name = path.split('/').pop();
 
-        return subdirectory
-            ? {
-                  nameEn: subdirectory.name,
-              }
-            : {};
+        return {
+            nameEn: removeTagsAndMetadata(name),
+        };
     }
 
     extractCode() {
