@@ -97,9 +97,9 @@ describe('downloadSources', function() {
             game.sourceMissingEn = true;
             await database.game.save(game);
             await downloadSources([strategy], database);
-            sinon.assert.calledOnce(progressBarUpdate);
+            sinon.assert.notCalled(progressBarUpdate);
             sinon.assert.notCalled(fetchGameDataSpy);
-            sinon.assert.calledOnce(selfTestStub);
+            sinon.assert.notCalled(selfTestStub);
         });
 
         it('It downloads additional images if game has forceAdditionalImagesUpdate flag even if sources are already downloaded', async function() {
