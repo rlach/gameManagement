@@ -58,12 +58,14 @@ class DlsiteStrategy extends SiteStrategy {
         }
 
         const result = removeUndefined({
-            communityStars: productInfo
-                ? productInfo.rate_average_2dp
-                : undefined,
-            communityStarVotes: productInfo
-                ? productInfo.rate_count
-                : undefined,
+            communityStars:
+                productInfo && productInfo.rate_average_2dp
+                    ? productInfo.rate_average_2dp
+                    : undefined,
+            communityStarVotes:
+                productInfo && productInfo.rate_count
+                    ? productInfo.rate_count
+                    : undefined,
         });
         Object.assign(result, removeUndefined(jpn));
         Object.assign(result, removeUndefined(eng));
