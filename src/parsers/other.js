@@ -9,7 +9,10 @@ class OtherStrategy extends SiteStrategy {
     }
 
     async fetchGameData(_a, _b, path) {
-        const name = path.split('/').pop();
+        const name = path
+            .replace(/\\/g, '/')
+            .split('/')
+            .pop();
 
         return {
             nameEn: removeTagsAndMetadata(name),
