@@ -334,9 +334,16 @@ function getGameMetadata(query) {
             log.debug('Could not get genres');
         }
 
-        const description = query('div[itemprop="description"]')
+        let description = query('.work_parts_container')
             .text()
             .trim();
+
+        if (!description || description === '') {
+            description = query('div[itemprop="description"]')
+                .text()
+                .trim();
+        }
+
         const tags = query('.work_genre span')
             .map((i, e) => query(e).attr('title'))
             .get();
