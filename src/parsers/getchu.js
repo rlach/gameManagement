@@ -81,7 +81,7 @@ class GetchuStrategy extends SiteStrategy {
     }
 
     shouldUse(gameId) {
-        return !!gameId.match(/^\d{6,8}$/gi);
+        return !!gameId.match(/^\d{1,8}$/gi);
     }
 
     /* istanbul ignore next */

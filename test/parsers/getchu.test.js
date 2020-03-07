@@ -209,8 +209,7 @@ describe('Getchu strategy', function() {
             expect(getchuStrategy.shouldUse('12308978')).to.eql(true);
         });
 
-        it('returns false when code is just a too long or too short number', async function() {
-            expect(getchuStrategy.shouldUse('12345')).to.eql(false);
+        it('returns false when code is just a too long number', async function() {
             expect(getchuStrategy.shouldUse('123089789')).to.eql(false);
         });
 
