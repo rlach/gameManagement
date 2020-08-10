@@ -107,7 +107,9 @@ module.exports = GetchuStrategy;
 
 function getGameMetadataJp(query) {
     try {
-        let releaseDayText = query('#tooltip-day').text();
+        let releaseDayText = query(
+            '[title="同じ発売日の同ジャンル商品を開く"]'
+        ).text();
         let images = getImages(query);
 
         return removeUndefined({
