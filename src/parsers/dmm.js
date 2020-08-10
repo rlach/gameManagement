@@ -55,6 +55,8 @@ class DmmStrategy extends SiteStrategy {
         }
         let uri;
         let method;
+        const ageCheckUrl = `https://www.dmm.co.jp/age_check/=/declared=yes/?rurl=https%3A%2F%2Fwww.dmm.co.jp%2Fmono%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_aisoft2638%2F`;
+        let performAgeCheck = true;
         if (id.match(/d_\d+/)) {
             uri = `https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=${id}/`;
             method = getDoujinMetadata;
@@ -64,10 +66,19 @@ class DmmStrategy extends SiteStrategy {
         } else {
             uri = `https://dlsoft.dmm.co.jp/detail/${id}/`;
             method = getProMetadata;
+            performAgeCheck = false;
         }
 
         try {
-            let reply = await request.get({
+            let requestWithJar = request.defaults({ jar: true });
+            if (performAgeCheck) {
+                await requestWithJar.get({
+                    method: 'GET',
+                    uri: ageCheckUrl,
+                });
+            }
+
+            let reply = await requestWithJar.get({
                 method: 'GET',
                 uri: uri,
             });
@@ -295,7 +306,7 @@ function findTableValue(query, value) {
 }
 
 function getProMetadata(query) {
-    const images = query('#item-rotationbnr img')
+    const images = query('.image-slider img')
         .map((i, e) => query(e).attr('src'))
         .get();
     const softwareDetail = getSoftwareDetail(query);
@@ -309,7 +320,9 @@ function getProMetadata(query) {
                     .trim()
             )
             .get(),
-        imageUrlJp: query('a[name="package-image"]').attr('href'),
+        imageUrlJp: query('meta[property="og:image"]')
+            .attr('content')
+            .trim(),
         additionalImages: images,
         descriptionJp: query('.area-detail-read .text-overflow')
             .text()
@@ -324,12 +337,7 @@ function getProMetadata(query) {
         tagsJp: softwareDetail['ゲームジャンル']
             ? [softwareDetail['ゲームジャンル']]
             : undefined,
-        makerJp: query('.area-bskt a')
-            .filter((i, e) =>
-                query(e)
-                    .attr('href')
-                    .includes('article=maker')
-            )
+        makerJp: query('.brand .content')
             .text()
             .trim(),
         communityStars: getCommunityStars(query),
@@ -339,7 +347,7 @@ function getProMetadata(query) {
 
 function getSoftwareDetail(query) {
     const softwareDetail = {};
-    query('.software-detail table')
+    query('.container02 table')
         .not('.spec-table')
         .not('.tbl-bps')
         .find('tr')

@@ -53,11 +53,15 @@ async function convertDbToLaunchbox(
             );
             const launchboxId = game.launchboxId;
 
-            customFields.push(
-                ...originalCustomFields.filter(
-                    cf => cf.GameID._text === launchboxId
-                )
-            );
+            const fieldsToAdd = originalCustomFields
+                .filter(cf => cf.GameID._text === launchboxId)
+                .filter(
+                    (field, index, self) =>
+                        index ===
+                        self.findIndex(t => t.Name._text === field.Name._text)
+                );
+
+            customFields.push(...fieldsToAdd);
 
             const result = mapper.map(game);
 
